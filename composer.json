@@ -1,0 +1,25 @@
+{
+  "name": "xtuple/util",
+  "description": "xTuple PHP utility classes",
+  "type": "library",
+  "homepage": "https://github.com/xtuple/php-util",
+  "license": "CPAL-1.0",
+  "authors": [
+    {
+      "name": "Andrey Mikheychik",
+      "email": "andrey@xtuple.com",
+      "role": "Software Engineer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Xtuple\\Util\\": "src/Xtuple/Util/"
+    }
+  },
+  "require": {
+    "php": "^7.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5"
+  }
+}

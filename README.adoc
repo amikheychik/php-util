@@ -1,0 +1,14 @@
+= xTuple PHP Utility classes
+
+Library to provide set of classes for common use across other xTuple's libraries.
+
+== Documentation
+
+http://asciidoctor.org[ASCIIDoc] is used for documentation. To generate documentation run:
+
+[source,bash]
+----
+asciidoctor --backend html5 --doctype book --destination-dir target/docs docs/index.adoc
+----
+
+Documentation will be located in `target/docs`
