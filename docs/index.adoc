@@ -5,3 +5,47 @@
 :source-highlighter: coderay
 :source-language: php
 
+== Subpackages
+
+=== Generics
+
+`Xtuple/Util/Generics` package simplifies work with generic classes.
+
+==== Type
+
+`Xtuple/Util/Generics/Type` package should be used when type check is required.
+
+Use `StrictType` when instance of a class/interface is required.
+
+[source]
+----
+use Xtuple\Util\Generics\Type\StrictType;
+
+// Super types may be used.
+$stdClass = new StrictType(\Countable::class);
+
+// Type::cast() method returns the same object instance as it receives, if type is correct.
+$array1 = new \ArrayObject();
+// Passes correctly, as \ArrayObject implements \Countable
+$array2 = $stdClass->cast($array1); // ($array1 === $array2)
+
+// Throws an exception, as an array is passed
+$stdClass->cast([]);
+
+// Throws an exception, as \stdClass does not implement \Countable;
+$stdClass->cast(new \stdClass());
+----
+
+Use `NullableType` when instance of a class/interface or null can be passed.
+
+[source]
+----
+use Xtuple\Util\Generics\Type\NullableType;
+
+// Class/interface names may be passed as strings.
+$optionalStdClass = new NullableType('\stdClass'); <1>
+
+// Returns null, instead of throwing an exception (unlike StrictType)
+$optionalStdClass->cast(null);
+----
+<1> `::class` constant doesn't have a leading root namespace `\`, but it's recommended to provide one when it's passed as a string.
