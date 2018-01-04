@@ -12,3 +12,12 @@ asciidoctor --backend html5 --doctype book --destination-dir target/docs docs/in
 ----
 
 Documentation will be located in `target/docs`
+
+== Testing
+
+[source,bash]
+----
+phpunit --coverage-html target/coverage/html
+----
+
+Code coverage report will be available in `target/coverage/html`

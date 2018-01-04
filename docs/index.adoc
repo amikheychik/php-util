@@ -7,6 +7,298 @@
 
 == Subpackages
 
+=== Collection
+
+`Xtuple/Util/Collection` package provides classes to work with collections of elements. It contains abstract and default implementations for both strictly typed and untyped data. All collections are iterable and countable.
+
+[NOTE]
+PHP doesn't allow to use the word `List` as a namespace or a class name, so the term `Sequence` is used instead for the namespace and root interface. All the classes are named using the term `List`.
+
+[NOTE]
+PHP doesn't have a default mechanism for object identity, so the `Set` is defined not by elements' identity, but by their key method (similarly to `Map`).
+
+Default implementation class path for any collection type follows the same pattern: `{Abstract Data Type}/{Implementation type}/{Narrowing customization}` (e.g. `Xtuple/Util/Collection/Map/ArrayMap/StrictType/StrictlyTypedArrayMap`).
+
+Strict type abstract collections should be used to have generic collections. Original collection type interfaces should be extended to provide type information in PHPDocs.
+
+Example: defining class to provide `ArrayList<stdClass>` list.
+
+[source]
+.ListStdClass.php - interface definition
+----
+<?php namespace Example\ArrayList;
+
+use Xtuple\Util\Collection\Sequence\Sequence;
+
+/**
+ * List<stdClass> <1>
+ */
+interface ListStdClass
+  extends Sequence { <2>
+  /**
+   * @return \stdClass|null <3>
+   *
+   * @param int $key
+   */
+  public function get(int $key);
+
+  /**
+   * @return \stdClass|null <4>
+   */
+  public function current();
+
+  public function name(): string; <5>
+}
+----
+<1> Optional hint in "generic" notation. May be useful for long and complicated data structures.
+<2> Extending original list interface `Sequence`.
+<3> Overriding `get()` definition, to specify `@return \stdClass|null` instead of `@return mixed|null`.
+<4> Overriding `current()` definition, to specify return type. `Sequence::key()` doesn't need to be overridden, as its types are the same for all lists.
+<5> Additional methods can be added to this type.
+
+[NOTE]
+`@generic` PHPDoc tag is used to mark interface methods that need to be overridden with more specific types.
+
+[source]
+.ArrayListStdClass.php - actual class implementation
+----
+<?php namespace Example\ArrayList;
+
+use Xtuple\Util\Collection\Sequence\ArrayList\StrictType\AbstractStrictlyTypedArrayList;
+
+/**
+ * ArrayList<stdClass>
+ */
+final class ArrayListStdClass
+  extends AbstractStrictlyTypedArrayList <1>
+  implements ListStdClass { <2>
+  /** @var string */
+  private $name;
+  /**
+   * @param \stdClass[] $elements <3>
+   * @param string      $name
+   */
+  public function __construct(array $elements = [], string $name = '') {
+    parent::__construct(\stdClass::class, $elements); <4>
+    $this->name = $name;
+  }
+
+  public function name(): string { <5>
+    return $this->name;
+  }
+}
+----
+<1> `AbstractStrictlyTypedArrayList` automatically checks elements' types.
+<2> Specify implemented interface to reference overridden `get()` and `current()` methods.
+<3> Overriding constructor PHPDoc to narrow type hint (`@param \stdClass[] $elements` instead of `@param array $elements`) and hide `$type` parameter
+<4> Pass exact type `stdClass` into parent constructor.
+<5> Implementation of the additional method defined in `ListStdClass`.
+
+==== List (Sequence)
+
+`Xtuple/Util/Collection/Sequence` package provides default list implementations. List keys are integers and count starts from `0`. List allows access to any existing element with `get(int $key)` method. List is immutable.
+
+[source]
+.Example usage of the `ArrayList`.
+----
+use Xtuple\Util\Collection\Sequence\ArrayList\ArrayList;
+
+// Lists remove all the array keys, and start numeration from 0.
+$list = new ArrayList(['one' => 1, 'two' => 2, 'three' => 3]);
+
+// Returns 2, as 'two' is removed.
+$list->get(1);
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayList`.
+----
+use Xtuple\Util\Collection\Sequence\ArrayList\StrictType\StrictlyTypedArrayList;
+
+// Effectively, $list is List<Countable>
+$list = new StrictlyTypedArrayList(\Countable::class, [
+  new \ArrayObject([1]),
+  new \ArrayObject([1, 2]),
+]);
+
+$list->get(0)->count(); // returns 1
+
+foreach ($list as $k => $value) {
+  // \Countable interface methods can be used without a type check, as type is checked on input.
+  $value->count();
+}
+----
+
+==== Map
+
+`Xtuple/Util/Collection/Map` package provides default key-value map implementations. Unlike usual key-value maps, Map keys are always strings (not objects). Map allows access to any existing element with `get(string $key)` method. Map is immutable.
+
+[source]
+.Example usage of the `ArrayMap`.
+----
+use Xtuple\Util\Collection\Map\ArrayMap\ArrayMap;
+
+// Array's default keys are casted to string
+$map = new ArrayMap([1, 2 => 'two', 'three' => 3]);
+
+// Note: parameter is string
+$map->get('0'); // returns 1
+$map->get('1'); // returns null
+$map->get('2'); // returns 'two'
+$map->get('three'); // returns 3
+
+// Mapping callback can be specified to be used instead of default keys
+$map = new ArrayMap([
+  ['code' => 'US', 'name' => 'United States'],
+  ['code' => 'CA', 'name' => 'Canada'],
+], function ($element) {
+  return $element['code'];
+});
+
+// Returns ['code' => 'US, 'name' => 'United States']
+$map->get('US');
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayMap`.
+----
+use Xtuple\Util\Collection\Map\ArrayMap\StrictType\StrictlyTypedArrayMap;
+
+// $map is Map<string, stdClass>
+$map = new StrictlyTypedArrayMap(\stdClass::class, [
+  'US' => (object) ['code' => 'US', 'name' => 'United States'],
+  'CA' => (object) ['code' => 'CA', 'name' => 'Canada'],
+]);
+
+// $key parameter can be specified to provide name of the key method. Key method must not require any parameters.
+$map = new StrictlyTypedArrayMap(\Countable::class, [
+  new \ArrayObject([1]),
+  new \ArrayObject([1, 2]),
+  new \ArrayObject([2]),
+], 'count');
+
+// Returns ArrayObject([1, 2]), as its count() returned 2
+$map->get('2');
+
+// Returns ArrayObject([2]), as it overrides earlier provided ArrayObject([1])
+$map->get('1');
+----
+
+==== Set
+
+`Xtuple/Util/Collection/Set` package provides default set implementation. As PHP doesn't support objects identity by default, its implementation can be chosen by user (two objects may be completely different, but would be considered identical, as long as their key method returns the same value). This effectively makes Set similar to Map, but unlike Map, Set throws exception when duplicates occur. Set is immutable.
+
+[source]
+.Example usage of the `ArraySet`.
+----
+use Xtuple\Util\Collection\Set\ArraySet\ArraySet;
+
+// Array's default keys are casted to string
+$map = new ArraySet([1, 2 => 'two', 'three' => 3]);
+$map->get('0'); // returns 1
+$map->get('1'); // returns null
+$map->get('2'); // returns 'two'
+$map->get('three'); // returns 3
+
+// Mapping callback can be specified to be used instead of default keys
+$map = new ArraySet([
+  ['code' => 'US', 'name' => 'United States'],
+  ['code' => 'CA', 'name' => 'Canada'],
+], function ($element) {
+  return $element['code'];
+});
+
+// Returns ['code' => 'US, 'name' => 'United States']
+$map->get('US');
+
+// Throws an exception, as 'code' => 'US' is duplicated.
+$map = new ArraySet([
+  ['code' => 'US', 'name' => 'United States'],
+  ['code' => 'CA', 'name' => 'Canada'],
+  ['code' => 'US', 'name' => 'USA'],
+], function ($element) {
+  return $element['code'];
+});
+----
+
+[source]
+.Example usage of the `StrictlyTypedArraySet`.
+----
+use Xtuple\Util\Collection\Set\ArraySet\StrictType\StrictlyTypedArraySet;
+
+final class Country {
+  /** @var array */
+  private $data;
+  public function __construct(array $data) {
+    $this->data = $data;
+  }
+  public function code(): string { return $this->data['code']; }
+  public function name(): string { return $this->data['name']; }
+}
+
+// $map is Set<Country>
+$map = new StrictlyTypedArraySet(Country::class, [
+  'US' => new Country(['code' => 'US', 'name' => 'United States']),
+  'CA' => new Country(['code' => 'CA', 'name' => 'Canada']),
+]);
+
+// $key parameter can be specified to provide name of the key method. Key method must not require any parameters.
+$map = new StrictlyTypedArraySet(Country::class, [
+  new Country(['code' => 'US', 'name' => 'United States']),
+  new Country(['code' => 'CA', 'name' => 'Canada']),
+], 'code');
+
+// Returns 'United States'
+$map->get('US')->name();
+
+// Throws an exception, as code 'US' is duplicated.
+$map = new StrictlyTypedArraySet(Country::class, [
+  new Country(['code' => 'US', 'name' => 'United States']),
+  new Country(['code' => 'CA', 'name' => 'Canada']),
+  new Country(['code' => 'US', 'name' => 'USA']),
+], 'code');
+----
+
+==== Stack
+
+`Xtuple/Util/Collection/Stack` package provides a default stack implementation. Similarly to List, stack keys are handled internally. Stack is mutable and provides `push()` and `pop()` methods to mutate its state.
+
+[source]
+.Example usage of the `ArrayStack`.
+----
+use Xtuple\Util\Collection\Stack\ArrayStack\ArrayStack;
+
+// Initial state may be provided
+$stack = new ArrayStack(['one', 'two']);
+
+// Returns 3 - size of an updated stack
+$stack->push('three');
+
+// Returns 'three'
+$stack->pop();
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayStack`.
+----
+use Xtuple\Util\Collection\Stack\ArrayStack\StrictType\StrictlyTypedArrayStack;
+
+//
+$stack = new StrictlyTypedArrayStack(\stdClass:class, [
+  (object) ['value' => 'one'],
+  (object) ['value' => 'two'],
+]);
+
+// Returns 3 - size of an updated stack
+$stack->push(['value' => 'three']);
+
+// Returns 'three'
+$stack->pop()->value;
+
+// Throws an exception, as string is passed, not a \stdClass
+$stack->push('three');
+----
+
 === Generics
 
 `Xtuple/Util/Generics` package simplifies work with generic classes.
