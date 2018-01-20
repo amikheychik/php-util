@@ -25,7 +25,7 @@ abstract class AbstractArraySet
     parent::__construct($this->index);
   }
 
-  public function get(string $key) {
+  public final function get(string $key) {
     return $this->index[$key] ?? null;
   }
 }
