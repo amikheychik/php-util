@@ -8,6 +8,37 @@ class TypeTest
   extends TestCase {
   /**
    * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage array is passed, scalar is required
+   */
+  public function testScalar() {
+    $type = new ScalarType();
+    self::assertEquals('string', $type->cast('string'));
+    self::assertEquals(0.0, $type->cast(0.0));
+    self::assertEquals(0, $type->cast(0));
+    self::assertTrue($type->cast(true));
+    self::assertFalse($type->cast(false));
+    /** @noinspection PhpParamsInspection */
+    $type->cast([]);
+  }
+
+  /**
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage object is passed, scalar is required
+   */
+  public function testNullableScalar() {
+    $type = new NullableScalarType();
+    self::assertEquals('string', $type->cast('string'));
+    self::assertEquals(0.0, $type->cast(0.0));
+    self::assertEquals(0, $type->cast(0));
+    self::assertTrue($type->cast(true));
+    self::assertFalse($type->cast(false));
+    self::assertNull($type->cast(null));
+    /** @noinspection PhpParamsInspection */
+    $type->cast(new \stdClass());
+  }
+
+  /**
+   * @expectedException \InvalidArgumentException
    * @expectedExceptionMessage NULL is passed, \Countable is required
    */
   public function testStrict() {
@@ -19,7 +50,7 @@ class TypeTest
     $stdClass->cast(null);
   }
 
-  public function testNullable() {
+  public function testNullableType() {
     $stdClass = new NullableType(\ArrayObject::class);
     self::assertInstanceOf(\ArrayObject::class, $stdClass->cast(new \ArrayObject()));
     self::assertNull($stdClass->cast(null));
