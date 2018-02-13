@@ -344,37 +344,52 @@ $path->isFile();
 
 `Xtuple/Util/Generics/Type` package should be used when type check is required.
 
-Use `StrictType` when instance of a class/interface is required.
+Use `StrictType` when instance of a class/interface is required, and `ScalarType` when a scalar (string, integer, float or boolean) is required.
 
 [source]
 ----
+use Xtuple\Util\Generics\Type\ScalarType;
 use Xtuple\Util\Generics\Type\StrictType;
 
 // Super types may be used.
-$stdClass = new StrictType(\Countable::class);
+$type = new StrictType(\Countable::class);
 
 // Type::cast() method returns the same object instance as it receives, if type is correct.
 $array1 = new \ArrayObject();
 // Passes correctly, as \ArrayObject implements \Countable
-$array2 = $stdClass->cast($array1); // ($array1 === $array2)
+$array2 = $type->cast($array1); // ($array1 === $array2)
 
 // Throws an exception, as an array is passed
-$stdClass->cast([]);
+$type->cast([]);
 
 // Throws an exception, as \stdClass does not implement \Countable;
-$stdClass->cast(new \stdClass());
+$type->cast(new \stdClass());
+
+$scalar = new ScalarType();
+
+// Returns 1
+$scalar->cast(1);
+
+// Throws an exception, null is not a scalar.
+$scalar->cast(null);
 ----
 
-Use `NullableType` when instance of a class/interface or null can be passed.
+Use `NullableType` when instance of a class/interface or `null` can be passed, and `NullableScalarType` when a scalar or `null` can be passed.
 
 [source]
 ----
+use Xtuple\Util\Generics\Type\NullableScalarType;
 use Xtuple\Util\Generics\Type\NullableType;
 
 // Class/interface names may be passed as strings.
-$optionalStdClass = new NullableType('\stdClass'); <1>
+$nullableType = new NullableType('\stdClass'); <1>
 
 // Returns null, instead of throwing an exception (unlike StrictType)
-$optionalStdClass->cast(null);
+$nullableType->cast(null);
+
+$nullableScalar = new NullabaleScalarType();
+
+// Returns null, instead of throwin an exception
+$nullalbeScalar->cast(null);
 ----
 <1> `::class` constant doesn't have a leading root namespace `\`, but it's recommended to provide one when it's passed as a string.
