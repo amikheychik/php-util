@@ -9,6 +9,7 @@ class IntegerEnumTest
   /**
    * @expectedException \InvalidArgumentException
    * @expectedExceptionMessage Value `0` is not supported in Xtuple\Util\Enum\Integer\TestIntegerEnum enum
+   * @throws \Throwable
    */
   public function testEnum() {
     $enum = new TestIntegerEnum(TestIntegerEnum::INT);

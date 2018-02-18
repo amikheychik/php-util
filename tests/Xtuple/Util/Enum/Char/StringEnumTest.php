@@ -9,6 +9,7 @@ class StringEnumTest
   /**
    * @expectedException \InvalidArgumentException
    * @expectedExceptionMessage Value `0` is not supported in Xtuple\Util\Enum\Char\TestStringEnum enum
+   * @throws \Throwable
    */
   public function testEnum() {
     $enum = new TestStringEnum(TestStringEnum::STRING);

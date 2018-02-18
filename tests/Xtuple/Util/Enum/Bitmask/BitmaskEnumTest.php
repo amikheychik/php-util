@@ -10,6 +10,7 @@ class BitmaskEnumTest
    * @expectedException \LogicException
    * @expectedExceptionMessage Bitmask Xtuple\Util\Enum\Bitmask\IncorrectBitmask values do not form full 15 (0b1111)
    *                           mask
+   * @throws \Throwable
    */
   public function testValues() {
     new CorrectBitmask(CorrectBitmask::ZERO);
@@ -23,6 +24,7 @@ class BitmaskEnumTest
   /**
    * @expectedException \InvalidArgumentException
    * @expectedExceptionMessage Value `16` is not supported in bitmask enum Xtuple\Util\Enum\Bitmask\SplitBitmask
+   * @throws \Throwable
    */
   public function testConstructor() {
     new SplitBitmask(SplitBitmask::ONE | SplitBitmask::THREE | SplitBitmask::TWELVE | SplitBitmask::FIFTEEN);

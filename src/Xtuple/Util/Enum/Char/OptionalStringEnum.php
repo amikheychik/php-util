@@ -7,7 +7,7 @@ abstract class OptionalStringEnum {
   private $value;
 
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
    *
    * @param string|null $value
    */
@@ -37,6 +37,10 @@ abstract class OptionalStringEnum {
   /** @var string[][] */
   private static $values;
 
+  /**
+   * @throws \ReflectionException
+   * @return array
+   */
   private static function values(): array {
     if (!isset(self::$values[static::class])) {
       self::$values[static::class] = (new \ReflectionClass(static::class))->getConstants();

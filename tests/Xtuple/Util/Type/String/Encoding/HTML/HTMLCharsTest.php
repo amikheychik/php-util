@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\Type\String\Encoding\HTML\Encode;
+namespace Xtuple\Util\Type\String\Encoding\HTML;
 
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Type\String\Encoding\HTML\Decode\HTMLDecodedString;
 use Xtuple\Util\Type\String\Encoding\HTML\Decode\HTMLDecodedStringFromEncoded;
 use Xtuple\Util\Type\String\Encoding\HTML\Decode\HTMLDecodedStringFromMixed;
+use Xtuple\Util\Type\String\Encoding\HTML\Encode\HTMLEncodedStringFromDecoded;
 
 class HTMLCharsTest
   extends TestCase {

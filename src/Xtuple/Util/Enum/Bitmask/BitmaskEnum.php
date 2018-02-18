@@ -7,7 +7,7 @@ abstract class BitmaskEnum {
   private $value;
 
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
    *
    * @param int $value
    */
@@ -32,6 +32,10 @@ abstract class BitmaskEnum {
   /** @var int[] */
   private static $max;
 
+  /**
+   * @throws \ReflectionException
+   * @return int
+   */
   private static function max(): int {
     if (!isset(self::$max[static::class])) {
       $bitmask = 0b0;
