@@ -21,7 +21,7 @@ class XMLAttributeTest
    */
   public function testSimpleXML() {
     $simple = new \SimpleXMLElement('<Test name="value" />');
-    $attribute = new XMLAttributeSimple($simple->attributes()[0]);
+    $attribute = new XMLAttributeSimple($simple->attributes()['name']);
     self::assertEquals('name', $attribute->name());
     self::assertEquals('value', $attribute->value());
     new XMLAttributeSimple($simple);

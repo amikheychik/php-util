@@ -40,7 +40,7 @@ class XMLElementTest
     self::assertEquals(3, $element->children()->count());
     self::assertEquals(2, $element->children('Child')->count());
     self::assertEquals(2, $element->children('/Test/Child')->count());
-    self::assertEquals('Test', $element->children('/Test/Child[@name="not-empty"]')->get(0)->value());
+    self::assertEquals('Test', $element->children('Child[@name="not-empty"]')->get(0)->value());
     self::assertEquals('true', $element->attribute('debug')->value());
     self::assertEquals(2, $element->attributes()->count());
     new XMLElementSimple((new \SimpleXMLElement('<Test name="test" />'))->attributes('name'));

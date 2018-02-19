@@ -684,3 +684,168 @@ $nullableScalar = new NullabaleScalarType();
 $nullalbeScalar->cast(null);
 ----
 <1> `::class` constant doesn't have a leading root namespace `\`, but it's recommended to provide one when it's passed as a string.
+
+=== XML
+
+`Xtuple\Util\XML` package provides classes to simplify handling XML documents. http://us3.php.net/manual/en/book.simplexml.php[SimpleXML] PHP extension is used for the XML handling. Unlike `\SimpleXMLElement`, this package has a strict separation between an XML attribute and an XML element.
+
+==== Attribute
+
+`Xtuple\Util\XML\Attribute\XMLAttribute` interface defines methods required to work with an XML element.
+
+The default implementation is provided by `Xtuple\Util\XML\Attribute\XMLAttributeSimple`, using `\SimpleXMLElement`. Unlike `\SimpleXMLElement`, `XMLAttributeSimple` would always represent an XML attribute and would throw an exception if an XML element is passed.
+
+`Xtuple\Util\XML\Attribute\XMLAttributeStruct` is a straight-forward implementation of the `XMLAttribute` interface that may be helpful, when an `XMLAttribute` is required, but underlying data is presented in non-XML format (e.g. to create test stubs).
+
+`Xtuple\Util\XML\Attribute\XMLAttribute::value()` method is generic. Its return value may be overridden by the children implementations to return a more specific type. For example, `Xtuple\Util\XML\Attribute\Type\Boolean\BooleanXMLAttribute` interface re-defines `value()` method to return `boolean`.
+
+[source]
+----
+use Xtuple\Util\XML\Attribute\Type\Boolean\OptionalBooleanXMLAttribute;
+use Xtuple\Util\XML\Attribute\Type\Boolean\RequiredBooleanXMLAttribute;
+use Xtuple\Util\XML\Attribute\XMLAttributeSimple;
+use Xtuple\Util\XML\Attribute\XMLAttributeStruct;
+use Xtuple\Util\XML\Element\XMLElementSimple;
+
+$xml = new \SimpleXMLElement('<Database name="phpunit" debug="true" />');
+
+// $struct and $simple represent the same attribute
+$struct = new XMLAttributeStruct('name', 'phpunit');
+$simple = new XMLAttributeSimple($xml->attributes()['name']);
+
+// Returns 'name'
+$struct->name() === $simple->name();
+
+// Returns 'phpunit'
+$struct->value() === $simple->value();
+
+// Throws an exception, as $xml is an XML element '<Database name="phpunit" />', not an attribute.
+$simple = new XMLAttributeSimple($xml);
+
+$element = new XMLElementSimple($xml);
+
+// RequiredBooleanXMLAttribute does a strict check for a boolean attribute
+$debug = new RequiredBooleanXMLAttribute($element->attribute('debug'));
+
+// Returns true, as debug attribute is defined an is 'true' (check is case insensitive)
+$debug->value();
+
+// OptionalBooleanXMLAttribute may be used when attribute may not be presented. It requires to provide a default value.
+// Note: XMLAttribute object is still required and must not be null.
+$test = new OptionalBooleanXMLAttribute($element->attribute('test'), false);
+
+// Returns false, as 'test' attribute is not defined, an default is set to false.
+$test->value();
+----
+
+==== Element
+
+`Xtuple\Util\XML\Element\XMLElement` interface defines methods required to work with an XML element.
+
+The default implementation is provided by `Xtuple\Util\XML\Element\XMLElementSimple`, using `\SimpleXMLElement`. `XMLElementSimple` throws an exception, if a `\SimpleXMLElement` representing an XML attribute is passed.
+
+`Xtuple\Util\XML\Element\XMLElementString` is a shortcut for `XMLElementSimple` to provide XML as a string instead. `XMLElementString` throws an exception, if provided string can not be parsed as a valid XML.
+
+[source]
+----
+use Xtuple\Util\XML\Element\XMLElementSimple;
+use Xtuple\Util\XML\Element\XMLElementString;
+
+$xml = <<<EXAMPLE
+  <Configuration environment="dev" debug="true">
+    <Database parameter="prefix"></Database>
+    <Database parameter="name">phpunit</Database>
+    <Parameter name="timezone">America/New_York</Parameter>
+    Do not change
+  </Configuration>
+EXAMPLE;
+
+// Default format. Convenient, if a \SimpleXMLElement was provided
+$element = new XMLElementSimple(new \SimpleXMLElement($xml));
+
+// Shortcut format, when $xml is provided as a string.
+$element = new XMLElementString($xml);
+
+// Returns 'Configuration'
+$element->name();
+
+// Returns 'Do not change' (the free form content of the <Configuration> tag)
+$element->value();
+
+// Returns original $xml XML, but prepended with <xml
+$element->xml();
+
+// Returns List<XMLElement> of all children elements (three total in this example)
+$element->children();
+
+// Children can be filtered by tag: only two elements returned
+$element->children('Database');
+
+// Equivalent form with the root tag:
+$element->children('/Configuration/Database');
+
+// XPath expression may be used to filter children. An empty list returned if no matching elements found.
+if ($dbName = $element->children('Database[@parameter="name"]')->get(0)) {
+  // Only one element <Database> has attribute parameter with the value "name".
+  // Returns 'phpunit' for the example above.
+  $dbName->value();
+}
+
+// Returns 'true'
+$element->attribute('debug')->value();
+
+// Unlike children() method, attribute() always returns an XMLAttribute object.
+// Returns null, as 'schema' attribute does not exist.
+$element->attribute('schema')->value();
+
+// Returns all attributes as Map<XMLAttribute> (XMLAttribute name() is used as keys)
+$element->attributes()
+
+// Unlike attribute() method, Map<XMLAttribute>::get() return null if the attribute does not exist
+if ($environment = $element->attributes()->get('environment')) {
+  // Returns 'dev'
+  $environment->value();
+}
+
+// Unlike \SimpleXMLElement, XMLElement can not be an attribute.
+$simple = new \SimpleXMLElement('<Test name="test" />');
+// $attribute is an instance of \SimpleXMLElement too
+$attribute = $simple->attributes('name');
+// Throws an exception, as it's not a valid XML element. Use XMLElementSimple instead.
+new XMLElementSimple($attribute);
+----
+
+`Xtuple\Util\XML\Element\XMLElement::value()` method is generic and its return value can be redefined by implementations (or sub-interfaces) to return a more specific type. For example, `Xtuple\Util\XML\Element\Type\ArrayXMLElement::value()` returns an array built from an `XMLElement` and `Xtuple\Util\XML\Element\Type\BooleanXMLElement::value()` returns true or false.
+
+[source]
+----
+use Xtuple\Util\XML\Element\Type\ArrayXMLElement;
+use Xtuple\Util\XML\Element\Type\BooleanXMLElement;
+use Xtuple\Util\XML\Element\XMLElementString;
+
+$xml = <<<EXAMPLE
+  <Configuration version="1">
+    <Environment>dev</Environment>
+    <Debug>true</Debug>
+    <Database type="postgres"><Name>phpunit</Name></Database>
+  </Configuration>
+EXAMPLE;
+
+$element = new XMLElementString($xml);
+
+$debug = new BooleanXMLElement($element->children('Debug')->get(0));
+// Returns true, for element string value 'true' (check is case insensitive)
+$debug->value() === true;
+
+$config = new ArrayXMLElement($element);
+// <Configuration> XML converted into array. Note: attributes and elements names cases are preserved.
+$config->value() == [
+  'version' => '1',
+  'Environment' => 'dev',
+  'Debug' => 'true',
+  'Database' => [
+    'type' => 'postgres',
+    'Name' => 'phpunit',
+  ],
+];
+----
