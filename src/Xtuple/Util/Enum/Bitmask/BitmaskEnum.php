@@ -29,6 +29,13 @@ abstract class BitmaskEnum {
     return $this->value === $value;
   }
 
+  public final function has(int $flag): bool {
+    if ($flag) {
+      return ($this->value & $flag) > 0;
+    }
+    return true;
+  }
+
   /** @var int[] */
   private static $max;
 

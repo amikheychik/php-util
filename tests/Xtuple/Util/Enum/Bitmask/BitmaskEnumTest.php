@@ -18,6 +18,9 @@ class BitmaskEnumTest
     self::assertEquals(0b1100, $bitmask->value());
     $bitmask = new CorrectBitmask(CorrectBitmask::TWO | CorrectBitmask::FOUR | CorrectBitmask::EIGHT);
     self::assertTrue($bitmask->is(0b1110));
+    self::assertTrue($bitmask->has(0b0));
+    self::assertTrue($bitmask->has(0b10));
+    self::assertFalse($bitmask->has(0b01));
     new IncorrectBitmask(IncorrectBitmask::ZERO);
   }
 

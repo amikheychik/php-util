@@ -299,6 +299,184 @@ $stack->pop()->value;
 $stack->push('three');
 ----
 
+=== Enum
+
+`Xtuple\Util\Enum` package provides classes to simplify enums declaration. Using enum classes instead of regular constants allows to have strictly checked types and values. Each type of enum is based on an abstract class that checks available values through reflection. Allowed values should declared as public constants.
+
+==== Bitmask
+
+`Xtuple\Util\Enum\Bitmask\BitmaskEnum` should be used for bit masks. It strictly checks for the bit mask to have all flags possible.
+
+[source]
+----
+use Xtuple\Util\Enum\Bitmask\BitmaskEnum;
+
+final class Access
+  extends BitmaskEnum {
+  // Combination as the flags must allow to have all flags up (e.g. 0b111 in this example)
+  public const READ = 0b001;
+  public const WRITE = 0b010;
+  public const EXECUTE = 0b100;
+
+  // A shortcut static constructor for each custom value is possible
+  public static function DEFAULT(): Access {
+    return new self(self::READ | self::WRITE);
+  }
+
+  // A value check shortcut for each basic or custom value is possible
+  public function isDefault(): bool {
+    return $this->is(self::READ | self::WRITE);
+  }
+}
+
+// Different declarations are possible
+$access = new Access(Access::READ | Access::WRITE);
+$access = new Access(3);
+$access = Access::DEFAULT(); // if a shortcut method provided
+
+// Different value checks are possible
+$access->value() === Access::READ | Access::WRITE;
+$access->is(3);
+$access->isDefault();
+
+// Specific flag check
+$access->has(Access::READ) === true;
+$access->has(Access::EXECUTE) === false;
+----
+
+==== Char
+
+`Xtuple\Util\Enum\Char\StringEnum` should be used to provide a set of string constants.
+
+[source]
+----
+use Xtuple\Util\Enum\Char\StringEnum;
+
+final class Status
+  extends StringEnum {
+  // Only declared as constants values are allowed
+  public const UNPUBLISHED = 'unpublished';
+  public const DRAFT = 'draft';
+  public const PUBLISHED = 'published';
+
+  // A shortcut static constructor for each value is recommended
+  public static function UNPUBLISHED(): Status {
+    return new self(self::UNPUBLISHED);
+  }
+
+  // A value check shortcut for each value is recommended
+  public function isUnpublished(): bool {
+    return $this->is(self::UNPUBLISHED);
+  }
+}
+
+// These declarations would return the same value (but different objects)
+$status = new Status(Status::UNPUBLISHED);
+$status = new Status('unpublished');
+$status = Status::UNPUBLISHED(); // if a shortcut method provided
+
+// Check for the value
+$status->value() === 'unpublished';
+$status->is(Status::UNPUBLISHED);
+$status->isUnpublished();  // if a shortcut method provided
+
+// Providing wrong value would cause an exception
+try {
+  // E.g. $row is loaded from a database
+  $row = [
+    'status' => 'review',
+  ];
+  $status = new Status($row['status']);
+}
+catch (\Exception $e) {
+  // Value `review` is not supported...
+  $e->getMessage();
+}
+----
+
+`Xtuple\Util\Enum\Char\OptionalStringEnum` allows to declare a `string` enum with allowed `null` value.
+
+[source]
+----
+use Xtuple\Util\Enum\Char\OptionalStringEnum;
+
+final class Status
+  extends OptionalStringEnum {
+  // Only declared as constants values are allowed
+  public const UNPUBLISHED = 'unpublished';
+  public const PUBLISHED = 'published';
+
+  // A shortcut static constructor for each value is recommended
+  public static function UNDEFINED(): Status {
+    return new self(null);
+  }
+
+  // A value check shortcut for each value is recommended
+  public function isUndefined(): bool {
+    return $this->is(null);
+  }
+}
+
+// These declarations would return the same value (but different objects)
+$status = new Status(null);
+$status = Status::UNDEFINED(); // if a shortcut method provided
+
+// Check for the value
+$status->value() === 'null';
+$status->is(null);
+$status->isUndefined();  // if a shortcut method provided
+----
+
+==== Integer
+
+`Xtuple\Util\Enum\Integer\IntegerEnum` should be used to provide a set of integer constants.
+
+[source]
+----
+use Xtuple\Util\Enum\Integer\IntegerEnum;
+
+final class Status
+  extends IntegerEnum {
+  // Only declared as constants values are allowed
+  public const UNPUBLISHED = 0;
+  public const DRAFT = 1;
+  public const PUBLISHED = 2;
+
+  // A shortcut static constructor for each value is recommended
+  public static function UNPUBLISHED(): Status {
+    return new self(self::UNPUBLISHED);
+  }
+
+  // A value check shortcut for each value is recommended
+  public function isUnpublished(): bool {
+    return $this->is(self::UNPUBLISHED);
+  }
+}
+
+// These declarations would return the same value (but different objects)
+$status = new Status(Status::UNPUBLISHED);
+$status = new Status(0);
+$status = Status::UNPUBLISHED(); // if a shortcut method provided
+
+// Check for the value
+$status->value() === 0;
+$status->is(Status::UNPUBLISHED);
+$status->isUnpublished();  // if a shortcut method provided
+
+// Providing wrong value would cause an exception
+try {
+  // E.g. $row is loaded from a database
+  $row = [
+    'status' => 3,
+  ];
+  $status = new Status($row['status']);
+}
+catch (\Exception $e) {
+  // Value `3` is not supported...
+  $e->getMessage();
+}
+----
+
 === Exception
 
 `Xtuple\Util\Exception` package provides a set of classes to throw translatable exceptions.
