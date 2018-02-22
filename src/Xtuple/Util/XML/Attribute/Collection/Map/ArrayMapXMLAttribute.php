@@ -14,4 +14,20 @@ final class ArrayMapXMLAttribute
   public function __construct(array $elements = []) {
     parent::__construct(XMLAttribute::class, $elements, 'name');
   }
+
+  public function __toString(): string {
+    $attributes = [];
+    foreach ($this as $attribute) {
+      /** @var XMLAttribute $attribute */
+      $attributes[] = $attribute->__toString();
+    }
+    return implode(' ', $attributes);
+  }
+
+  public function getOptional(XMLAttribute $default): XMLAttribute {
+    if ($attribute = $this->get($default->name())) {
+      return $attribute;
+    }
+    return $default;
+  }
 }

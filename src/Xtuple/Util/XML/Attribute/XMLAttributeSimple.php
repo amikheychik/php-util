@@ -16,6 +16,13 @@ final class XMLAttributeSimple
     $this->element = $element;
   }
 
+  public function __toString(): string {
+    return strtr('{name}="{value}"', [
+      '{name}' => $this->name(),
+      '{value}' => $this->value(),
+    ]);
+  }
+
   public function name(): string {
     return $this->element->getName();
   }

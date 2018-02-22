@@ -10,9 +10,13 @@ class XMLAttributeTest
     $attribute = new XMLAttributeStruct('name', 'value');
     self::assertEquals('name', $attribute->name());
     self::assertEquals('value', $attribute->value());
+    self::assertEquals('name="value"', (string) $attribute);
+    $attribute = new XMLAttributeStruct('name', '');
+    self::assertEquals('name=""', (string) $attribute);
     $attribute = new XMLAttributeStruct('bool', true);
     self::assertEquals('bool', $attribute->name());
     self::assertTrue($attribute->value());
+    self::assertEquals('bool="1"', (string) $attribute);
   }
 
   /**
@@ -24,6 +28,23 @@ class XMLAttributeTest
     $attribute = new XMLAttributeSimple($simple->attributes()['name']);
     self::assertEquals('name', $attribute->name());
     self::assertEquals('value', $attribute->value());
+    self::assertEquals('name="value"', (string) $attribute);
     new XMLAttributeSimple($simple);
+  }
+
+  public function testAbstract() {
+    $attribute = new TestAbstract(new XMLAttributeStruct('test', 3.1415), '3.14');
+    self::assertEquals('test', $attribute->name());
+    self::assertEquals(3.1415, $attribute->value());
+    self::assertEquals('test="3.14"', (string) $attribute);
+    $attribute = new TestAbstract(new XMLAttributeStruct('test', 3.1415));
+    self::assertEquals('test="3.1415"', (string) $attribute);
+  }
+}
+
+final class TestAbstract
+  extends AbstractXMLAttribute {
+  public function __construct(XMLAttribute $attribute, ?string $value = null) {
+    parent::__construct($attribute, $value);
   }
 }

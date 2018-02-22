@@ -4,9 +4,7 @@ namespace Xtuple\Util\XML\Element;
 
 use Xtuple\Util\XML\Attribute\Collection\Map\ArrayMapXMLAttribute;
 use Xtuple\Util\XML\Attribute\Collection\Map\MapXMLAttribute;
-use Xtuple\Util\XML\Attribute\XMLAttribute;
 use Xtuple\Util\XML\Attribute\XMLAttributeSimple;
-use Xtuple\Util\XML\Attribute\XMLAttributeStruct;
 use Xtuple\Util\XML\Element\Collection\Sequence\ArrayListXMLElement;
 use Xtuple\Util\XML\Element\Collection\Sequence\ListXMLElement;
 
@@ -32,6 +30,14 @@ final class XMLElementSimple
     $this->element = $element;
   }
 
+  public function __toString(): string {
+    return trim(preg_replace("/^<\\?xml.*\\?>\n/", '', $this->element->asXML()));
+  }
+
+  public function name(): string {
+    return $this->element->getName();
+  }
+
   public function attributes(?string $ns = null, bool $isPrefix = false): MapXMLAttribute {
     $attributes = [];
     foreach ($this->element->attributes($ns, $isPrefix) as $attribute) {
@@ -39,10 +45,6 @@ final class XMLElementSimple
       $attributes[] = new XMLAttributeSimple($attribute);
     }
     return new ArrayMapXMLAttribute($attributes);
-  }
-
-  public function attribute(string $name, ?string $ns = null, bool $isPrefix = false): XMLAttribute {
-    return $this->attributes($ns, $isPrefix)->get($name) ?: new XMLAttributeStruct($name, null);
   }
 
   public function children(?string $xpath = null, ?string $ns = null, bool $isPrefix = false): ListXMLElement {
@@ -56,19 +58,15 @@ final class XMLElementSimple
     return new ArrayListXMLElement($elements);
   }
 
-  public function name(): string {
-    return $this->element->getName();
-  }
-
   public function value() {
     return $this->element->__toString();
   }
 
-  public function xml(): string {
-    if (empty(trim($this->element->__toString()))
-      && $this->children()->isEmpty()) {
-      return '';
-    }
-    return $this->element->asXML();
+  public function isEmpty(): bool {
+    return (
+      empty($this->value())
+      && $this->attributes()->isEmpty()
+      && $this->children()->isEmpty()
+    );
   }
 }

@@ -14,6 +14,13 @@ final class XMLAttributeStruct
     $this->value = $value;
   }
 
+  public function __toString(): string {
+    return strtr('{name}="{value}"', [
+      '{name}' => $this->name,
+      '{value}' => $this->value,
+    ]);
+  }
+
   public function name(): string {
     return $this->name;
   }

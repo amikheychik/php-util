@@ -14,4 +14,12 @@ final class ArrayListXMLElement
   public function __construct(array $elements = []) {
     parent::__construct(XMLElement::class, $elements);
   }
+
+  public function __toString(): string {
+    $xml = [];
+    foreach ($this as $element) {
+      $xml[] = (string) $element;
+    }
+    return implode('', $xml);
+  }
 }

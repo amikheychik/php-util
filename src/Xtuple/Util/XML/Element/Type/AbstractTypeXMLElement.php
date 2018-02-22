@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\XML\Element;
+namespace Xtuple\Util\XML\Element\Type;
 
 use Xtuple\Util\XML\Attribute\Collection\Map\MapXMLAttribute;
 use Xtuple\Util\XML\Element\Collection\Sequence\ListXMLElement;
+use Xtuple\Util\XML\Element\XMLElement;
 
-abstract class AbstractXMLElement
+abstract class AbstractTypeXMLElement
   implements XMLElement {
   /** @var XMLElement */
   private $xml;
@@ -28,10 +29,6 @@ abstract class AbstractXMLElement
 
   public final function children(?string $xpath = null, ?string $ns = null, bool $isPrefix = false): ListXMLElement {
     return $this->xml->children($xpath, $ns, $isPrefix);
-  }
-
-  public final function value() {
-    return $this->xml->value();
   }
 
   public final function isEmpty(): bool {

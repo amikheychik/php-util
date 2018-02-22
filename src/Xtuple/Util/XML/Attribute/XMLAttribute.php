@@ -3,6 +3,8 @@
 namespace Xtuple\Util\XML\Attribute;
 
 interface XMLAttribute {
+  public function __toString(): string;
+
   public function name(): string;
 
   /**

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\XML\Element\Type;
+namespace Xtuple\Util\XML\Element\Type\Dictionary;
 
 use Xtuple\Util\XML\Element\XMLElement;
 
