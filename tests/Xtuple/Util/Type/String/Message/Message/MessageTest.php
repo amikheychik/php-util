@@ -20,6 +20,19 @@ class MessageTest
     ]));
     self::assertEquals('Query http://httpbin.org/status/404 failed: Page not found', $message->__toString());
     self::assertEquals('Query {query} failed: {message}', $message->template());
+    self::assertEquals('Page not found', $message->arguments()->get('message')->__toString());
+    self::assertNull($message->arguments()->get('{message}'));
+  }
+
+  public function testWithToken() {
+    $message = new MessageWithTokens('API request failed: ({code}) {message}', [
+      'code' => 1024,
+      'message' => 'Access denied',
+    ]);
+    self::assertEquals('API request failed: (1024) Access denied', $message->__toString());
+    self::assertEquals('API request failed: ({code}) {message}', $message->template());
+    self::assertEquals('Access denied', $message->arguments()->get('message')->__toString());
+    self::assertNull($message->arguments()->get('{message}'));
   }
 
   public function testPlurals() {

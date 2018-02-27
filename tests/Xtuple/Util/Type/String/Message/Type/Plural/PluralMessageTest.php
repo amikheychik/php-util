@@ -117,15 +117,15 @@ class PluralMessageTest
 
   public function testArguments() {
     $plural = new PluralMessageStruct(
-      new IntegerMessage(4),
+      new IntegerMessage(4321),
       new StringMessage('{count} users are {status}'),
       new StringMessage('One user is {status}'),
       null,
       new ArraySetArgument([
-        new StringArgument('status', "online"),
+        new StringArgument('status', 'online'),
       ])
     );
-    self::assertEquals('4 users are online', $plural->__toString());
+    self::assertEquals('4,321 users are online', $plural->__toString());
   }
 
   public function testStringMessage() {

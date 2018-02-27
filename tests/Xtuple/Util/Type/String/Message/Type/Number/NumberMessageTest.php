@@ -51,9 +51,11 @@ class NumberMessageTest
     self::assertEquals('5,000.543', (string) $argument);
     self::assertEquals('5000.54321', $argument->template());
     self::assertEquals('5 000,543', $argument->format('ru_RU')); // 5&nbsp;000,543
-    $argument = new FloatArgument('count', 6.54321, '#,#000.000#');
+    $argument = new FloatArgument('count', 6.54321, '#,#00.000#');
     self::assertEquals('6.54321', $argument->template());
     self::assertEquals('006.5432', (string) $argument);
+    $argument = new FloatArgument('count', 123456.54321, '#,#000.000#');
+    self::assertEquals('12,3456.5432', (string) $argument);
     $argument = new FloatArgument('count', 6543.21, '#.#');
     self::assertEquals('6543.21', $argument->template());
     self::assertEquals('6543.2', (string) $argument);
