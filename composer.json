@@ -19,7 +19,8 @@
   "require": {
     "php": "^7.1",
     "ext-intl": "*",
-    "ext-simplexml": "*"
+    "ext-simplexml": "*",
+    "lib-openssl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0"

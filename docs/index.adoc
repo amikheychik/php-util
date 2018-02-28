@@ -844,7 +844,33 @@ $decoded = new HTMLDecodedStringFromEncoded($encoded);
 $decoded->__toString() === '<a href="/">Home\'s page</a>';
 ----
 
-==== Message (Translatable string)
+===== Transliteration
+
+`Xtuple\Util\Type\String\Transliteration` package provides a basic classes to transform input in non-latin characters to latin. http://php.net/manual/en/book.intl.php[PHP Intl extension] is used to perform transliteration.
+
+`Xtuple\Util\Type\String\Transliteration\Slug` allows to prepare user input to be used in URLs.
+
+.Using `Xtuple\Util\Type\String\Transliteration`
+[source]
+----
+use Xtuple\Util\Type\String\Transliteration\ASCIITransliterationString;
+use Xtuple\Util\Type\String\Transliteration\Slug\URLSlugString;
+
+// Transforming text into ASCII characters text
+$ascii = new ASCIITransliterationString('Königsberg in Ostpreußen, 1255');
+$ascii->__toString() === 'Konigsberg in Ostpreussen, 1255';
+$ascii->original() === 'Königsberg in Ostpreußen, 1255';
+
+// Using text in URL
+$slug = new URLSlugString('Königsberg_in_Ostpreußen, 1255');
+// All non alphanum characters , except underscore ('_') are replaced with '-'. Text is turned to lowercase.
+$slug->__toString() === 'konigsberg_in_ostpreussen--1255';
+// This include slashes `/`, as they are used to separate parts (slugs) of the URL.
+$slug = new URLSlugString('Ostpreußen/Königsberg/1255');
+$slug->__toString() === 'ostpreussen-konigsberg-1255';
+----
+
+==== Message (Localizable string)
 
 `Xtuple\Util\Type\String\Chars\Message` package provides set of localizable/translatable string classes. Name `Message` was inspired by the underlying http://php.net/manual/en/book.intl.php[PHP Intl extension] terminology (see http://php.net/manual/en/class.messageformatter.php[MessageFormatter class]). PHP `intl` extension wraps up http://site.icu-project.org[ICU - International Components for Unicode] library, which makes localization handling highly reliable.
 
@@ -1040,6 +1066,36 @@ $select = new SelectMessageStruct('other', new StringMessage('Their gender is {g
 $select->__toString() === 'Their gender is unknown';
 ----
 
+==== UUID
+
+`Xtuple\Util\Type\UUID` package allows to generate or handle https://en.wikipedia.org/wiki/Universally_unique_identifier[Universally Unique Identifiers]. Currently only UUID v4 generation is supported. `UUID` package requires OpenSSL library to generate cryptographically strong random UUIDs.
+
+.Using `Xtuple\Util\Type\UUID`
+[source]
+----
+use Xtuple\Util\Type\UUID\OptionalUUIDString;
+use Xtuple\Util\Type\UUID\UUIDString;
+use Xtuple\Util\Type\UUID\UUIDv4;
+
+$uuid = new UUIDv4(); // <1>
+// Returns generated UUID:
+$uuid->__toString();
+// Returns generated UUID as Uniform Resource Name (URN):
+$uuid->urn();
+// UUIDs can be checked for equality.
+$uuid->equals(new UUIDv4());
+
+// An exception is thrown, if passed string is not a valid UUID
+$uuid = new UUIDString((string) $uuid);
+// If input may not be a valid UUID, and exception check is undesired, use Optional
+$optional = new OptionalUUIDStrong((string) $uuid);
+// Returns true, if UUID is valid
+$optional->isPresent();
+// Returns UUID object, if UUID is valid; returns null otherwise
+$optional->value();
+----
+<1> `UUIDv4` constructor may throw an exception, if OpenSSL library can't generate cryptographically strong random bytes. It's unlikely to happen, but https://secure.php.net/manual/en/function.openssl-random-pseudo-bytes.php["some systems may be broken or old."]
+
 === XML
 
 `Xtuple\Util\XML` package provides classes to simplify work with XML. http://us3.php.net/manual/en/book.simplexml.php[SimpleXML] PHP extension is used for the XML handling. Unlike `\SimpleXMLElement`, this package has a strict separation between an XML attributes, elements and documents.
@@ -1226,7 +1282,7 @@ $attributes->count() === 2;
 
 ==== Element
 
-`Xtuple\Util\XML\Element\XMLElement` interface defines methods required to work with an XML element. Unlike `\SimpleXMLElement`, `XMLElement` does not represent an XML document (that should start with an `<?xml` tag`, use ``Xtuple\Util\XML\Document\XMLDocument` instead). Implementations of the interface must be able to handle any set of data that can be converted into an XML element (for example, see `Xtuple\Util\XML\Element\XMLElementSequence`).
+`Xtuple\Util\XML\Element\XMLElement` interface defines methods required to work with an XML element. Unlike `\SimpleXMLElement`, `XMLElement` does not represent an XML document (that should start with an `<?xml` tag, use `Xtuple\Util\XML\Document\XMLDocument` instead). Implementations of the interface must be able to handle any set of data that can be converted into an XML element (for example, see `Xtuple\Util\XML\Element\XMLElementSequence`).
 
 `XMLElement::__toString()` must return a valid XML element string, trimmed and with no prepended `<?xml` tag (even if the input had it).
 
