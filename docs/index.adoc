@@ -299,6 +299,49 @@ $stack->pop()->value;
 $stack->push('three');
 ----
 
+==== Tree
+
+`Xtuple\Util\Collection\Tree` package handles nested data (but not necessarily using tree-representation to do it). `Tree` is mutable and provides `set()` and `remove()` methods to change its state. `Tree::data(): array` method returns all the data as a (nested) array. `Tree` keys may be both strings or integers, but all the specific data is retrieved using key paths to the node. `Tree` is iterable, but should iterate only through the top-level keys and elements (as otherwise it's not clear how to cast nested keys to strings or integers.). Similarly, `Tree::count()` returns the number of top-level data, and `Tree::isEmpty()` doesn't check all the leaves.
+
+As with other `Xtuple\Util\Collection` packages, abstract `Tree` classes may be used implementing new interfaces to provide custom method to access specific keys.
+
+.Using `Xtuple\Util\Collection\Tree\ArrayTree`
+[source]
+----
+use Xtuple\Util\Collection\Tree\ArrayTree\ArrayTree;
+
+$tree = new ArrayTree([
+  'name' => 'xtuple/util',
+  'require' => [
+    'php' => '^7.1',
+    'ext-intl' => '*',
+    'ext-simplexml' => '*',
+    'lib-openssl' => '*',
+  ],
+]);
+
+// Following is true:
+$tree->isEmpty() === false;
+$tree->count() === 2;
+// Note: get(), set(), remove() require an array of strings and integers.
+$tree->get(['name']) === 'xtuple/util';
+// set() returns previous value of the (nested) property
+$tree->set(['description'], 'xTuple PHP utility classes') === null;
+$tree->set(['require', 'php'], '^7.2') === '^7.1';
+// remove() returns last value of the (nested) property
+$tree->remove(['require', 'lib-openssl']) === '*';
+// Final data may be retrieved as array:
+$tree->data() === [
+  'name' => 'xtuple/util',
+  'description' => 'xTuple PHP utility classes',
+  'require' => [
+    'php' => '^7.2',
+    'ext-intl' => '*',
+    'ext-simplexml' => '*',
+  ],
+];
+----
+
 === Enum
 
 `Xtuple\Util\Enum` package provides classes to simplify enums declaration. Using enum classes instead of regular constants allows to have strictly checked types and values. Each type of enum is based on an abstract class that checks available values through reflection. Allowed values should declared as public constants.
