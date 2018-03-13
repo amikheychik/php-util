@@ -53,7 +53,7 @@ final class XMLElementSimple
       ? $this->element->children($ns, $isPrefix)
       : $this->element->xpath($xpath);
     foreach ($children as $child) {
-      $elements[] = new XMLElementSimple($child);
+      $elements[] = new XMLElementString($child->asXML());
     }
     return new ArrayListXMLElement($elements);
   }
