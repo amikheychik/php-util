@@ -29,8 +29,21 @@ final class ArrayXMLElement {
     foreach ($this->element->attributes($this->ns, $this->isPrefix) as $attribute) {
       $value[$attribute->name()] = $attribute->value();
     }
+    $lists = [];
     foreach ($this->element->children(null, $this->ns, $this->isPrefix) as $child) {
-      $value[$child->name()] = (new ArrayXMLElement($child))->value();
+      if (!isset($value[$child->name()])) {
+        $value[$child->name()] = (new ArrayXMLElement($child))->value();
+      }
+      else {
+        $lists[] = $child->name();
+        $value[$child->name()] = (array) $value[$child->name()];
+        $value[$child->name()][] = (new ArrayXMLElement($child))->value();
+      }
+    }
+    $lists = array_unique($lists);
+    if (sizeof($lists) === 1) {
+      $value = array_merge($value, $value[$lists[0]]);
+      unset($value[$lists[0]]);
     }
     return $value;
   }
