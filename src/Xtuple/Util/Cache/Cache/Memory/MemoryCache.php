@@ -43,7 +43,16 @@ final class MemoryCache
   }
 
   public function delete(Key $key): void {
-    $this->cache()->remove((new MemoryCacheKey($this->bucket, $key))->key());
+    $path = (new MemoryCacheKey($this->bucket, $key))->key();
+    $this->cache()->remove($path);
+    do {
+      array_pop($path);
+      $value = $this->cache()->get($path);
+      if (is_array($value) && empty($value)) {
+        $this->cache()->remove($path);
+      }
+    }
+    while (sizeof($path) > 1);
   }
 
   public function insert(Record $record): Record {

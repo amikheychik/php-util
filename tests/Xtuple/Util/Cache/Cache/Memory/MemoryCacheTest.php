@@ -72,8 +72,16 @@ final class MemoryCacheTest
 
   public function testClearAndEmpty() {
     $cache = new MemoryCache('test');
+    $cache->clear();
+    self::assertTrue($cache->isEmpty());
     $cache->insert(new RecordStruct(new KeyStruct(['system', 'user', '1']), 'Bond'));
     self::assertFalse($cache->isEmpty());
+    $cache->insert(new RecordStruct(new KeyStruct(['system', 'user', '2']), 'Bond'));
+    $cache->delete(new KeyStruct(['system', 'user', '1']));
+    self::assertFalse($cache->isEmpty());
+    $cache->delete(new KeyStruct(['system', 'user', '2']));
+    self::assertTrue($cache->isEmpty());
+    $cache->insert(new RecordStruct(new KeyStruct(['system', 'user', '1']), 'Bond'));
     $cache->clear();
     self::assertTrue($cache->isEmpty());
   }
