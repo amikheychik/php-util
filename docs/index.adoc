@@ -732,6 +732,70 @@ $nullalbeScalar->cast(null);
 
 `Xtuple\Util\Type` package contains subpackages to handle real-world data types.
 
+==== DateTime
+
+`Xtuple\Util\Type\DateTime` package handles dates and time information. It uses PHP core https://secure.php.net/manual/en/book.datetime.php[DateTime] package underneath.
+
+`Xtuple\Util\Type\DateTime\DateTime` represents date and time in UTC. It's serializable and JSON serializable. To format `DateTime` into a custom string use `Xtuple\Util\Type\String\Message\Type\DateTime` package.
+
+`Xtuple\Util\Type\DateTime\Timestamp` represents Unix timestamp.
+
+.Using `Xtuple\Util\Type\DateTime` package
+[source]
+----
+use Xtuple\Util\Type\DateTime\DateTimeString;
+use Xtuple\Util\Type\DateTime\DateTimeStruct;
+
+// DateTime information depends on the timezone. Examples are shown for a specific timezone.
+$default = ini_get('date.timezone');
+ini_set('America/New_York');
+
+// \DateTimeImmutable is used as to handle datetime information. By default server timezone is used.
+$date = new DateTimeStruct(new \DateTimeImmutable('Jan 1, 2018'));
+// Jan 1, 2018 5am UTC
+$date->__toString() === '2018-01-01T05:00:00+00:00';
+$date->utc() === '2018-01-01T05:00:00Z';
+json_encode($date) === '"2018-01-01T05:00:00.000Z"';
+
+// Timezone information parsed from the date string preceeds explicit timezone
+$date = new DateTimeStruct(new \DateTimeImmutable('Jan 1, 2018 PST', new \DateTimeZone('UTC')));
+// Jan 1, 2018 8am UTC
+$date->utc() === '2018-01-01T08:00:00Z';
+
+// DateTimeString is a shortcut for DateTimeStruct
+$date = new DateTimeString('Jan 1, 2018', 'UTC');
+(string) $date === '2018-01-01T00:00:00+00:00';
+
+// DateTimeTimestamp is a shortcut to get DateTime from a timestamp.
+// Unix timestamp is counted from UTC, so custom timezone can not be specified.
+$date = new DateTimeTimestamp(0);
+(string) $date === '1970-01-01T00:00:00+00:00';
+
+try {
+  // Timestamp must be non-negative
+  $date = new DateTimeTimestamp(-1);
+}
+catch (\InvalidArgumentException $e) {
+  $e->getMessage() === 'Unix timestamp must be non-negative.';
+}
+
+$timestamp = new TimestampStruct(0);
+$timestamp->seconds() === 0;
+
+$timestamp = new TimestampDateTime(new DateTimeTimestamp(0));
+$timestamp->seconds() === 0;
+
+try {
+  // Timestamp must be non-negative
+  $date = new TimestampStruct(-1);
+}
+catch (\InvalidArgumentException $e) {
+  $e->getMessage() === 'Unix timestamp must be non-negative.';
+}
+
+ini_set($default);
+----
+
 ==== Measure
 
 `Xtuple\Util\Type\Measure` package handles units of measurement.
@@ -995,6 +1059,34 @@ Various types of messages are present in `Xtuple\Util\Type\String\Message\Type`.
 String (`Xtuple\Util\Type\String\Message\Type\String`) is the most basic one, used just to fulfill the strict type requirements of `Set<Argument>` and `Set<Message>`. Example of its usage is provided in the section above.
 
 Examples below provided only for `Message` types, but they can also be used with corresponding `Argument` types.
+
+[NOTE]
+`Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessage` default implementation currently do not use `php-intl` package, due to the difference between commonly used `date()` formatting options and `\IntlDateFormatter`. This also renders `Message::format($locale)` method redundant, as its parameter doesn't change the output. `DateTimeMessage::timezone(?string $timezone = null)` should be used to render date for the given format in the specified timezone.
+
+.Using `Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessage`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessageStruct;
+
+$default = ini_get('date.timezone');
+ini_set('date.timezone', 'America/New_York');
+
+// DateTime is in UTC, formatter uses system default date.timezone setting
+$date = new DateTimeMessageStruct(
+  new DateTimeString('2018-01-01T00:00:00Z'),
+  'm/d/Y g:ia'
+);
+// Default output is in UTC
+(string) $date === '01/01/2018 12:00am';
+// $locale doesn't change the format output
+$date->locale('ru_RU') === '01/01/2018 12:00am'; // instead of 01.01.2018 00:00
+// Default server timezone is used
+$date->timezone() === '12/31/2017 7:00pm';
+// Custom timezone is used
+$date->timezone('America/Los_Angeles') === '12/31/2017 4:00pm';
+
+ini_set('date.timezone', $default);
+----
 
 .Using `Xtuple\Util\Type\String\Message\Type\Number\NumberMessage`
 [source]
