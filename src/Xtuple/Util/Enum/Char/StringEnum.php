@@ -2,7 +2,10 @@
 
 namespace Xtuple\Util\Enum\Char;
 
-abstract class StringEnum {
+use Xtuple\Util\Type\String\Chars;
+
+abstract class StringEnum
+  implements Chars {
   /** @var string */
   private $value;
 
@@ -19,6 +22,10 @@ abstract class StringEnum {
       ]));
     }
     $this->value = $value;
+  }
+
+  public function __toString(): string {
+    return $this->value;
   }
 
   public final function value(): string {

@@ -13,6 +13,7 @@ class StringEnumTest
    */
   public function testEnum() {
     $enum = new TestStringEnum(TestStringEnum::STRING);
+    self::assertEquals('value', (string) $enum);
     self::assertEquals('value', $enum->value());
     self::assertTrue($enum->is('value'));
     new TestStringEnum('0');
