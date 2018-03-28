@@ -3,7 +3,11 @@
 namespace Xtuple\Util\File\Path;
 
 interface Path {
-  public function absolute(): ?string;
+  /**
+   * @throws \InvalidArgumentException
+   * @return string
+   */
+  public function absolute(): string;
 
   public function exists(): bool;
 

@@ -1,14 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\File\Path;
+namespace Xtuple\Util\File\Path\Relative;
 
-abstract class AbstractPath
-  implements Path {
-  /** @var Path */
+abstract class AbstractRelativePath
+  implements RelativePath {
+  /** @var RelativePath */
   private $path;
 
-  public function __construct(Path $path) {
+  public function __construct(RelativePath $path) {
     $this->path = $path;
+  }
+
+  public final function relative(): string {
+    return $this->path->relative();
   }
 
   public final function absolute(): string {

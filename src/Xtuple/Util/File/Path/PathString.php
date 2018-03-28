@@ -11,19 +11,31 @@ final class PathString
     $this->path = $path;
   }
 
-  public function absolute(): ?string {
-    return realpath($this->path) ?: null;
+  public function absolute(): string {
+    if ($path = realpath($this->path)) {
+      return $path;
+    }
+    throw new \InvalidArgumentException(strtr('Path {path} does not exist', [
+      '{path}' => $this->path,
+    ]));
   }
 
   public function exists(): bool {
-    return !is_null($this->absolute());
+    if (realpath($this->path)) {
+      return true;
+    }
+    return false;
   }
 
   public function isDir(): bool {
-    return $this->exists() ? is_dir($this->absolute()) : false;
+    return $this->exists()
+      ? is_dir($this->absolute())
+      : false;
   }
 
   public function isFile(): bool {
-    return $this->exists() ? is_file($this->absolute()) : false;
+    return $this->exists()
+      ? is_file($this->absolute())
+      : false;
   }
 }

@@ -100,4 +100,14 @@ class ExceptionTest
       "\t\t- HTTP request to URL http://example.com failed",
     ]), $e->__toString());
   }
+
+  public function testLastError() {
+    $e = new LastErrorException('Last error');
+    self::assertEquals('Last error', $e->getMessage());
+    $previous = error_reporting(E_ERROR);
+    trigger_error('Test user warning', E_USER_WARNING);
+    $e = new LastErrorException('Last error');
+    self::assertEquals('Last error: Test user warning', $e->getMessage());
+    error_reporting($previous);
+  }
 }

@@ -3,17 +3,23 @@
 namespace Xtuple\Util\File\Path;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\File\Directory\Make\MakeDirectoryPath;
 
 class PathTest
   extends TestCase {
+  /**
+   * @expectedException \InvalidArgumentException
+   * @expectedExceptionMessage Path /tmp/phpunit/php-util/path does not exist
+   */
   public function testString() {
     $path = new TestPath(new PathString('/tmp'));
     self::assertEquals('/tmp', $path->absolute());
     self::assertFalse($path->isFile());
     self::assertTrue($path->isDir());
     self::assertTrue($path->exists());
-    $random = rand();
-    $pathString = "/tmp/php-util-{$random}";
+    /** @noinspection PhpUnhandledExceptionInspection */
+    new MakeDirectoryPath('/tmp/phpunit/php-util');
+    $pathString = '/tmp/phpunit/php-util/path';
     if (!touch($pathString)) {
       self::fail(strtr('Failed to create a test file {file}', [
         '{file}' => $pathString,
@@ -25,10 +31,11 @@ class PathTest
     self::assertFalse($path->isDir());
     self::assertTrue($path->exists());
     unlink($path->absolute());
-    self::assertNull($path->absolute());
+    rmdir('/tmp/phpunit/php-util');
     self::assertFalse($path->exists());
     self::assertFalse($path->isFile());
     self::assertFalse($path->isDir());
+    $path->absolute();
   }
 }
 
