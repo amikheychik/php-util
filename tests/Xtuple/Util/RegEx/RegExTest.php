@@ -6,72 +6,112 @@ use PHPUnit\Framework\TestCase;
 
 class RegExTest
   extends TestCase {
+  private $pattern = '/
+    (?:(\w+)\-)?                                        # prefix
+    (?P<ip>
+      (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])?\-){3} # first 3 parts of IP
+      (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])           # last part of IP
+    )                  
+    \.(.*)                                              # base domain
+  /x';
+
   public function testStruct() {
-    $regex = new TestRegEx(new RegExPattern('/(a+)(b*(c))(d?)/'));
-    self::assertEquals('/(a+)(b*(c))(d?)/', (string) $regex);
-    self::assertEquals('/(a+)(b*(c))(d?)/', $regex->pattern());
-    self::assertEquals('bcdaaa', $regex->replace('$2d$1', 'aaabc'));
-    self::assertEquals('aaa', $regex->group('aaabc', '1'));
+    $regex = new TestRegEx(new RegExPattern($this->pattern));
+    self::assertEquals($this->pattern, (string) $regex);
+    self::assertEquals($this->pattern, $regex->pattern());
+    self::assertEquals(
+      '255-249-199-99.example.com',
+      $regex->replace('$2.example.com', 'ec2-255-249-199-99.compute-1.amazonaws.com')
+    );
+    self::assertEquals('255-249-199-99', $regex->group('ec2-255-249-199-99.compute-1.amazonaws.com', 'ip'));
+    self::assertEquals('compute-1.amazonaws.com', $regex->group('ec2-255-249-199-99.compute-1.amazonaws.com', '3'));
   }
 
   public function testStructMatches() {
-    $regex = new TestRegEx(new RegExPattern('/(a+)(b*(c))(d?)/'));
+    $regex = new TestRegEx(new RegExPattern($this->pattern));
     self::assertEquals([
-      'aaabc',
-      'aaa',
-      'bc',
-      'c',
+      'ec2-255-249-199-99.compute-1.amazonaws.com',
+      'ec2',
+      '255-249-199-99',
+      'compute-1.amazonaws.com',
+      'ip' => '255-249-199-99',
+    ], $regex->matches('ec2-255-249-199-99.compute-1.amazonaws.com'));
+    self::assertEquals([
+      '255-249-199-99.compute-1.amazonaws.com',
       '',
-    ], $regex->matches('aaabc'));
+      '255-249-199-99',
+      'compute-1.amazonaws.com',
+      'ip' => '255-249-199-99',
+    ], $regex->matches('ec2-255-249-199-99.compute-1.amazonaws.com', false, 4));
     self::assertEquals([
-      'abc',
-      'a',
-      'bc',
-      'c',
-      '',
-    ], $regex->matches('aaabc', false, 2));
+      ['ec2-255-249-199-99.compute-1.amazonaws.com', 0],
+      ['ec2', 0],
+      ['255-249-199-99', 4],
+      ['compute-1.amazonaws.com', 19],
+      'ip' => ['255-249-199-99', 4],
+    ], $regex->matches('ec2-255-249-199-99.compute-1.amazonaws.com', true));
     self::assertEquals([
-      ['aaabc', 0],
-      ['aaa', 0],
-      ['bc', 3],
-      ['c', 4],
-      ['', 5],
-    ], $regex->matches('aaabc', true));
-    self::assertEquals([
-      ['abc', 2],
-      ['a', 2],
-      ['bc', 3],
-      ['c', 4],
-      ['', 5],
-    ], $regex->matches('aaabc', true, 2));
+      ['255-249-199-99.compute-1.amazonaws.com', 4],
+      ['', -1],
+      ['255-249-199-99', 4],
+      ['compute-1.amazonaws.com', 19],
+      'ip' => ['255-249-199-99', 4],
+    ], $regex->matches('ec2-255-249-199-99.compute-1.amazonaws.com', true, 4));
   }
 
   public function testStructAll() {
-    $regex = new TestRegEx(new RegExPattern('/(a+)(b*(c))(d?)/'));
+    $regex = new TestRegEx(new RegExPattern($this->pattern));
     self::assertEquals([
-      ['abc', 'aacd', 'aaabc'],
-      ['a', 'aa', 'aaa'],
-      ['bc', 'c', 'bc'],
-      ['c', 'c', 'c'],
-      ['', 'd', ''],
-    ], $regex->all('abc-aacd-aaabc'));
+      ['ec2-255-249-199-99.compute-1.amazonaws.com'],
+      ['ec2'],
+      ['255-249-199-99'],
+      ['compute-1.amazonaws.com'],
+      'ip' => ['255-249-199-99'],
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', false, false));
     self::assertEquals([
-      [['abc', 0], ['aacd', 4], ['aaabc', 9]],
-      [['a', 0], ['aa', 4], ['aaa', 9]],
-      [['bc', 1], ['c', 6], ['bc', 12]],
-      [['c', 2], ['c', 6], ['c', 13]],
-      [['', 3], ['d', 7], ['', 14]],
-    ], $regex->all('abc-aacd-aaabc', false, true));
+      [
+        'ec2-255-249-199-99.compute-1.amazonaws.com',
+        'ec2',
+        '255-249-199-99',
+        'compute-1.amazonaws.com',
+        'ip' => '255-249-199-99',
+      ],
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', true, false));
     self::assertEquals([
-      ['abc', 'a', 'bc', 'c', ''],
-      ['aacd', 'aa', 'c', 'c', 'd'],
-      ['aaabc', 'aaa', 'bc', 'c', ''],
-    ], $regex->all('abc-aacd-aaabc', true));
+      [
+        ['ec2-255-249-199-99.compute-1.amazonaws.com', 0],
+        ['ec2', 0],
+        ['255-249-199-99', 4],
+        ['compute-1.amazonaws.com', 19],
+        'ip' => ['255-249-199-99', 4],
+      ],
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', true, true));
     self::assertEquals([
-      [['abc', 0], ['a', 0], ['bc', 1], ['c', 2], ['', 3]],
-      [['aacd', 4], ['aa', 4], ['c', 6], ['c', 6], ['d', 7]],
-      [['aaabc', 9], ['aaa', 9], ['bc', 12], ['c', 13], ['', 14]],
-    ], $regex->all('abc-aacd-aaabc', true, true));
+      [
+        ['ec2-255-249-199-99.compute-1.amazonaws.com', 0],
+      ],
+      [
+        ['ec2', 0],
+      ],
+      [
+        ['255-249-199-99', 4],
+      ],
+      [
+        ['compute-1.amazonaws.com', 19],
+      ],
+      'ip' => [
+        ['255-249-199-99', 4],
+      ],
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', false, true));
+    self::assertEquals([
+      [
+        ['255-249-199-99.compute-1.amazonaws.com', 4],
+        ['', -1],
+        ['255-249-199-99', 4],
+        ['compute-1.amazonaws.com', 19],
+        'ip' => ['255-249-199-99', 4],
+      ],
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', true, true, 4));
   }
 }
 

@@ -2,9 +2,10 @@
 
 namespace Xtuple\Util\RegEx;
 
-interface RegEx {
-  public function __toString(): string;
+use Xtuple\Util\Type\String\Chars;
 
+interface RegEx
+  extends Chars {
   public function pattern(): string;
 
   public function matches(string $string, bool $capture = false, int $offset = 0): array;
