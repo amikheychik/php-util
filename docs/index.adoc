@@ -159,7 +159,7 @@ Inspections can be set for IDE or for the Project only. These settings are recom
 * PHP language level: `7.1 (const visibility, nullables, multiple exceptions)`
 * Analysis (_tab_):
 ** Call tree analysis depth: `1`
-** Unchecked exceptions: `\PHPUnit\Framework\AssertionFailedError`, `\PHPUnit\Framework\AssertionFailedError`
+** Unchecked exceptions: `\PHPUnit\Framework\AssertionFailedError`, `\SebastianBergmann\RecursionContext\InvalidArgumentException`
 
 == Subpackages
 
