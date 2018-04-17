@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Message;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 
 abstract class AbstractMessage
   implements Message {
@@ -25,7 +25,7 @@ abstract class AbstractMessage
     return $this->message->template();
   }
 
-  public final function arguments(): SetArgument {
+  public final function arguments(): MapArgument {
     return $this->message->arguments();
   }
 }

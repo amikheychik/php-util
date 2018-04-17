@@ -19,6 +19,9 @@ class BooleanXMLAttributeTest
     self::assertEquals('debug="false"', (string) $attribute);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testBooleanRequired() {
     $element = new XMLElementString('<Test debug="true" />');
     $attribute = new BooleanRequiredXMLAttribute(
@@ -38,6 +41,9 @@ class BooleanXMLAttributeTest
     self::assertFalse($attribute->value());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testBooleanOptional() {
     $element = new XMLElementString('<Test debug="true" />');
     $attribute = new BooleanOptionalXMLAttribute(
@@ -70,6 +76,9 @@ class BooleanXMLAttributeTest
     self::assertFalse($attribute->value());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testCommutativity() {
     $attribute = new XMLAttributeBoolean('debug', true);
     $debug = new BooleanRequiredXMLAttribute($attribute);

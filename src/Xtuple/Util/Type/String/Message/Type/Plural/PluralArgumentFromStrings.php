@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Plural;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 
 final class PluralArgumentFromStrings
   extends AbstractPluralArgument {
@@ -13,11 +13,11 @@ final class PluralArgumentFromStrings
    *                                 depend on the language.
    * @param null|string    $singular - singular form; is non-existent in some languages, but is required in English.
    * @param array          $plurals  - key-value list of other plural forms.
-   * @param SetArgument    $arguments
+   * @param MapArgument    $arguments
    * @param int|float|null $offset
    */
   public function __construct(string $key, $count, string $plural, ?string $singular = null, array $plurals = [],
-                              ?SetArgument $arguments = null, $offset = null) {
+                              ?MapArgument $arguments = null, $offset = null) {
     parent::__construct($key, new PluralMessageFromStrings($count, $plural, $singular, $plurals, $arguments, $offset));
   }
 }

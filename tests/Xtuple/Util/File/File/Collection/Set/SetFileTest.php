@@ -45,6 +45,9 @@ class SetFileTest
     ]);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function tearDown() {
     parent::tearDown();
     foreach ($this->files as $file) {
@@ -56,6 +59,9 @@ class SetFileTest
     rmdir($this->dir->path()->absolute());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testArraySet() {
     self::assertFalse($this->files->isEmpty());
     self::assertEquals(6, $this->files->count());
@@ -64,6 +70,9 @@ class SetFileTest
     self::assertEquals('Mock', $file->content());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testDirectorySetFileStruct() {
     $files = new TestDirectorySetFile(new DirectorySetFileStruct($this->dir));
     self::assertEquals($this->dir->path()->absolute(), $files->directory()->path()->absolute());
@@ -82,13 +91,15 @@ class SetFileTest
         self::assertEquals('empty', $fileInPath->name());
       }
     }
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals('Mock', (new RegularFile($files->get("{$this->dir->path()->absolute()}/file.mock")))->content());
     self::assertNull($files->get("{$this->dir->path()->absolute()}/mock.file"));
     $files = new TestDirectorySetFile(new DirectorySetFileStruct($this->empty));
     self::assertTrue($files->isEmpty());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testDirectoryFilteredSetFileStruct() {
     $files = new DirectoryFilteredSetFile($this->dir, new FileExtension('test'));
     self::assertEquals($this->dir->path()->absolute(), $files->directory()->path()->absolute());
@@ -102,7 +113,6 @@ class SetFileTest
         );
       }
     }
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals(
       'Test 1',
       (new RegularFile($files->get("{$this->dir->path()->absolute()}/file1.test")))->content()
@@ -114,6 +124,9 @@ class SetFileTest
     self::assertTrue($files->isEmpty());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testRecursiveDirectorySetFile() {
     $files = new RecursiveDirectorySetFile($this->sandbox);
     self::assertEquals($this->sandbox->path()->absolute(), $files->directory()->path()->absolute());
@@ -126,13 +139,15 @@ class SetFileTest
         $file->path()->absolute()
       );
     }
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals('Mock', (new RegularFile($files->get("{$this->dir->path()->absolute()}/file.mock")))->content());
     self::assertNull($files->get("{$this->dir->path()->absolute()}/mock.file"));
     $files = new RecursiveDirectorySetFile($this->empty);
     self::assertTrue($files->isEmpty());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testRecursiveDirectoryFilteredSetFile() {
     $files = new RecursiveDirectoryFilteredSetFile($this->sandbox, new FileExtension('test'));
     self::assertEquals($this->sandbox->path()->absolute(), $files->directory()->path()->absolute());
@@ -146,7 +161,6 @@ class SetFileTest
         );
       }
     }
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals(
       'Test 1',
       (new RegularFile($files->get("{$this->dir->path()->absolute()}/file1.test")))->content()

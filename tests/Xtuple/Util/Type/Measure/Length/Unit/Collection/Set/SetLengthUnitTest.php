@@ -3,14 +3,14 @@
 namespace Xtuple\Util\Type\Measure\Length\Unit\Collection\Set;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Exception\Exception;
 use Xtuple\Util\Type\Measure\Length\Unit\Unit\Meter;
 
 class SetLengthUnitTest
   extends TestCase {
   /**
-   * @expectedException Exception
+   * @expectedException \Throwable
    * @expectedExceptionMessage Length unit unknown is not supported
+   * @throws \Throwable
    */
   public function testLengthUnits() {
     $units = new LengthUnits();
@@ -19,6 +19,9 @@ class SetLengthUnitTest
     $units->find('unknown');
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testArraySetLengthUnit() {
     $units = new ArraySetLengthUnit([
       'M' => new Meter(),
@@ -30,7 +33,6 @@ class SetLengthUnitTest
     ], true);
     self::assertTrue($units->get('MTR')->is(new Meter()));
     self::assertNull($units->get('m'));
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertTrue($units->find('mtr')->is(new Meter()));
   }
 }

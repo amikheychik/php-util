@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Plural;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\Message;
 use Xtuple\Util\Type\String\Message\Type\Number\NumberMessage;
 
@@ -24,7 +24,7 @@ interface PluralMessage
 
   public function plural(): Message;
 
-  public function plurals(): SetArgument;
+  public function plurals(): MapArgument;
 
   public function offset(): ?float;
 }

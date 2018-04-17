@@ -10,6 +10,8 @@ final class ArraySetMassUnit
   extends AbstractStrictlyTypedArraySet
   implements SetMassUnit {
   /**
+   * @throws \Throwable - if a duplicate element exists.
+   *
    * @param MassUnit[]|iterable $elements
    * @param bool                $mapped
    */
@@ -17,9 +19,6 @@ final class ArraySetMassUnit
     parent::__construct(MassUnit::class, $elements, $mapped ? null : 'symbol');
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function find(string $search): MassUnit {
     $search = strtolower($search);
     foreach ($this as $symbol => $unit) {

@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class StrictlyTypedArrayStackTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage array is passed, \stdClass is required
+   * @expectedException \Throwable
+   * @expectedExceptionMessage All elements must be \stdClass. Element 0 of type \array given.
+   * @throws \Throwable
    */
   public function testConstructor() {
     new StrictlyTypedArrayStack(\stdClass::class);
@@ -21,8 +22,9 @@ class StrictlyTypedArrayStackTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage array is passed, \stdClass is required
+   * @throws \Throwable
    */
   public function testStack() {
     $stack = new StrictlyTypedArrayStack(\stdClass::class);

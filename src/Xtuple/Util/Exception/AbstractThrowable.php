@@ -66,6 +66,7 @@ abstract class AbstractThrowable
       $exceptions[] = $exception;
     }
     while ($exception = $exception->getPrevious());
+    /** @noinspection PhpUnhandledExceptionInspection - ensured to be \Throwable */
     return new ArrayListThrowable($exceptions);
   }
 

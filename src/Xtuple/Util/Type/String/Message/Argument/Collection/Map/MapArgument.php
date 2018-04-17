@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\Type\String\Message\Argument\Collection\Set;
+namespace Xtuple\Util\Type\String\Message\Argument\Collection\Map;
 
-use Xtuple\Util\Collection\Set\Set;
+use Xtuple\Util\Collection\Map\Map;
 use Xtuple\Util\Type\String\Message\Argument\Argument;
 
-interface SetArgument
-  extends Set {
+interface MapArgument
+  extends Map {
   /**
    * @param string $key
    *

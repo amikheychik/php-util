@@ -4,7 +4,8 @@ namespace Xtuple\Util\File\Path;
 
 interface Path {
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
+   *
    * @return string
    */
   public function absolute(): string;

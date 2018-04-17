@@ -2,6 +2,8 @@
 
 namespace Xtuple\Util\Enum\Integer;
 
+use Xtuple\Util\Exception\Exception;
+
 abstract class IntegerEnum {
   /** @var int */
   private $value;
@@ -13,10 +15,10 @@ abstract class IntegerEnum {
    */
   public final function __construct(int $value) {
     if (!in_array($value, self::values(), true)) {
-      throw new \InvalidArgumentException(strtr('Value `{value}` is not supported in {class} enum', [
-        '{value}' => $value,
-        '{class}' => static::class,
-      ]));
+      throw new Exception('Value `{value}` is not supported in {class} enum', [
+        'value' => $value,
+        'class' => static::class,
+      ]);
     }
     $this->value = $value;
   }
@@ -33,11 +35,11 @@ abstract class IntegerEnum {
   private static $values;
 
   /**
-   * @throws \ReflectionException
-   * @return array
+   * @return int[][]
    */
   private static function values(): array {
     if (!isset(self::$values[static::class])) {
+      /** @noinspection PhpUnhandledExceptionInspection - class exists as it's called through static */
       self::$values[static::class] = (new \ReflectionClass(static::class))->getConstants();
     }
     return self::$values[static::class];

@@ -37,14 +37,14 @@ final class RelativePathToFile
   }
 
   public function exists(): bool {
-    return !is_null($this->absolute());
+    return $this->to->path()->exists();
   }
 
   public function isDir(): bool {
-    return $this->exists() ? is_dir($this->absolute()) : false;
+    return $this->to->path()->isDir();
   }
 
   public function isFile(): bool {
-    return $this->exists() ? is_file($this->absolute()) : false;
+    return $this->to->path()->isFile();
   }
 }

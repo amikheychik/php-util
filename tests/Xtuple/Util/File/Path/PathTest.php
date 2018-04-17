@@ -8,8 +8,9 @@ use Xtuple\Util\File\Directory\Make\MakeDirectoryPath;
 class PathTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Path /tmp/phpunit/php-util/path does not exist
+   * @throws \Throwable
    */
   public function testString() {
     $path = new TestPath(new PathString('/tmp'));
@@ -17,7 +18,6 @@ class PathTest
     self::assertFalse($path->isFile());
     self::assertTrue($path->isDir());
     self::assertTrue($path->exists());
-    /** @noinspection PhpUnhandledExceptionInspection */
     new MakeDirectoryPath('/tmp/phpunit/php-util');
     $pathString = '/tmp/phpunit/php-util/path';
     if (!touch($pathString)) {

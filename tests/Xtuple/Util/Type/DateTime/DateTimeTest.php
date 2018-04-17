@@ -18,6 +18,9 @@ class DateTimeTest
     $this->date = date('Y-m-d\TH:i:s', $this->time);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     $dateTime = new DateTimeStruct(new \DateTimeImmutable($this->date));
     // utc() method returns time formatted UTC time in ISO 8601, while timezone() is actual timezone
@@ -53,6 +56,9 @@ class DateTimeTest
     ini_set('date.timezone', $default);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testStructCompare() {
     // These dates are parsed as UTC, because contain timezone in the format
     $dateTime1 = new DateTimeStruct(new \DateTimeImmutable('2018-01-01T00:00:00+00:00'));
@@ -76,6 +82,9 @@ class DateTimeTest
     self::assertFalse($dateTime1->equals($dateTime4));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testString() {
     $default = ini_get('date.timezone');
     ini_set('date.timezone', 'America/New_York');
@@ -112,6 +121,9 @@ class DateTimeTest
     self::assertTrue($utc->equals($pst));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testDaylightSavingsTime() {
     $pst = new DateTimeString('Sunday, March 11, 2018, 2:00:00 am', 'America/Los_Angeles');
     $pdt = new DateTimeString('Sunday, March 11, 2018, 3:00:00 am', 'America/Los_Angeles');
@@ -134,8 +146,9 @@ class DateTimeTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Unix timestamp must be non-negative.
+   * @throws \Throwable
    */
   public function testTimestamp() {
     // Timestamp by default use timezone of the system
@@ -170,6 +183,9 @@ class DateTimeTest
     new DateTimeTimestamp(-1);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testDateTimeImmutable() {
     $dateTime = new \DateTimeImmutable($this->date, null);
     self::assertEquals($this->time, $dateTime->getTimestamp());

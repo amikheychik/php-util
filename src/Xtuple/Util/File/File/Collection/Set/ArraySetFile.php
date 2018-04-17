@@ -9,9 +9,11 @@ final class ArraySetFile
   extends AbstractArraySet
   implements SetFile {
   /**
+   * @throws \Throwable - if a duplicate element exists.
+   *
    * @param File[]|iterable $elements
    */
-  public function __construct(array $elements = []) {
+  public function __construct(iterable $elements = []) {
     parent::__construct($elements, function (File $element) {
       return $element->path()->absolute();
     });

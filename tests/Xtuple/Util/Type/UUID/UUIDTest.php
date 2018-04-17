@@ -3,12 +3,11 @@
 namespace Xtuple\Util\Type\UUID;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Exception\Exception;
 
 class UUIDTest
   extends TestCase {
   /**
-   * @expectedException Exception
+   * @expectedException \Throwable
    * @expectedExceptionMessage String UUIDv4 is not a valid UUID
    * @throws \Throwable
    */

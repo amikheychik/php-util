@@ -2,12 +2,10 @@
 
 namespace Xtuple\Util\File\Directory;
 
-use Xtuple\Util\Exception\Exception;
-
 final class RelativeDirectory
   extends AbstractDirectory {
   /**
-   * @throws Exception
+   * @throws \Throwable
    *
    * @param Directory $directory
    * @param string    $relative

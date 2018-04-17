@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class TypeTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage array is passed, scalar is required
+   * @throws \Throwable
    */
   public function testScalar() {
     $type = new ScalarType();
@@ -17,13 +18,14 @@ class TypeTest
     self::assertEquals(0, $type->cast(0));
     self::assertTrue($type->cast(true));
     self::assertFalse($type->cast(false));
-    /** @noinspection PhpParamsInspection */
+    /** @noinspection PhpParamsInspection - causing an error to test */
     $type->cast([]);
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage object is passed, scalar is required
+   * @throws \Throwable
    */
   public function testNullableScalar() {
     $type = new NullableScalarType();
@@ -33,13 +35,13 @@ class TypeTest
     self::assertTrue($type->cast(true));
     self::assertFalse($type->cast(false));
     self::assertNull($type->cast(null));
-    /** @noinspection PhpParamsInspection */
     $type->cast(new \stdClass());
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage NULL is passed, \Countable is required
+   * @throws \Throwable
    */
   public function testStrict() {
     $stdClass = new StrictType(\Countable::class);
@@ -50,6 +52,9 @@ class TypeTest
     $stdClass->cast(null);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testNullableType() {
     $stdClass = new NullableType(\ArrayObject::class);
     self::assertInstanceOf(\ArrayObject::class, $stdClass->cast(new \ArrayObject()));
@@ -57,8 +62,9 @@ class TypeTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage array is passed, \ArrayObject is required
+   * @throws \Throwable
    */
   public function testNonObjectValidation() {
     $stdClass = new NullableType(\ArrayObject::class);
@@ -66,8 +72,9 @@ class TypeTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage \stdClass is passed, \Countable is required
+   * @throws \Throwable
    */
   public function testInstanceOfValidation() {
     $stdClass = new NullableType('\Countable');

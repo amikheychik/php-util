@@ -20,6 +20,7 @@ abstract class AbstractDateTime
   }
 
   public final function unserialize($serialized) {
+    /** @noinspection PhpUnhandledExceptionInspection - serialized data must be correct */
     $this->dateTime = new DateTimeStruct(
       new \DateTimeImmutable($serialized)
     );

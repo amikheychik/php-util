@@ -8,6 +8,8 @@ final class ArrayListThrowable
   extends AbstractStrictlyTypedArrayList
   implements ListThrowable {
   /**
+   * @throws \Throwable - if elements is of the wrong type.
+   *
    * @param \Throwable[] $elements
    */
   public function __construct(array $elements = []) {

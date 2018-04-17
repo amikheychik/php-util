@@ -3,7 +3,7 @@
 namespace Xtuple\Util\Type\String\Message\Message;
 
 use Xtuple\Util\Type\String\Chars;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 
 interface Message
   extends Chars {
@@ -11,5 +11,5 @@ interface Message
 
   public function template(): string;
 
-  public function arguments(): SetArgument;
+  public function arguments(): MapArgument;
 }

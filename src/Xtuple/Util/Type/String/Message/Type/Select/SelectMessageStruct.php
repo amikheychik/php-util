@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Select;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\Message;
 
 final class SelectMessageStruct
@@ -12,16 +12,17 @@ final class SelectMessageStruct
   private $value;
   /** @var Message */
   private $default;
-  /** @var SetArgument */
+  /** @var MapArgument */
   private $options;
-  /** @var SetArgument */
+  /** @var MapArgument */
   private $arguments;
 
-  public function __construct(string $value, Message $default, SetArgument $options, ?SetArgument $arguments = null) {
+  public function __construct(string $value, Message $default, MapArgument $options, ?MapArgument $arguments = null) {
     $this->value = $value;
     $this->default = $default;
     $this->options = $options;
-    $this->arguments = $arguments ?: new ArraySetArgument();
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
+    $this->arguments = $arguments ?: new ArrayMapArgument();
   }
 
   public function __toString(): string {
@@ -57,11 +58,11 @@ final class SelectMessageStruct
     return $this->default;
   }
 
-  public function options(): SetArgument {
+  public function options(): MapArgument {
     return $this->options;
   }
 
-  public function arguments(): SetArgument {
+  public function arguments(): MapArgument {
     return $this->arguments;
   }
 }

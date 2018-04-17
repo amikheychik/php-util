@@ -2,7 +2,6 @@
 
 namespace Xtuple\Util\File\File\Collection\Set\Directory;
 
-use Xtuple\Util\Exception\Exception;
 use Xtuple\Util\File\Directory\Directory;
 use Xtuple\Util\File\File\File;
 
@@ -48,7 +47,7 @@ abstract class AbstractDirectoryIteratorSetFile
   }
 
   /**
-   * @throws Exception
+   * @throws \Throwable
    *
    * @param mixed $current
    *

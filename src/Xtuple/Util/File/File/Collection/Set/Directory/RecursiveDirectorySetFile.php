@@ -8,6 +8,11 @@ use Xtuple\Util\File\File\FileSplFileInfo;
 
 final class RecursiveDirectorySetFile
   extends AbstractDirectoryIteratorSetFile {
+  /**
+   * @throws \Throwable
+   *
+   * @param Directory $directory
+   */
   public function __construct(Directory $directory) {
     parent::__construct(
       $directory,

@@ -9,6 +9,9 @@ use Xtuple\Util\Type\DateTime\DateTimeString;
 
 final class MemoryCacheTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testCacheInterface() {
     $cache = new MemoryCache('test');
     $cache->insert(new RecordStruct(new KeyStruct(['system', 'user', 1]), 'Bond'));

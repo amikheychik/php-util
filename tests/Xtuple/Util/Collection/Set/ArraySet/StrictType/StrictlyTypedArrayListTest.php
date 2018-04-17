@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class StrictlyTypedArrayListTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage array is passed, \stdClass is required
+   * @expectedException \Throwable
+   * @expectedExceptionMessage All elements must be \stdClass. Element 0 of type \array given.
+   * @throws \Throwable
    */
   public function testConstructor() {
     new StrictlyTypedArraySet(\stdClass::class);
@@ -21,8 +22,9 @@ class StrictlyTypedArrayListTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Method key() is not defined in type \stdClass
+   * @throws \Throwable
    */
   public function testKeyConstructor() {
     new StrictlyTypedArraySet(\stdClass::class, [
@@ -30,6 +32,9 @@ class StrictlyTypedArrayListTest
     ], 'key');
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSet() {
     $set = new StrictlyTypedArraySet(TestElement::class);
     self::assertTrue($set->isEmpty());

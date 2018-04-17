@@ -10,7 +10,7 @@ final class DirectoryPath
   extends AbstractFile
   implements Directory {
   /**
-   * @throws Exception
+   * @throws \Throwable
    *
    * @param string $path
    */

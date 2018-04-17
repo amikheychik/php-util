@@ -20,6 +20,7 @@ final class DateTimeStruct
   }
 
   public function unserialize($serialized) {
+    /** @noinspection PhpUnhandledExceptionInspection - data serialized in UTC, which should be parsed correctly */
     $this->date = new \DateTimeImmutable($serialized);
   }
 
@@ -32,6 +33,7 @@ final class DateTimeStruct
   }
 
   public function compare(DateTime $to): int {
+    /** @noinspection PhpUnhandledExceptionInspection - UTC format should be parsed without an exception */
     return (int) ($this->date <=> new \DateTimeImmutable($to->utc()));
   }
 

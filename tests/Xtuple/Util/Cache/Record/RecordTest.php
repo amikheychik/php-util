@@ -8,6 +8,9 @@ use Xtuple\Util\Type\DateTime\DateTimeString;
 
 class RecordTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     $expires = new DateTimeString('+1 hour');
     $record = new TestRecord(new RecordStruct(new KeyStruct(['system', 'user']), 'admin', $expires));

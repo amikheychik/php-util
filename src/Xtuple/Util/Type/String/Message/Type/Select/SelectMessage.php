@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Select;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\Message;
 
 interface SelectMessage
@@ -11,5 +11,5 @@ interface SelectMessage
 
   public function default(): Message;
 
-  public function options(): SetArgument;
+  public function options(): MapArgument;
 }

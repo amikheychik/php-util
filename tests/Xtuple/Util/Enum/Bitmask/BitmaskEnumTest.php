@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class BitmaskEnumTest
   extends TestCase {
   /**
-   * @expectedException \LogicException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Bitmask Xtuple\Util\Enum\Bitmask\IncorrectBitmask values do not form full 15 (0b1111)
    *                           mask
    * @throws \Throwable
@@ -25,7 +25,7 @@ class BitmaskEnumTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Value `16` is not supported in bitmask enum Xtuple\Util\Enum\Bitmask\SplitBitmask
    * @throws \Throwable
    */

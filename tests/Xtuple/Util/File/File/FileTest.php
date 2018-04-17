@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class FileTest
   extends TestCase {
   /**
-   * @expectedException \Xtuple\Util\Exception\Exception
-   * @expectedExceptionMessage File ./FileTest.php not found
+   * @expectedException \Throwable
+   * @expectedExceptionMessage Failed to load file ./FileTest.php
+   * @throws \Throwable
    */
   public function testSplInfo() {
     $file = new FileSplFileInfo(new \SplFileInfo(__FILE__));
@@ -19,8 +20,9 @@ class FileTest
   }
 
   /**
-   * @expectedException \Xtuple\Util\Exception\Exception
-   * @expectedExceptionMessage File ./FileTest.php not found
+   * @expectedException \Throwable
+   * @expectedExceptionMessage Failed to load file ./FileTest.php
+   * @throws \Throwable
    */
   public function testFromPathString() {
     $file = new FileFromPathString(__FILE__);

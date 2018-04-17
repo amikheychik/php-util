@@ -5,19 +5,22 @@ namespace Xtuple\Util\Type\String\Message\Type\Select;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Type\String\Message\Argument\ArgumentFromString;
 use Xtuple\Util\Type\String\Message\Argument\ArgumentWithTokens;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
 use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
 
 class SelectMessageTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     $argument = new SelectArgumentStruct(
       'test',
-      new SelectMessageStruct('other', new StringMessage('an {animal}'), new ArraySetArgument([
+      new SelectMessageStruct('other', new StringMessage('an {animal}'), new ArrayMapArgument([
         new StringArgument('dog', 'a dog'),
         new StringArgument('cat', 'a cat'),
-      ]), new ArraySetArgument([
+      ]), new ArrayMapArgument([
         new StringArgument('animal', 'unknown animal'),
       ]))
     );
@@ -31,30 +34,36 @@ class SelectMessageTest
     self::assertEquals('unknown animal', $argument->arguments()->get('animal')->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSelectString() {
     $select = new SelectMessageFromStrings('other', 'an animal');
     self::assertEquals('an animal', (string) $select);
     self::assertEquals('a dog', (string) new SelectMessageFromStrings('a', 'an animal', [
       'a' => 'a {animal}',
       'an' => 'an {animal}',
-    ], new ArraySetArgument([
+    ], new ArrayMapArgument([
       new StringArgument('animal', 'dog'),
     ])));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSelectMessage() {
     $select = new SelectMessageStruct(
       'macos',
       new StringMessage('OS is not supported.'),
-      new ArraySetArgument([
-        new ArgumentFromString('macos', 'MacOSX {version} {name}', new ArraySetArgument([
+      new ArrayMapArgument([
+        new ArgumentFromString('macos', 'MacOSX {version} {name}', new ArrayMapArgument([
           new StringArgument('name', 'High Sierra'),
         ])),
         new ArgumentWithTokens('ubuntu', 'Ubuntu {version} {name}', [
           'name' => 'Xenial Xerus',
         ]),
       ]),
-      new ArraySetArgument([
+      new ArrayMapArgument([
         new StringArgument('version', '10.13.3'),
       ])
     );

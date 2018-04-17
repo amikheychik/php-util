@@ -2,6 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Encoding\Base64\Decode;
 
+use Xtuple\Util\Exception\Exception;
 use Xtuple\Util\Type\String\Encoding\Base64\Encode\Base64EncodedChars;
 
 final class Base64DecodedStringFromEncoded
@@ -13,10 +14,14 @@ final class Base64DecodedStringFromEncoded
     $this->encoded = $encoded;
   }
 
+  /**
+   * @throws \Throwable
+   * @return string
+   */
   public function __toString(): string {
     $decoded = base64_decode((string) $this->encoded, true);
     if ($decoded === false) {
-      throw new \InvalidArgumentException('The input contains character from outside of the base64 alphabet.');
+      throw new Exception('The input contains character from outside of the base64 alphabet.');
     }
     return $decoded;
   }

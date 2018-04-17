@@ -7,6 +7,9 @@ use Xtuple\Util\XML\Element\XMLElementString;
 
 final class ArrayXMLElementTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testValue() {
     $array = new ArrayXMLElement(
       new XMLElementString(implode('', [

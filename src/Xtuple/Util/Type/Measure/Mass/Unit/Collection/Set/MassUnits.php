@@ -16,6 +16,7 @@ final class MassUnits
   private $units;
 
   public function __construct() {
+    /** @noinspection PhpUnhandledExceptionInspection - elements have different keys */
     $this->units = new ArraySetMassUnit([
       new Kilogram(),
       new Pound(),

@@ -2,10 +2,12 @@
 
 namespace Xtuple\Util\Generics\Type;
 
+use Xtuple\Util\Exception\Exception;
+
 final class ScalarType
   implements Type {
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
    *
    * @param string|float|int|bool $instance
    *
@@ -13,9 +15,9 @@ final class ScalarType
    */
   public function cast($instance) {
     if (!is_scalar($instance)) {
-      throw new \InvalidArgumentException(strtr('{type} is passed, scalar is required', [
-        '{type}' => gettype($instance),
-      ]));
+      throw new Exception('{type} is passed, scalar is required', [
+        'type' => gettype($instance),
+      ]);
     }
     return $instance;
   }

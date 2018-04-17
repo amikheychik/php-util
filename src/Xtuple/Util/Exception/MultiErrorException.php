@@ -9,6 +9,8 @@ use Xtuple\Util\Type\String\Message\Message\MessageWithTokens;
 final class MultiErrorException
   extends AbstractThrowable {
   /**
+   * @throws \Throwable - if $errors is of the wrong type.
+   *
    * @param Message[] $errors
    * @param string    $message
    * @param array     $parameters

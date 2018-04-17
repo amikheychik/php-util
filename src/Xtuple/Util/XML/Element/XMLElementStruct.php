@@ -17,8 +17,11 @@ final class XMLElementStruct
    */
   public function __construct(string $name, ?string $value = null, ?MapXMLAttribute $attributes = null,
                               ?ListXMLElement $children = null) {
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
     $attributes = $attributes ?: new ArrayMapXMLAttribute();
+    /** @noinspection PhpUnhandledExceptionInspection - ensured to be XMLElement */
     $children = $children ?: new ArrayListXMLElement();
+    /** @noinspection PhpUnhandledExceptionInspection - XML should be valid */
     parent::__construct(new XMLElementString(strtr('<{name}{attributes}>{children}{value}</{name}>', [
       '{name}' => $name,
       '{attributes}' => ($attributes = (string) $attributes) ? " {$attributes}" : '',

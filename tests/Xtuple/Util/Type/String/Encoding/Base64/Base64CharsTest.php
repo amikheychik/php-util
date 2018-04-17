@@ -13,7 +13,7 @@ use Xtuple\Util\Type\String\Encoding\Base64\Encode\URLSafe\URLSafeBase64EncodedS
 class Base64CharsTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage The input contains character from outside of the base64 alphabet.
    */
   public function testEncodeDecode() {

@@ -10,6 +10,8 @@ final class ArraySetLengthUnit
   extends AbstractStrictlyTypedArraySet
   implements SetLengthUnit {
   /**
+   * @throws \Throwable - if a duplicate element exists.
+   *
    * @param LengthUnit[]|iterable $elements
    * @param bool                  $mapped
    */

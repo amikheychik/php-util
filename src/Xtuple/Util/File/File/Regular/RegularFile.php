@@ -5,7 +5,6 @@ namespace Xtuple\Util\File\File\Regular;
 use Xtuple\Util\Exception\ChainException;
 use Xtuple\Util\Exception\Exception;
 use Xtuple\Util\Exception\LastErrorException;
-use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\File\AbstractFile;
 use Xtuple\Util\File\File\File;
 
@@ -13,7 +12,7 @@ final class RegularFile
   extends AbstractFile
   implements Regular {
   /**
-   * @throws Exception
+   * @throws \Throwable
    *
    * @param File $file
    */
@@ -27,7 +26,8 @@ final class RegularFile
   }
 
   /**
-   * @throws Throwable
+   * @throws \Throwable
+   *
    * @return string
    */
   public function content(): string {
@@ -43,7 +43,7 @@ final class RegularFile
       }
       return $content;
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       throw new ChainException($e, 'Failed to read file {filename} content', [
         'filename' => $this->path()->absolute(),
       ]);

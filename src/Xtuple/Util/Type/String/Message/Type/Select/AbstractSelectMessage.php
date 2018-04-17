@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Select;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\AbstractMessage;
 use Xtuple\Util\Type\String\Message\Message\Message;
 
@@ -25,7 +25,7 @@ abstract class AbstractSelectMessage
     return $this->message->default();
   }
 
-  public final function options(): SetArgument {
+  public final function options(): MapArgument {
     return $this->message->options();
   }
 }

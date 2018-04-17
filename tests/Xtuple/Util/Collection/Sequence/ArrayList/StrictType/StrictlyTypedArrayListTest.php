@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class StrictlyTypedArrayListTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
-   * @expectedExceptionMessage array is passed, \stdClass is required
+   * @expectedException \Throwable
+   * @expectedExceptionMessage All elements must be \stdClass. Element 0 of type \array given.
+   * @throws \Throwable
    */
   public function testConstructor() {
     new StrictlyTypedArrayList(\stdClass::class);

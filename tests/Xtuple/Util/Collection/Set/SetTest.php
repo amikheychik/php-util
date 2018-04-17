@@ -7,6 +7,9 @@ use Xtuple\Util\Collection\Set\ArraySet\ArraySet;
 
 class SetTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testSet() {
     $set = new TestSet(new ArraySet());
     self::assertTrue($set->isEmpty());

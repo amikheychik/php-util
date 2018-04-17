@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Plural;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\AbstractMessage;
 use Xtuple\Util\Type\String\Message\Message\Message;
 use Xtuple\Util\Type\String\Message\Type\Number\NumberMessage;
@@ -30,7 +30,7 @@ abstract class AbstractPluralMessage
     return $this->message->plural();
   }
 
-  public final function plurals(): SetArgument {
+  public final function plurals(): MapArgument {
     return $this->message->plurals();
   }
 

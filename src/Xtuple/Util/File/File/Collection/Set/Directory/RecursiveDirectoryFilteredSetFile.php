@@ -9,6 +9,12 @@ use Xtuple\Util\RegEx\RegEx;
 
 final class RecursiveDirectoryFilteredSetFile
   extends AbstractDirectoryIteratorSetFile {
+  /**
+   * @throws \Throwable
+   *
+   * @param Directory $directory
+   * @param RegEx     $filter
+   */
   public function __construct(Directory $directory, RegEx $filter) {
     parent::__construct(
       $directory,

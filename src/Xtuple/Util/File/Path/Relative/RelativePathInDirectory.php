@@ -14,7 +14,7 @@ final class RelativePathInDirectory
   private $file;
 
   /**
-   * @throws Exception
+   * @throws \Throwable
    *
    * @param Directory $directory
    * @param File      $file
@@ -41,14 +41,14 @@ final class RelativePathInDirectory
   }
 
   public function exists(): bool {
-    return !is_null($this->absolute());
+    return $this->file->path()->exists();
   }
 
   public function isDir(): bool {
-    return $this->exists() ? is_dir($this->absolute()) : false;
+    return $this->file->path()->isDir();
   }
 
   public function isFile(): bool {
-    return $this->exists() ? is_file($this->absolute()) : false;
+    return $this->file->path()->isFile();
   }
 }

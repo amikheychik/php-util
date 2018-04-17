@@ -4,6 +4,7 @@ namespace Xtuple\Util\Collection\Stack\ArrayStack\StrictType;
 
 use Xtuple\Util\Collection\Stack\ArrayStack\ArrayStack;
 use Xtuple\Util\Collection\Stack\Stack;
+use Xtuple\Util\Exception\ChainException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArrayStack
@@ -13,15 +14,37 @@ abstract class AbstractStrictlyTypedArrayStack
   /** @var ArrayStack */
   private $stack;
 
+  /**
+   * @throws \Throwable - if element is of the wrong type.
+   *
+   * @param string   $type
+   * @param iterable $elements
+   */
   public function __construct(string $type, iterable $elements = []) {
     $this->type = new StrictType($type);
     $index = [];
-    foreach ($elements as $element) {
-      $index[] = $this->type->cast($element);
+    foreach ($elements as $i => $element) {
+      try {
+        $index[] = $this->type->cast($element);
+      }
+      catch (\Throwable $e) {
+        throw new ChainException($e, 'All elements must be \{type}. Element {index} of type \{given} given.', [
+          'index' => $i,
+          'type' => ltrim($type, '\\'),
+          'given' => ltrim(gettype($element) === 'object' ? get_class($element) : gettype($element), '\\'),
+        ]);
+      }
     }
     $this->stack = new ArrayStack($index);
   }
 
+  /**
+   * @throws \Throwable
+   *
+   * @param mixed $element
+   *
+   * @return int
+   */
   public final function push($element): int {
     return $this->stack->push($this->type->cast($element));
   }

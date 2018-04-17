@@ -20,10 +20,12 @@ final class DateTimeMessageStruct
   }
 
   public function format(string $locale): string {
+    /** @noinspection PhpUnhandledExceptionInspection - UTC format would be parsed without an exception */
     return (new \DateTimeImmutable($this->dateTime->utc()))->format($this->format);
   }
 
   public function timezone(?string $timezone = null): string {
+    /** @noinspection PhpUnhandledExceptionInspection - UTC format would be parsed without an exception */
     return (new \DateTimeImmutable($this->dateTime->utc()))->setTimezone(
       new \DateTimeZone($timezone ?: ini_get('date.timezone'))
     )->format($this->format);

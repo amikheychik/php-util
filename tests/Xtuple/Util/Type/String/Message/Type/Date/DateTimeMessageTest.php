@@ -7,6 +7,9 @@ use Xtuple\Util\Type\DateTime\DateTimeString;
 
 class DateTimeMessageTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     $default = ini_get('date.timezone');
     ini_set('date.timezone', 'America/New_York');
@@ -23,6 +26,9 @@ class DateTimeMessageTest
     self::assertEquals(0, $message->arguments()->count());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testArgument() {
     $argument = new DateTimeArgumentStruct('date', new DateTimeMessageStruct(
       new DateTimeString('Sunday, March 11, 2018, 2:00:00 am', 'America/Chicago'),

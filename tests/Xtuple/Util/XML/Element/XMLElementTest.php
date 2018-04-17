@@ -10,6 +10,9 @@ use Xtuple\Util\XML\Element\Collection\Sequence\ArrayListXMLElement;
 
 class XMLElementTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testEmpty() {
     $empty = new TestXMLElement(new XMLElementString('<Test/>'));
     self::assertEquals('Test', $empty->name());
@@ -20,6 +23,9 @@ class XMLElementTest
     self::assertEquals('none', $empty->attributes()->getOptional(new OptionalXMLAttributeStruct('none'))->name());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testXML() {
     $element = new TestXMLElement(new XMLElementString(implode('', [
       '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
@@ -44,8 +50,9 @@ class XMLElementTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Passed element is an attribute.
+   * @throws \Throwable
    */
   public function testElement() {
     $element = new TestXMLElement(new XMLElementString(implode('', [
@@ -68,6 +75,9 @@ class XMLElementTest
     new XMLElementSimple((new \SimpleXMLElement('<Test name="test" />'))->attributes('name'));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     self::assertEquals(
       '<Test/>',
@@ -116,6 +126,9 @@ class XMLElementTest
     ])));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSequence() {
     $element = new XMLElementSequence(new ArrayListXMLElement([
       new XMLElementString('<Name>phpunit</Name>'),

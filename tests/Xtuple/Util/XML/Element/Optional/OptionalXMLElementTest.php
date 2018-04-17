@@ -11,6 +11,9 @@ use Xtuple\Util\XML\Element\XMLElementStruct;
 
 class OptionalXMLElementTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testOptional() {
     $element = new OptionalXMLElement(new XMLElementStruct('Debug', 'true'));
     self::assertEquals('<Debug>true</Debug>', (string) $element);

@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\Type\String\Message\Type\Plural;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 use Xtuple\Util\Type\String\Message\Message\Message;
 use Xtuple\Util\Type\String\Message\Type\Number\NumberMessage;
 
@@ -15,20 +15,22 @@ final class PluralMessageStruct
   private $plural;
   /** @var null|Message */
   private $singular;
-  /** @var SetArgument */
+  /** @var MapArgument */
   private $plurals;
-  /** @var SetArgument */
+  /** @var MapArgument */
   private $arguments;
   /** @var null|float */
   private $offset;
 
-  public function __construct(NumberMessage $count, Message $plural, ?Message $singular, ?SetArgument $plurals = null,
-                              ?SetArgument $arguments = null, ?float $offset = null) {
+  public function __construct(NumberMessage $count, Message $plural, ?Message $singular, ?MapArgument $plurals = null,
+                              ?MapArgument $arguments = null, ?float $offset = null) {
     $this->count = $count;
     $this->plural = $plural;
     $this->singular = $singular;
-    $this->plurals = $plurals ?: new ArraySetArgument();
-    $this->arguments = $arguments ?: new ArraySetArgument();
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
+    $this->plurals = $plurals ?: new ArrayMapArgument();
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
+    $this->arguments = $arguments ?: new ArrayMapArgument();
     $this->offset = $offset;
   }
 
@@ -78,11 +80,11 @@ final class PluralMessageStruct
     return $this->singular;
   }
 
-  public function plurals(): SetArgument {
+  public function plurals(): MapArgument {
     return $this->plurals;
   }
 
-  public function arguments(): SetArgument {
+  public function arguments(): MapArgument {
     return $this->arguments;
   }
 

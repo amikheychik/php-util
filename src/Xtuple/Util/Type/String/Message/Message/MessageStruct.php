@@ -2,16 +2,16 @@
 
 namespace Xtuple\Util\Type\String\Message\Message;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 
 final class MessageStruct
   implements Message {
   /** @var string */
   private $template;
-  /** @var SetArgument */
+  /** @var MapArgument */
   private $arguments;
 
-  public function __construct(string $template, SetArgument $arguments) {
+  public function __construct(string $template, MapArgument $arguments) {
     $this->template = $template;
     $this->arguments = $arguments;
   }
@@ -32,7 +32,7 @@ final class MessageStruct
     return $this->template;
   }
 
-  public function arguments(): SetArgument {
+  public function arguments(): MapArgument {
     return $this->arguments;
   }
 }

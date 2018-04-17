@@ -5,6 +5,162 @@
 :source-highlighter: coderay
 :source-language: php
 
+== Coding standards
+
+=== Exceptions
+
+Checked exceptions are exceptions which handling is recognized by compiler or static code analysis tools, forcing developer to recognize and handle it.
+
+Unchecked exceptions are exceptions that can not be predicted during the development and static code analysis and may happen at any moment.
+
+Use only checked exceptions of `\Xtuple\Util\Exception\Throwable` type. `\Xtuple\Util\Exception\Throwable` interface provides localizable message and ability to pass multiple errors related to the exception.
+
+Treat unchecked exceptions, specified in other methods (or their documentation) as checked. In this case only really unpredictable runtime exceptions (e.g. running out of memory) would remain unchecked.
+
+`try-catch-finally` block should start (`try`) in the beginning of the method and end (`catch` or `catch-finally`) in the end of it. If there is need to use `try-catch` more than once in the method, it's a sure sign that method is not atomic enough and should be refactored into multiple methods or even classes.
+
+If a called method throws an exception, following rules should be checked and applied (ordered by priority):
+
+. Always add `@throws \Throwable` in unit tests.
+. If the cases when exception can be thrown are checked by developer, use `/** @noinspection PhpUnhandledExceptionInspection */` annotation before unsafe method call. It's recommended to provide a short additional comment why `@noinspection` is set.
+. If a valid default behavior/value is possible, use `try-catch` to make code execution safe. Provide default value/behavior in the method.
+. If method has no valid defaults, use `try-catch` to make code execution safe. Chain and re-throw an exception, providing additional context information. Add `@throw \Throwable` to the method's PHPDoc.
+. Add `@throws \Throwable` tag to the method's PHPDoc.
+  * Only use `\Throwable`, as an exceptional situation should not rely on any additional parameters for recovery. (Logging can check exact type of exception to log for details, if needed).
+  * Use it when the exception is thrown by the parent method call, or when the caller method is a decorator.
+  * Use it for existing projects, to allow stricter checks, while saving time on migration.
+
+.Examples of handling exceptions in different situations.
+[source]
+----
+<?php declare(strict_types=1);
+
+use Xtuple\Util\Exception\ChainException;
+use Xtuple\Util\Exception\Exception;
+
+final class Exceptional {
+  /** @var \DateTimeImmutable */
+  private $now;
+  /** @var string */
+  private $connection;
+
+  public function __construct(string $connection) {
+    /** @noinspection PhpUnhandledExceptionInspection - 'now' value is a default argument value */ // <1>
+    $this->now = new \DateTimeImmutable('now');
+    $this->connection = $connection;
+  }
+
+  /** @var null|\PDO */
+  private $pdo;
+
+  /**
+   * @throws \Throwable // <2>
+   * @return \PDO
+   */
+  public function pdo(): \PDO {
+    if ($this->pdo === null) {
+      $this->pdo = new \PDO($this->connection);
+    }
+    return $this->pdo;
+  }
+
+  /**
+   * @throws \Throwable // <3>
+   *
+   * @param string $query
+   * @param array  $params
+   *
+   * @return \stdClass
+   */
+  public function execute(string $query, array $params = []): \stdClass {
+    $statement = $this->pdo()->prepare($query);
+    if ($statement === false) {
+      throw new Exception('Failed to prepare a PDO statement');
+    }
+    /** @var \PDOStatement $statement */
+    if (!$statement->execute($params)) {
+      throw new Exception('Failed to execute a PDO statement');
+    }
+    $result = $statement->fetchObject();
+    if ($result === false) {
+      throw new Exception('Failed to fetch an object from a PDO statement');
+    }
+    return $result; // <4>
+  }
+
+  public function has(int $id): bool {
+    try {
+      return (bool) $this->execute('SELECT EXISTS(SELECT 1 FROM example WHERE id = :id) AS result;', [
+        ':id' => $id,
+      ])->result;
+    }
+    catch (\Throwable $e) { // <5>
+    }
+    return false;
+  }
+
+  /**
+   * @throws \Throwable // <6>
+   *
+   * @param int $id
+   *
+   * @return \stdClass
+   */
+  public function get(int $id): \stdClass {
+    try {
+      return $this->execute('SELECT * FROM example WHERE id = :id', [':id' => $id]);
+    }
+    catch (\Throwable $e) { // <7>
+      throw new ChainException($e, 'Failed to load object {id}', [
+        'id' => $id,
+      ]);
+    }
+  }
+}
+----
+<1> `now` is a default value for `\DateTimeImmutable` class constructor and exception is not expected. If eventually exception happens in production (e.g. due to `$timezone` argument error), it can be analysed and `@noinspection` can be removed, if appropriate; but before that happens, this code can be considered safe.
+<2> `\PDO::__construct()` throws a `\PDOException`, which extends `\RuntimeException` and would be considered as unchecked by default. Adding `@throws \Throwable` to force method callers to recognize it. (It's **always** better to catch and re-throw an exception, providing more context information).
+<3> In `execute()` method, `prepare()`, `execute()` and `fetchObject()` calls may return error codes, so it throws a checked `\Xtuple\Util\Exception\Throwable` exception, while `pdo()` may throw a `\Throwable`. `\Throwable` is at the top of exception hierarchy, so we use it in PHPDoc.
+<4> There is no additional context information that we can provide in this method, so we skip catching and chaining exceptions.
+<5> All exceptions are silenced. By application convention false includes cases where the answer could not be determined.
+<6> Only `\Xtuple\Util\Exception\ChainException` can be thrown by `get()`, but we specify `\Throwable` as it only matters that this method is unsafe.
+<7> `get()` must return an actual row from the database, hence throwing an exception is necessary. The previous exceptions may contain confusing information so the code should do the following:
+* chain the exception;
+* add a message appropriate to this context;
+* store the previous exception for logging.
+
+== Development
+
+=== PHPStorm IDE
+
+http://jetbrains.com/phpstorm[PHPStorm] is the most advanced IDE to work with PHP and is **strongly** recommended to use for development. Using other IDEs or editors is up for a developer, and this section can be used as a reference to achieve same code quality and development productivity results.
+
+==== Preferences
+
+Preferences section describes either critical settings that need to be checked to be set correctly, or to be changed from the defaults.
+
+===== Editor
+
+====== Inspections
+
+[NOTE]
+Inspections can be set for IDE or for the Project only. These settings are recommended to be set for IDE and adjusted for specific projects if required.
+
+* PHP
+** Error handling
+*** Unhandled exception: `checked`; severity: `Warning`.
+** PHPDoc
+*** Missing `@throws` tag(s): `checked`; severity: `No highlighting, only fix` (to mitigate https://youtrack.jetbrains.com/issue/WI-41446).
+
+===== Language & Frameworks
+
+====== PHP
+
+* PHP language level: `7.1 (const visibility, nullables, multiple exceptions)`
+* Analysis (_tab_):
+** Call tree analysis depth: `1`
+** Unchecked exceptions: `\PHPUnit\Framework\AssertionFailedError`, `\PHPUnit\Framework\AssertionFailedError`
+
 == Subpackages
 
 === Cache
@@ -472,7 +628,7 @@ try {
   ];
   $status = new Status($row['status']);
 }
-catch (\Exception $e) {
+catch (\Throwable $e) {
   // Value `review` is not supported...
   $e->getMessage();
 }
@@ -555,7 +711,7 @@ try {
   ];
   $status = new Status($row['status']);
 }
-catch (\Exception $e) {
+catch (\Throwable $e) {
   // Value `3` is not supported...
   $e->getMessage();
 }
@@ -638,7 +794,7 @@ try {
     'message' => 'Page not found',
   ]));
 }
-catch (\Exception $e) {
+catch (\Throwable $e) {
   throw new ChainException($e, 'API request {request} failed', [
     'request' => 'api/v2/address',
   ]);
@@ -878,7 +1034,7 @@ try {
   // Timestamp must be non-negative
   $date = new DateTimeTimestamp(-1);
 }
-catch (\InvalidArgumentException $e) {
+catch (\Throwable $e) {
   $e->getMessage() === 'Unix timestamp must be non-negative.';
 }
 
@@ -892,7 +1048,7 @@ try {
   // Timestamp must be non-negative
   $date = new TimestampStruct(-1);
 }
-catch (\InvalidArgumentException $e) {
+catch (\Throwable $e) {
   $e->getMessage() === 'Unix timestamp must be non-negative.';
 }
 

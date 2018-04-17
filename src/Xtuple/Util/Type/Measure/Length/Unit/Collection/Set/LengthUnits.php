@@ -15,6 +15,7 @@ final class LengthUnits
   private $units;
 
   public function __construct() {
+    /** @noinspection PhpUnhandledExceptionInspection - elements have different keys */
     $this->units = new ArraySetLengthUnit([
       new Meter(),
       new Centimeter(),

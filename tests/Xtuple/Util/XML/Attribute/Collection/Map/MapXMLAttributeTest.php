@@ -8,6 +8,9 @@ use Xtuple\Util\XML\Attribute\XMLAttributeStruct;
 
 class MapXMLAttributeTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testArrayMap() {
     $attributes = new ArrayMapXMLAttribute([
       new XMLAttributeStruct('database', 'phpunit'),

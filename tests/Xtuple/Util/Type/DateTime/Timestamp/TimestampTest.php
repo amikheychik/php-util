@@ -8,7 +8,7 @@ use Xtuple\Util\Type\DateTime\DateTimeTimestamp;
 class TimestampTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Unix timestamp must be non-negative.
    */
   public function testStruct() {
@@ -18,6 +18,9 @@ class TimestampTest
     new TimestampStruct(-1);
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testDateTime() {
     $time = time();
     $date = new DateTimeTimestamp($time);

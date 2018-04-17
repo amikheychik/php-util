@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\Type\String\Message\Message;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\SetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\MapArgument;
 
 abstract class AbstractScalarMessage
   implements Message {
@@ -22,7 +22,8 @@ abstract class AbstractScalarMessage
     return $this->template;
   }
 
-  public final function arguments(): SetArgument {
-    return new ArraySetArgument();
+  public final function arguments(): MapArgument {
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
+    return new ArrayMapArgument();
   }
 }

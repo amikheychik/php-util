@@ -2,16 +2,23 @@
 
 namespace Xtuple\Util\XML\Attribute;
 
+use Xtuple\Util\Exception\Exception;
+
 final class XMLAttributeSimple
   implements XMLAttribute {
   /** @var \SimpleXMLElement */
   private $element;
 
+  /**
+   * @throws \Throwable
+   *
+   * @param \SimpleXMLElement $element
+   */
   public function __construct(\SimpleXMLElement $element) {
     if ($element->attributes()->getName() !== '') {
-      throw new \InvalidArgumentException(strtr('Passed element `{name}` is not an attribute.', [
-        '{name}' => $element->getName(),
-      ]));
+      throw new Exception('Passed element `{name}` is not an attribute.', [
+        'name' => $element->getName(),
+      ]);
     }
     $this->element = $element;
   }

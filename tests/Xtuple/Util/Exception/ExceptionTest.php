@@ -3,7 +3,7 @@
 namespace Xtuple\Util\Exception;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Message\Collection\Sequence\ArrayListMessage;
 use Xtuple\Util\Type\String\Message\Message\MessageStruct;
 use Xtuple\Util\Type\String\Message\Message\MessageWithTokens;
@@ -32,8 +32,11 @@ class ExceptionTest
     );
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testExceptionWithArguments() {
-    $e = new ExceptionWithMessage(new MessageStruct('Test {exception}', new ArraySetArgument([
+    $e = new ExceptionWithMessage(new MessageStruct('Test {exception}', new ArrayMapArgument([
       new StringArgument('exception', 'throwable'),
     ])));
     self::assertEquals('Test throwable', $e->getMessage());
@@ -41,8 +44,11 @@ class ExceptionTest
     self::assertEquals('throwable', $e->message()->arguments()->get('exception'));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testExceptionWithMessage() {
-    $e = new ExceptionWithMessage(new MessageStruct('Test {exception}', new ArraySetArgument([
+    $e = new ExceptionWithMessage(new MessageStruct('Test {exception}', new ArrayMapArgument([
       new StringArgument('exception', 'throwable'),
     ])));
     self::assertEquals('Test throwable', $e->getMessage());
@@ -50,14 +56,17 @@ class ExceptionTest
     self::assertEquals('throwable', $e->message()->arguments()->get('exception'));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testChained() {
     $e = new Exception('Test {exception}', [
       'exception' => 'throwable',
     ]);
-    $e = new ExceptionWithArguments('Test {exception}', new ArraySetArgument([
+    $e = new ExceptionWithArguments('Test {exception}', new ArrayMapArgument([
       new StringArgument('exception', 'previous'),
     ]), $e, null, 403);
-    $e = new ExceptionWithMessage(new MessageStruct('Test http error {http}', new ArraySetArgument([
+    $e = new ExceptionWithMessage(new MessageStruct('Test http error {http}', new ArrayMapArgument([
       new StringArgument('http', 'page not found'),
     ])), $e, null, 404);
     self::assertEquals('Test http error page not found', $e->getMessage());
@@ -71,13 +80,16 @@ class ExceptionTest
     self::assertEquals('Test chained {exception}', $e->message()->template());
     self::assertEquals('exception', $e->message()->arguments()->get('exception'));
     self::assertEquals(implode("\n", [
-      "Xtuple\\Util\\Exception\\ChainException: Test chained exception in {$this->file}:67",
-      "\t+ Xtuple\\Util\\Exception\\ExceptionWithMessage:404 Test http error page not found in {$this->file}:60",
-      "\t\t+ Xtuple\\Util\\Exception\\ExceptionWithArguments:403 Test previous in {$this->file}:57",
-      "\t\t\t+ Xtuple\\Util\\Exception\\Exception: Test throwable in {$this->file}:54",
+      "Xtuple\\Util\\Exception\\ChainException: Test chained exception in {$this->file}:76",
+      "\t+ Xtuple\\Util\\Exception\\ExceptionWithMessage:404 Test http error page not found in {$this->file}:69",
+      "\t\t+ Xtuple\\Util\\Exception\\ExceptionWithArguments:403 Test previous in {$this->file}:66",
+      "\t\t\t+ Xtuple\\Util\\Exception\\Exception: Test throwable in {$this->file}:63",
     ]), $e->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testMultiple() {
     $e = new MultiErrorException([
       new MessageWithTokens('HTTP request to URL {url} failed', [
@@ -93,9 +105,9 @@ class ExceptionTest
       ]),
     ]));
     self::assertEquals(implode("\n", [
-      "Xtuple\\Util\\Exception\\ChainException: API request failed in {$this->file}:90",
+      "Xtuple\\Util\\Exception\\ChainException: API request failed in {$this->file}:102",
       "\t- Failed 2 requests",
-      "\t+ Xtuple\\Util\\Exception\\MultiErrorException: Async requests failed in {$this->file}:82",
+      "\t+ Xtuple\\Util\\Exception\\MultiErrorException: Async requests failed in {$this->file}:94",
       "\t\t- HTTP request to URL http://httpbin.org failed",
       "\t\t- HTTP request to URL http://example.com failed",
     ]), $e->__toString());

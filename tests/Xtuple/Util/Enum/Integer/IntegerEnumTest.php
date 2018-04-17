@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class IntegerEnumTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Value `0` is not supported in Xtuple\Util\Enum\Integer\TestIntegerEnum enum
    * @throws \Throwable
    */

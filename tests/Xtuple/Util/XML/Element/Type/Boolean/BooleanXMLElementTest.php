@@ -7,6 +7,9 @@ use Xtuple\Util\XML\Element\XMLElementString;
 
 class BooleanXMLElementTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testBoolean() {
     $boolean = new BooleanXMLElement(new XMLElementString('<Test>true</Test>'));
     self::assertTrue($boolean->value());

@@ -18,6 +18,7 @@ final class MemoryCache
 
   public function __construct(string $bucket) {
     $this->bucket = $bucket;
+    /** @noinspection PhpUnhandledExceptionInspection - constant default value is used */
     $this->now = new DateTimeString('now');
   }
 

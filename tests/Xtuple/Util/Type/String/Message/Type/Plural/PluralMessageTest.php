@@ -3,7 +3,7 @@
 namespace Xtuple\Util\Type\String\Message\Type\Plural;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Message\AbstractMessage;
 use Xtuple\Util\Type\String\Message\Type\Number\Currency\CurrencyMessage;
 use Xtuple\Util\Type\String\Message\Type\Number\Float\FloatArgument;
@@ -16,14 +16,17 @@ use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
 
 class PluralMessageTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
     $count = new FloatMessage(3);
     $plural = new StringMessage('{count} items');
     $singular = new StringMessage('One item');
-    $plurals = new ArraySetArgument([
+    $plurals = new ArrayMapArgument([
       new StringArgument('few', '{count} items'),
     ]);
-    $arguments = new ArraySetArgument();
+    $arguments = new ArrayMapArgument();
     $message = new PluralMessageStruct($count, $plural, $singular, $plurals, $arguments, 1.0);
     self::assertEquals('{count} items', $message->template());
     self::assertEquals($count, $message->count());
@@ -115,13 +118,16 @@ class PluralMessageTest
     self::assertEquals('One and a half pounds and 2.5 pounds', $plural->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testArguments() {
     $plural = new PluralMessageStruct(
       new IntegerMessage(4321),
       new StringMessage('{count} users are {status}'),
       new StringMessage('One user is {status}'),
       null,
-      new ArraySetArgument([
+      new ArrayMapArgument([
         new StringArgument('status', 'online'),
       ])
     );
@@ -143,6 +149,9 @@ class PluralMessageTest
     self::assertEquals('2 items', $plural->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testStringMessageOffset() {
     $offset = 1.0;
     $plural = new PluralMessageFromStrings(2, '{count} items', 'One item', [
@@ -155,13 +164,13 @@ class PluralMessageTest
     self::assertEquals('2 items', $plural->__toString());
     $plural = new PluralMessageFromStrings(3.5, '{count} items', 'One item', [
       '=0' => 'No items',
-    ], new ArraySetArgument([
+    ], new ArrayMapArgument([
       new FloatArgument('offset', 3.5 - $offset, '#000.#'),
     ]), $offset);
     self::assertEquals('002.5 items', $plural->__toString());
     $plural = new PluralArgumentFromStrings('quantity', 3.5, '{count} items', 'One item', [
       '=0' => 'No items',
-    ], new ArraySetArgument([
+    ], new ArrayMapArgument([
       new FloatArgument('offset', 3.5 - $offset, '#.00#'),
     ]), $offset);
     self::assertEquals('2.50 items', $plural->__toString());
@@ -178,18 +187,19 @@ final class TestOffsetEn
   extends AbstractMessage {
   public function __construct(float $count) {
     $offset = 1.5;
+    /** @noinspection PhpUnhandledExceptionInspection - arguments type is checked */
     parent::__construct(new PluralMessageStruct(
       new FloatMessage($count),
       new StringMessage('One and a half pounds and {count} pounds'),
       new StringMessage('One pound'),
-      new ArraySetArgument([
+      new ArrayMapArgument([
         new StringArgument('=0', 'No weight'),
         new StringArgument('=1', 'One pound, no ounces'),
         new StringArgument('=1.5', 'One and a half pounds and no ounces'),
         new StringArgument('=2', 'One and a half pounds and eight ounces'),
         new StringArgument('=2.5', 'One and a half pounds and sixteen ounces'),
       ]),
-      new ArraySetArgument([
+      new ArrayMapArgument([
         new FloatArgument('offset', $count - $offset),
       ]),
       $offset
@@ -211,11 +221,12 @@ final class TestMessageEn
 final class TestMessageRu
   extends AbstractMessage {
   public function __construct(NumberMessage $count) {
+    /** @noinspection PhpUnhandledExceptionInspection - arguments type is checked */
     parent::__construct(new PluralMessageStruct(
       $count,
       new StringMessage('{count} долларов'),
       new StringMessage('1 доллар'),
-      new ArraySetArgument([
+      new ArrayMapArgument([
         new StringArgument('few', '{count} доллара'),
       ])
     ));

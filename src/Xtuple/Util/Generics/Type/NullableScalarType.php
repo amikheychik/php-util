@@ -8,7 +8,7 @@ final class NullableScalarType
   private $type;
 
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
    *
    * @param string|float|int|bool|null $instance
    *

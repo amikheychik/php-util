@@ -3,7 +3,7 @@
 namespace Xtuple\Util\Type\String\Message\Argument;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Message\MessageStruct;
 use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
 
@@ -18,7 +18,8 @@ class ArgumentTest
   }
 
   public function testWithTokens() {
-    $message = new MessageStruct('API request failed: {error}', new ArraySetArgument([
+    /** @noinspection PhpUnhandledExceptionInspection - arguments type is checked */
+    $message = new MessageStruct('API request failed: {error}', new ArrayMapArgument([
       new ArgumentWithTokens('error', '({code}) {message}', [
         'code' => 1024,
         'message' => 'Access denied',

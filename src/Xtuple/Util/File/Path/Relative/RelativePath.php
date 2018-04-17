@@ -6,5 +6,9 @@ use Xtuple\Util\File\Path\Path;
 
 interface RelativePath
   extends Path {
+  /**
+   * @throws \Throwable
+   * @return string
+   */
   public function relative(): string;
 }

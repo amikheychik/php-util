@@ -9,6 +9,8 @@ final class ArrayListXMLElement
   extends AbstractStrictlyTypedArrayList
   implements ListXMLElement {
   /**
+   * @throws \Throwable - if elements are of the wrong type.
+   *
    * @param XMLElement[] $elements
    */
   public function __construct(array $elements = []) {

@@ -3,14 +3,13 @@
 namespace Xtuple\Util\File\Directory\Make;
 
 use Xtuple\Util\Exception\LastErrorException;
-use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\Directory\AbstractDirectory;
 use Xtuple\Util\File\Directory\DirectoryPath;
 
 final class MakeDirectoryPath
   extends AbstractDirectory {
   /**
-   * @throws Throwable
+   * @throws \Throwable
    *
    * @param string $path
    * @param int    $mode

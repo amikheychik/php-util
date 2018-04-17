@@ -20,8 +20,9 @@ class XMLAttributeTest
   }
 
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Passed element `Test` is not an attribute
+   * @throws \Throwable
    */
   public function testSimpleXML() {
     $simple = new \SimpleXMLElement('<Test name="value" />');

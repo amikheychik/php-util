@@ -2,6 +2,8 @@
 
 namespace Xtuple\Util\Generics\Type;
 
+use Xtuple\Util\Exception\Exception;
+
 final class StrictType
   implements Type {
   /** @var string */
@@ -13,16 +15,16 @@ final class StrictType
 
   public function cast($instance) {
     if (!is_object($instance)) {
-      throw new \InvalidArgumentException(strtr('{type} is passed, \{required} is required', [
-        '{type}' => gettype($instance),
-        '{required}' => $this->fqn,
-      ]));
+      throw new Exception('{type} is passed, \{required} is required', [
+        'type' => gettype($instance),
+        'required' => $this->fqn,
+      ]);
     }
     if (!($instance instanceof $this->fqn)) {
-      throw new \InvalidArgumentException(strtr('\{class} is passed, \{required} is required', [
-        '{class}' => get_class($instance),
-        '{required}' => $this->fqn,
-      ]));
+      throw new Exception('\{class} is passed, \{required} is required', [
+        'class' => get_class($instance),
+        'required' => $this->fqn,
+      ]);
     }
     return $instance;
   }

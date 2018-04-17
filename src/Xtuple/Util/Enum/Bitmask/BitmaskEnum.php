@@ -2,6 +2,8 @@
 
 namespace Xtuple\Util\Enum\Bitmask;
 
+use Xtuple\Util\Exception\Exception;
+
 abstract class BitmaskEnum {
   /** @var int */
   private $value;
@@ -13,10 +15,10 @@ abstract class BitmaskEnum {
    */
   public function __construct(int $value) {
     if ($value > self::max()) {
-      throw new \InvalidArgumentException(strtr('Value `{value}` is not supported in bitmask enum {class}', [
-        '{value}' => $value,
-        '{class}' => static::class,
-      ]));
+      throw new Exception('Value `{value}` is not supported in bitmask enum {class}', [
+        'value' => $value,
+        'class' => static::class,
+      ]);
     }
     $this->value = $value;
   }
@@ -40,23 +42,25 @@ abstract class BitmaskEnum {
   private static $max;
 
   /**
-   * @throws \ReflectionException
+   * @throws \Throwable
+   *
    * @return int
    */
   private static function max(): int {
     if (!isset(self::$max[static::class])) {
       $bitmask = 0b0;
+      /** @noinspection PhpUnhandledExceptionInspection - class exists as it's called through static */
       foreach ((new \ReflectionClass(static::class))->getConstants() as $constant => $mask) {
         $bitmask |= $mask;
       }
       $size = log($bitmask + 1, 2);
       $max = (int) pow(2, ceil($size)) - 1;
       if (ceil($size) !== floor($size)) {
-        throw new \LogicException(strtr('Bitmask {class} values do not form full {value} (0b{bin}) mask', [
-          '{class}' => static::class,
-          '{value}' => $max,
-          '{bin}' => decbin($max),
-        ]));
+        throw new Exception('Bitmask {class} values do not form full {value} (0b{bin}) mask', [
+          'class' => static::class,
+          'value' => $max,
+          'bin' => decbin($max),
+        ]);
       }
       self::$max[static::class] = $max;
     }

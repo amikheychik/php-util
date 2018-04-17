@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class ArraySetTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Element 1 is duplicated
+   * @throws \Throwable
    */
   public function testConstructor() {
     new ArraySet();
@@ -21,6 +22,9 @@ class ArraySetTest
     });
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSet() {
     $set = new ArraySet();
     self::assertTrue($set->isEmpty());

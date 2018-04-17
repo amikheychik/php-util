@@ -4,7 +4,7 @@ namespace Xtuple\Util\Type\String\Message\Message;
 
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Type\String\Message\Argument\ArgumentStruct;
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Type\Plural\PluralArgumentFromStrings;
 use Xtuple\Util\Type\String\Message\Type\Select\SelectArgumentFromStrings;
 use Xtuple\Util\Type\String\Message\Type\Select\SelectArgumentStruct;
@@ -13,8 +13,11 @@ use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
 
 class MessageTest
   extends TestCase {
+  /**
+   * @throws \Throwable
+   */
   public function testStruct() {
-    $message = new MessageStruct('Query {query} failed: {message}', new ArraySetArgument([
+    $message = new MessageStruct('Query {query} failed: {message}', new ArrayMapArgument([
       new StringArgument('query', 'http://httpbin.org/status/404'),
       new StringArgument('message', 'Page not found'),
     ]));
@@ -35,9 +38,12 @@ class MessageTest
     self::assertNull($message->arguments()->get('{message}'));
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testPlurals() {
     $count = 0;
-    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArraySetArgument([
+    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArrayMapArgument([
       new StringArgument('file', 'example.csv'),
       new PluralArgumentFromStrings('lines', $count, '{count} lines', '1 line', [
         '=0' => 'no lines',
@@ -45,7 +51,7 @@ class MessageTest
     ]));
     self::assertEquals('CSV file example.csv uploaded: no lines processed.', $message->__toString());
     $count = 1;
-    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArraySetArgument([
+    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArrayMapArgument([
       new StringArgument('file', 'example.csv'),
       new PluralArgumentFromStrings('lines', $count, '{count} lines', '1 line', [
         '=0' => 'no lines',
@@ -53,7 +59,7 @@ class MessageTest
     ]));
     self::assertEquals('CSV file example.csv uploaded: 1 line processed.', $message->__toString());
     $count = 10;
-    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArraySetArgument([
+    $message = new MessageStruct('CSV file {file} uploaded: {lines} processed.', new ArrayMapArgument([
       new StringArgument('file', 'example.csv'),
       new PluralArgumentFromStrings('lines', $count, '{count} lines', '1 line', [
         '=0' => 'no lines',
@@ -62,66 +68,72 @@ class MessageTest
     self::assertEquals('CSV file example.csv uploaded: 10 lines processed.', $message->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testPluralsArgs() {
     $codes = [];
-    $message = new MessageStruct('{discounts} applied.', new ArraySetArgument([
+    $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
       new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),
       ])),
     ]));
     self::assertEquals('No discounts applied.', $message->__toString());
     $codes = ['DOLLAROFF'];
-    $message = new MessageStruct('{discounts} applied.', new ArraySetArgument([
+    $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
       new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),
       ])),
     ]));
     self::assertEquals('Discount DOLLAROFF applied.', $message->__toString());
     $codes = ['DOLLAROFF', 'ONEFREE'];
-    $message = new MessageStruct('{discounts} applied.', new ArraySetArgument([
+    $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
       new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),
       ])),
     ]));
     self::assertEquals('Discounts DOLLAROFF, ONEFREE applied.', $message->__toString());
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testSelect() {
     $option = 'other';
     $extension = '';
-    $message = new MessageStruct('File with {article} uploaded.', new ArraySetArgument([
+    $message = new MessageStruct('File with {article} uploaded.', new ArrayMapArgument([
       new SelectArgumentFromStrings('article', $option, 'an unknown extension', [
         'a' => 'a {extension} extension',
         'an' => 'an {extension} extension',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('extension', $extension),
       ])),
     ]));
     self::assertEquals('File with an unknown extension uploaded.', $message->__toString());
     $option = 'a';
     $extension = 'CSV';
-    $message = new MessageStruct('File with {article} uploaded.', new ArraySetArgument([
+    $message = new MessageStruct('File with {article} uploaded.', new ArrayMapArgument([
       new SelectArgumentFromStrings('article', $option, 'an unknown extension', [
         'a' => 'a {extension} extension',
         'an' => 'an {extension} extension',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('extension', $extension),
       ])),
     ]));
     self::assertEquals('File with a CSV extension uploaded.', $message->__toString());
     $option = 'an';
     $extension = 'XLS';
-    $message = new MessageStruct('File with {article} uploaded.', new ArraySetArgument([
+    $message = new MessageStruct('File with {article} uploaded.', new ArrayMapArgument([
       new SelectArgumentFromStrings('article', $option, 'an unknown extension', [
         'a' => 'a {extension} extension',
         'an' => 'an {extension} extension',
-      ], new ArraySetArgument([
+      ], new ArrayMapArgument([
         new StringArgument('extension', $extension),
       ])),
     ]));
@@ -186,7 +198,8 @@ class MessageTest
 final class TestComplexMessage
   extends AbstractMessage {
   public function __construct(string $host, string $guest, int $people, string $option) {
-    parent::__construct(new MessageStruct('{party}', new ArraySetArgument([
+    /** @noinspection PhpUnhandledExceptionInspection - arguments type is checked */
+    parent::__construct(new MessageStruct('{party}', new ArrayMapArgument([
       new SelectArgumentStruct('party', new SelectMessageStruct(
         $option,
         new PluralArgumentFromStrings(
@@ -202,8 +215,8 @@ final class TestComplexMessage
           null,
           1
         ),
-        new ArraySetArgument([
-          new ArgumentStruct('female', new MessageStruct('{guests}', new ArraySetArgument([
+        new ArrayMapArgument([
+          new ArgumentStruct('female', new MessageStruct('{guests}', new ArrayMapArgument([
             new PluralArgumentFromStrings(
               'guests',
               $people,
@@ -218,7 +231,7 @@ final class TestComplexMessage
               1
             ),
           ]))),
-          new ArgumentStruct('male', new MessageStruct('{guests}', new ArraySetArgument([
+          new ArgumentStruct('male', new MessageStruct('{guests}', new ArrayMapArgument([
             new PluralArgumentFromStrings(
               'guests',
               $people,
@@ -234,7 +247,7 @@ final class TestComplexMessage
             ),
           ]))),
         ]),
-        new ArraySetArgument([
+        new ArrayMapArgument([
           new StringArgument('host', $host),
           new StringArgument('guest', $guest),
         ])

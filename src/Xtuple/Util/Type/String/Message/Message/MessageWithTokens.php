@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Type\String\Message\Message;
 
-use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
 
 final class MessageWithTokens
@@ -16,6 +16,7 @@ final class MessageWithTokens
     foreach ($tokens as $token => $argument) {
       $arguments[] = new StringArgument((string) $token, (string) $argument);
     }
-    parent::__construct(new MessageStruct($string, new ArraySetArgument($arguments)));
+    /** @noinspection PhpUnhandledExceptionInspection - arguments type is checked */
+    parent::__construct(new MessageStruct($string, new ArrayMapArgument($arguments)));
   }
 }

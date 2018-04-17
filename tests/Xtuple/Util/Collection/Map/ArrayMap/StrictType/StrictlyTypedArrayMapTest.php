@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 class StrictlyTypedArrayMapTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Method key() is not defined in type \stdClass
+   * @throws \Throwable
    */
   public function testConstructor() {
     $map = new StrictlyTypedArrayMap(TestEntry::class, [
@@ -23,6 +24,12 @@ class StrictlyTypedArrayMapTest
     new StrictlyTypedArrayMap(\stdClass::class, [], 'key');
   }
 
+  /**
+   * @expectedException \Throwable
+   * @expectedExceptionMessage All elements must be \Xtuple\Util\Collection\Map\ArrayMap\StrictType\TestEntry. Element
+   *                           0 of type \stdClass given
+   * @throws \Throwable
+   */
   public function testKey() {
     $map = new StrictlyTypedArrayMap(TestEntry::class, [
       new TestEntry('key', 'value'),
@@ -35,6 +42,9 @@ class StrictlyTypedArrayMapTest
       self::assertEquals('key', $k);
       self::assertEquals('value', $v->value());
     }
+    new StrictlyTypedArrayMap(TestEntry::class, [
+      (object) ['key' => 'test'],
+    ], 'key');
   }
 }
 

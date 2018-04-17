@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 class StringEnumTest
   extends TestCase {
   /**
-   * @expectedException \InvalidArgumentException
+   * @expectedException \Throwable
    * @expectedExceptionMessage Value `0` is not supported in Xtuple\Util\Enum\Char\TestStringEnum enum
    * @throws \Throwable
    */

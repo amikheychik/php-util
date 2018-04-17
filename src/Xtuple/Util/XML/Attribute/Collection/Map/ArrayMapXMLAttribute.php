@@ -9,6 +9,8 @@ final class ArrayMapXMLAttribute
   extends AbstractStrictlyTypedArrayMap
   implements MapXMLAttribute {
   /**
+   * @throws \Throwable - if the element of the wrong type is passed.
+   *
    * @param XMLAttribute[] $elements
    */
   public function __construct(array $elements = []) {

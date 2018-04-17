@@ -3,14 +3,14 @@
 namespace Xtuple\Util\Type\Measure\Mass\Unit\Collection\Set;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Exception\Exception;
 use Xtuple\Util\Type\Measure\Mass\Unit\Unit\Kilogram;
 
 class SetMassUnitTest
   extends TestCase {
   /**
-   * @expectedException Exception
+   * @expectedException \Throwable
    * @expectedExceptionMessage Mass unit unknown is not supported
+   * @throws \Throwable
    */
   public function testMassUnits() {
     $units = new MassUnits();
@@ -19,6 +19,9 @@ class SetMassUnitTest
     $units->find('unknown');
   }
 
+  /**
+   * @throws \Throwable
+   */
   public function testArraySetMassUnit() {
     $units = new ArraySetMassUnit([
       'K' => new Kilogram(),
@@ -30,7 +33,6 @@ class SetMassUnitTest
     ], true);
     self::assertTrue($units->get('K')->is(new Kilogram()));
     self::assertNull($units->get('kg'));
-    /** @noinspection PhpUnhandledExceptionInspection */
     self::assertTrue($units->find('k')->is(new Kilogram()));
   }
 }

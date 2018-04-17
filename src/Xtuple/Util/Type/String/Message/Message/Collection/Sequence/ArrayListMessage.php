@@ -9,6 +9,8 @@ final class ArrayListMessage
   extends AbstractStrictlyTypedArrayList
   implements ListMessage {
   /**
+   * @throws \Throwable - if elements is of the wrong type.
+   *
    * @param Message[]|iterable $elements
    */
   public function __construct(iterable $elements = []) {

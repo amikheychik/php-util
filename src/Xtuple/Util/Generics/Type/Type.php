@@ -4,7 +4,7 @@ namespace Xtuple\Util\Generics\Type;
 
 interface Type {
   /**
-   * @throws \InvalidArgumentException
+   * @throws \Throwable
    *
    * @param mixed $instance
    *

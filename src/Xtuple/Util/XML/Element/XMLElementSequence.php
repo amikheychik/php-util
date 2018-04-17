@@ -24,10 +24,12 @@ final class XMLElementSequence
   }
 
   public function attributes(?string $ns = null, bool $isPrefix = false): MapXMLAttribute {
+    /** @noinspection PhpUnhandledExceptionInspection - no arguments passed */
     return new ArrayMapXMLAttribute();
   }
 
   public function children(?string $xpath = null, ?string $ns = null, bool $isPrefix = false): ListXMLElement {
+    /** @noinspection PhpUnhandledExceptionInspection - XML should be valid */
     return (new XMLElementString(strtr('<Root>{sequence}</Root>', [
       '{sequence}' => $this,
     ])))->children($xpath, $ns, $isPrefix);
