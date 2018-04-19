@@ -4,11 +4,11 @@ namespace Xtuple\Util\Collection\Set\ArraySet\StrictType;
 
 use PHPUnit\Framework\TestCase;
 
-class StrictlyTypedArrayListTest
+class StrictlyTypedArraySetTest
   extends TestCase {
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage All elements must be \stdClass. Element 0 of type \array given.
+   * @expectedExceptionMessage Element 0 is array, \stdClass is required.
    * @throws \Throwable
    */
   public function testConstructor() {
@@ -23,7 +23,7 @@ class StrictlyTypedArrayListTest
 
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Method key() is not defined in type \stdClass
+   * @expectedExceptionMessage Method \stdClass::key() is undefined
    * @throws \Throwable
    */
   public function testKeyConstructor() {

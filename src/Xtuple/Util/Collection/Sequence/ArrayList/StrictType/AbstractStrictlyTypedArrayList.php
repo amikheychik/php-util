@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\Collection\Sequence\ArrayList\StrictType;
 
+use Xtuple\Util\Collection\Exception\ElementTypeException;
 use Xtuple\Util\Collection\Sequence\ArrayList\AbstractArrayList;
-use Xtuple\Util\Exception\ChainException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArrayList
@@ -21,11 +21,7 @@ abstract class AbstractStrictlyTypedArrayList
         $strict->cast($element);
       }
       catch (\Throwable $e) {
-        throw new ChainException($e, 'All elements must be \{type}. Element {index} of type \{given} given.', [
-          'index' => $i,
-          'type' => ltrim($type, '\\'),
-          'given' => ltrim(gettype($element) === 'object' ? get_class($element) : gettype($element), '\\'),
-        ]);
+        throw new ElementTypeException((string) $i, $strict, $element, $e);
       }
     }
     parent::__construct($elements);

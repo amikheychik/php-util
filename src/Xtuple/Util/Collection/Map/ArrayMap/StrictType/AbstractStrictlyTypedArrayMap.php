@@ -2,9 +2,9 @@
 
 namespace Xtuple\Util\Collection\Map\ArrayMap\StrictType;
 
+use Xtuple\Util\Collection\Exception\ElementTypeException;
 use Xtuple\Util\Collection\Map\ArrayMap\AbstractArrayMap;
-use Xtuple\Util\Exception\ChainException;
-use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\Exception\Undefined\Method\UndefinedMethodException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArrayMap
@@ -18,10 +18,7 @@ abstract class AbstractStrictlyTypedArrayMap
    */
   public function __construct(string $type, iterable $elements = [], ?string $key = null) {
     if (!is_null($key) && !method_exists($type, $key)) {
-      throw new Exception("Method {key}() is not defined in type \{type}", [
-        'key' => $key,
-        'type' => ltrim($type, '\\'),
-      ]);
+      throw new UndefinedMethodException($type, $key);
     }
     $strict = new StrictType($type);
     foreach ($elements as $i => $element) {
@@ -29,11 +26,7 @@ abstract class AbstractStrictlyTypedArrayMap
         $strict->cast($element);
       }
       catch (\Throwable $e) {
-        throw new ChainException($e, 'All elements must be \{type}. Element {index} of type \{given} given.', [
-          'index' => $i,
-          'type' => ltrim($type, '\\'),
-          'given' => ltrim(gettype($element) === 'object' ? get_class($element) : gettype($element), '\\'),
-        ]);
+        throw new ElementTypeException((string) $i, $strict, $element, $e);
       }
     }
     parent::__construct($elements, $key ? function ($element) use ($key) {

@@ -81,4 +81,41 @@ class TypeTest
     $stdClass->cast(new \ArrayObject());
     $stdClass->cast(new \stdClass());
   }
+
+  /**
+   * @throws \Throwable
+   */
+  public function testCastType() {
+    $type = new CastType('array');
+    self::assertEquals('string', $type->fqn());
+    self::assertEquals('casted', $type->cast('casted'));
+    try {
+      $type->cast(['casted']);
+    }
+    catch (\Throwable $e) {
+      self::assertEquals('array is passed, string is required', $e->getMessage());
+    }
+    finally {
+      if (!isset($e)) {
+        self::fail('Failed to throw cast exception');
+      }
+      unset($e);
+    }
+    $type = new CastType((object) []);
+    $instance = (object) ['test' => 'instance'];
+    self::assertEquals('\stdClass', $type->fqn());
+    self::assertEquals($instance, $type->cast($instance));
+    try {
+      $type->cast(['standard' => 'class']);
+    }
+    catch (\Throwable $e) {
+      self::assertEquals('array is passed, \stdClass is required', $e->getMessage());
+    }
+    finally {
+      if (!isset($e)) {
+        self::fail('Failed to throw cast exception');
+      }
+      unset($e);
+    }
+  }
 }
