@@ -17,6 +17,6 @@ final class MultiErrorException
    * @param int       $code
    */
   public function __construct(array $errors, string $message, array $parameters = [], int $code = 0) {
-    parent::__construct(new MessageWithTokens($message), null, new ArrayListMessage($errors), $code);
+    parent::__construct(new MessageWithTokens($message, $parameters), null, new ArrayListMessage($errors), $code);
   }
 }
