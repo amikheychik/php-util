@@ -7,6 +7,34 @@
 
 == Coding standards
 
+=== Code style
+
+https://www.jetbrains.com/help/phpstorm/settings-code-style.html[Code-style settings] are located in `Preferences → Editor → Code-Style`. Current file or all files in the selected directory can be https://www.jetbrains.com/help/phpstorm/using-code-editor.html#reformat_rearrange_code[reformatted] using `Code → Reformat Code` or `Code → Show Reformat Code Dialog` menus.
+
+Code style has evolved from https://www.drupal.org/docs/develop/standards/coding-standards[Drupal coding standards], absorbing ideas from https://www.php-fig.org/psr/psr-1/[PSR-1]/https://www.php-fig.org/psr/psr-2/[PSR-2] and with regard to upcoming PHP language https://wiki.php.net/rfc[features]. The goals of the code style are:
+
+* readability of the code;
+* consistency of the code style;
+* minimization of the Git diff output.
+
+==== Naming conventions
+
+===== Keywords
+
+* PHP http://php.net/manual/en/reserved.keywords.php[keywords] and http://php.net/manual/en/reserved.keywords.php[reserved] *must* be lowercase, including predefined constants `true`, `false`, `null`.
+
+===== PHP Code Tags
+
+* Full PHP tags (`<?php ?>`) *must* be used (not shorthand `<? ?>`).
+* Opening PHP tag `<?php` *must* be followed by `declare(strict_types=1);` declaration.
+* Closing PHP tag `?>` *must* be omitted in all files.
+* Code inside PHP tags *must not* be indented.
+
+===== Constants
+
+* Constants names *must* be all uppercase with underscores to separate words.
+* Pre-defined PHP constants (`true`, `false`, `null`) *must* be lowercase (for consistency with all other PHP keywords).
+
 === Exceptions
 
 Checked exceptions are exceptions which handling is recognized by compiler or static code analysis tools, forcing developer to recognize and handle it.
@@ -129,11 +157,74 @@ final class Exceptional {
 * add a message appropriate to this context;
 * store the previous exception for logging.
 
+=== Comments
+
+Comments should be considered a code-smell and a failure to write readable code. Comments should be used only to explain **why** some irregular code was added (e.g. to work around some specific problem), **not what** code is suppose to do.
+
+==== PHPDoc
+
+[Scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return types declarations](https://wiki.php.net/rfc/return_types) have been introduced in PHP 7. This allows remove substantial amount of PHPDocs used previously to declare types to be removed. PHPDocs should be used for types only to overcome current limitations of PHP (no `throws` keyword, no generics, etc.) to provide as strict typing as possible.
+
+* PHPDocs *must not* be used if information can be provided via PHP itself.
+* PHPDocs *must* be used for class properties.
+* Fully qualified class name *must not* be used.
+* PHP core classes *should* be documented as "fully qualified" (e.g. `\Throwable`).
+* PHPDocs for overridden and implemented methods *must* be omitted if method signature hasn't changed.
+* PHPDocs *should* be used to specify array element types (*may* be skipped if values are of `mixed` types).
+* For nullable type `null` *must* be specified *before* the type (e.g. `null|string`).
+* For a specific boolean value (`true` or `false`) this value *must* be used instead of `bool` (e.g. `null|false|string`).
+
+Additional PHPDoc tags should be used:
+
+* `@workaround` - to comment code that deals with issues caused by 3rd-party system.
+* `@generic` - to tag a method that has generic (`mixed`) parameter(s) that should be narrowed down in implementations.
+* `@override` - to tag a method that has a parent method implementation, but its call is omitted on purpose.
+
+As often PHPDocs are shown collapsed, put the overridden/critical information in the first line.
+
+.PHPDoc custom order example
+[source]
+----
+<?php
+
+interface PHPDocs {
+  /**
+   * @generic //<1>
+   *
+   * @param int $j
+   *
+   * @return mixed
+   */
+  public function element(int $j);
+}
+
+final class PHPDocsExample
+  implements PHPDocs {
+  /**
+   * @throws \Throwable //<2>
+   *
+   * @param int $i
+   *
+   * @return void
+   */
+  public function get(int $i): void {}
+
+  /**
+   * @return \stdClass //<3>
+   * {@inheritdoc}
+   */
+  public function element() {}
+}
+----
+<1> `@generic` tag marks that `element()` method can be overridden to narrow its type.
+<2> `@throws \Throwable` would be visible while PHPDoc is collapsed, while `@param` and `@return` only duplicate information contained in the method signature.
+<3> `@return \stdClass` only overrides generic return type (from `mixed` to `\stdClass`), so the rest of the PHPDoc can be inherited
+
 == Development
 
 === PHPStorm IDE
 
-http://jetbrains.com/phpstorm[PHPStorm] is the most advanced IDE to work with PHP and is **strongly** recommended to use for development. Using other IDEs or editors is up for a developer, and this section can be used as a reference to achieve same code quality and development productivity results.
+http://jetbrains.com/phpstorm[PHPStorm] is the most advanced IDE to work with PHP and is *strongly* recommended to use for development. Using other IDEs or editors is up for a developer, and this section can be used as a reference to achieve same code quality and development productivity results.
 
 ==== Preferences
 
