@@ -297,7 +297,7 @@ $cache->isEmpty() === true;
 
 === Collection
 
-`Xtuple/Util/Collection` package provides classes to work with collections of elements. It contains abstract and default implementations for both strictly typed and untyped data. All collections are iterable and countable.
+`Xtuple\Util\Collection` package provides classes to work with collections of elements. It contains abstract and default implementations for both strictly typed and untyped data. All collections are iterable and countable.
 
 [NOTE]
 PHP doesn't allow to use the word `List` as a namespace or a class name, so the term `Sequence` is used instead for the namespace and root interface. All the classes are named using the term `List`.
@@ -305,7 +305,7 @@ PHP doesn't allow to use the word `List` as a namespace or a class name, so the 
 [NOTE]
 PHP doesn't have a default mechanism for object identity, so the `Set` is defined not by elements' identity, but by their key method (similarly to `Map`).
 
-Default implementation class path for any collection type follows the same pattern: `{Abstract Data Type}/{Implementation type}/{Narrowing customization}` (e.g. `Xtuple/Util/Collection/Map/ArrayMap/StrictType/StrictlyTypedArrayMap`).
+Default implementation class path for any collection type follows the same pattern: `{Abstract Data Type}/{Implementation type}/{Narrowing customization}` (e.g. `Xtuple\Util\Collection\Map\ArrayMap\StrictType\StrictlyTypedArrayMap`).
 
 Strict type abstract collections should be used to have generic collections. Original collection type interfaces should be extended to provide type information in PHPDocs.
 
@@ -384,7 +384,7 @@ final class ArrayListStdClass
 
 ==== List (Sequence)
 
-`Xtuple/Util/Collection/Sequence` package provides default list implementations. List keys are integers and count starts from `0`. List allows access to any existing element with `get(int $key)` method. List is immutable.
+`Xtuple\Util\Collection\Sequence` package provides default list implementations. List keys are integers and count starts from `0`. List allows access to any existing element with `get(int $key)` method. List is immutable.
 
 [source]
 .Example usage of the `ArrayList`.
@@ -419,7 +419,7 @@ foreach ($list as $k => $value) {
 
 ==== Map
 
-`Xtuple/Util/Collection/Map` package provides default key-value map implementations. Unlike usual key-value maps, Map keys are always strings (not objects). Map allows access to any existing element with `get(string $key)` method. Map is immutable.
+`Xtuple\Util\Collection\Map` package provides default key-value map implementations. Unlike usual key-value maps, Map keys are always strings (not objects). Map allows access to any existing element with `get(string $key)` method. Map is immutable.
 
 [source]
 .Example usage of the `ArrayMap`.
@@ -474,7 +474,7 @@ $map->get('1');
 
 ==== Set
 
-`Xtuple/Util/Collection/Set` package provides default set implementation. As PHP doesn't support objects identity by default, its implementation can be chosen by user (two objects may be completely different, but would be considered identical, as long as their key method returns the same value). This effectively makes Set similar to Map, but unlike Map, Set throws exception when duplicates occur. Set is immutable.
+`Xtuple\Util\Collection\Set` package provides default set implementation. As PHP doesn't support objects identity by default, its implementation can be chosen by user (two objects may be completely different, but would be considered identical, as long as their key method returns the same value). This effectively makes Set similar to Map, but unlike Map, Set throws exception when duplicates occur. Set is immutable.
 
 [source]
 .Example usage of the `ArraySet`.
@@ -549,7 +549,7 @@ $map = new StrictlyTypedArraySet(Country::class, [
 
 ==== Stack
 
-`Xtuple/Util/Collection/Stack` package provides a default stack implementation. Similarly to List, stack keys are handled internally. Stack is mutable and provides `push()` and `pop()` methods to mutate its state.
+`Xtuple\Util\Collection\Stack` package provides a default stack implementation. Similarly to List, stack keys are handled internally. Stack is mutable and provides `push()` and `pop()` methods to mutate its state.
 
 [source]
 .Example usage of the `ArrayStack`.
@@ -960,11 +960,11 @@ $path->isFile();
 
 === Generics
 
-`Xtuple/Util/Generics` package simplifies work with generic classes.
+`Xtuple\Util\Generics` package simplifies work with generic classes.
 
 ==== Type
 
-`Xtuple/Util/Generics/Type` package should be used when type check is required.
+`Xtuple\Util\Generics\Type` package should be used when type check is required.
 
 Use `StrictType` when instance of a class/interface is required, and `ScalarType` when a scalar (string, integer, float or boolean) is required.
 
