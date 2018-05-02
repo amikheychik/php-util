@@ -3,6 +3,8 @@
 namespace Xtuple\Util\XML\Element;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\File\File\Regular\Create\CreateRegularFileFromString;
 use Xtuple\Util\XML\Attribute\Collection\Map\ArrayMapXMLAttribute;
 use Xtuple\Util\XML\Attribute\Optional\OptionalXMLAttributeStruct;
 use Xtuple\Util\XML\Attribute\XMLAttributeStruct;
@@ -73,6 +75,50 @@ class XMLElementTest
     self::assertEquals(2, $element->attributes()->count());
     self::assertFalse($element->isEmpty());
     new XMLElementSimple((new \SimpleXMLElement('<Test name="test" />'))->attributes('name'));
+  }
+
+  /**
+   * @throws \Throwable
+   */
+  public function testRegularFile() {
+    $element = new XMLElementRegularFile(
+      new CreateRegularFileFromString('/tmp/phpunit/php-util/element.xml', implode('', [
+        '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
+        '<Child name="empty"></Child>',
+        '<Child name="not-empty">Test</Child>',
+        '<Element>Element</Element>',
+        'Content',
+        '</Test>',
+      ]))
+    );
+    self::assertEquals('Test', $element->name());
+    self::assertEquals('Content', $element->value());
+    self::assertEquals(3, $element->children()->count());
+    self::assertEquals(2, $element->children('Child')->count());
+    self::assertEquals(2, $element->children('/Test/Child')->count());
+    self::assertEquals('Test', $element->children('Child[@name="not-empty"]')->get(0)->value());
+    self::assertEquals('true', $element->attributes()->getOptional(new OptionalXMLAttributeStruct('debug'))->value());
+    self::assertEquals(2, $element->attributes()->count());
+    self::assertFalse($element->isEmpty());
+    unlink('/tmp/phpunit/php-util/element.xml');
+    try {
+      new XMLElementRegularFile(
+        new CreateRegularFileFromString('/tmp/phpunit/php-util/element.xml', 'Not an XML content')
+      );
+    }
+    catch (\Throwable $e) {
+      self::assertEquals(
+        'Failed to load XML from file /tmp/phpunit/php-util/element.xml content',
+        $e->getMessage()
+      );
+    }
+    finally {
+      if (!isset($e)) {
+        throw new Exception('Failed to throw an XMLElementRegularFile exception');
+      }
+      unset($e);
+    }
+    unlink('/tmp/phpunit/php-util/element.xml');
   }
 
   /**
