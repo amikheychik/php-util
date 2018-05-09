@@ -21,4 +21,8 @@ abstract class AbstractArrayList
       ? $this->index[$key]
       : null;
   }
+
+  public final function key() {
+    return (int) parent::key();
+  }
 }

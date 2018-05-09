@@ -23,4 +23,8 @@ abstract class AbstractArrayMap
   public final function get(string $key) {
     return $this->index[$key] ?? null;
   }
+
+  public final function key() {
+    return (string) parent::key();
+  }
 }
