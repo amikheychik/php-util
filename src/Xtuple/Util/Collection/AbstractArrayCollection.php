@@ -23,7 +23,7 @@ abstract class AbstractArrayCollection
     next($this->elements);
   }
 
-  public final function key() {
+  public function key() {
     return key($this->elements);
   }
 
