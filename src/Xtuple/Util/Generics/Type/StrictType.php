@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Generics\Type;
 
-use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\Generics\Type\Exception\ValueTypeException;
 
 final class StrictType
   implements Type {
@@ -10,9 +10,7 @@ final class StrictType
   private $fqn;
 
   public function __construct(string $fqn) {
-    $this->fqn = strtr('\\{type}', [
-      '{type}' => ltrim($fqn, '\\'),
-    ]);
+    $this->fqn = ltrim($fqn, '\\');
   }
 
   public function fqn(): string {
@@ -21,16 +19,10 @@ final class StrictType
 
   public function cast($instance) {
     if (!is_object($instance)) {
-      throw new Exception('{type} is passed, {required} is required', [
-        'type' => gettype($instance),
-        'required' => $this->fqn,
-      ]);
+      throw new ValueTypeException($this->fqn, gettype($instance));
     }
     if (!($instance instanceof $this->fqn)) {
-      throw new Exception('\{class} is passed, {required} is required', [
-        'class' => get_class($instance),
-        'required' => $this->fqn,
-      ]);
+      throw new ValueTypeException($this->fqn, get_class($instance));
     }
     return $instance;
   }

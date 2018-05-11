@@ -2,9 +2,9 @@
 
 namespace Xtuple\Util\Collection\Stack\ArrayStack\StrictType;
 
-use Xtuple\Util\Collection\Exception\ElementTypeException;
 use Xtuple\Util\Collection\Stack\ArrayStack\ArrayStack;
 use Xtuple\Util\Collection\Stack\Stack;
+use Xtuple\Util\Generics\Type\Exception\ElementTypeException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArrayStack
@@ -28,7 +28,7 @@ abstract class AbstractStrictlyTypedArrayStack
         $index[] = $this->type->cast($element);
       }
       catch (\Throwable $e) {
-        throw new ElementTypeException((string) $i, $this->type, $element, $e);
+        throw new ElementTypeException((string) $i, $this->type->fqn(), $element, $e);
       }
     }
     $this->stack = new ArrayStack($index);

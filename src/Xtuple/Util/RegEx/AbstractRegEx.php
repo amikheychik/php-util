@@ -19,11 +19,11 @@ abstract class AbstractRegEx
     return $this->regEx->pattern();
   }
 
-  public function matches(string $string, bool $capture = false, int $offset = 0): array {
+  public final function matches(string $string, bool $capture = false, int $offset = 0): array {
     return $this->regEx->matches($string, $capture, $offset);
   }
 
-  public function all(string $string, bool $set = false, bool $capture = false, int $offset = 0): array {
+  public final function all(string $string, bool $set = false, bool $capture = false, int $offset = 0): array {
     return $this->regEx->all($string, $set, $capture, $offset);
   }
 

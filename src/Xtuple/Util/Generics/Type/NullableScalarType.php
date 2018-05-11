@@ -2,23 +2,25 @@
 
 namespace Xtuple\Util\Generics\Type;
 
+use Xtuple\Util\Generics\Type\Exception\TypeThrowable;
+
 final class NullableScalarType
   implements Type {
   /** @var null|ScalarType */
   private $type;
 
   /**
-   * @throws \Throwable
+   * @throws TypeThrowable
    *
    * @param string|float|int|bool|null $instance
    *
    * @return string|float|int|bool|null
    */
   public function cast($instance) {
-    if (is_null($instance)) {
+    if ($instance === null) {
       return null;
     }
-    if (is_null($this->type)) {
+    if ($this->type === null) {
       $this->type = new ScalarType();
     }
     return $this->type->cast($instance);

@@ -8,7 +8,7 @@ class StrictlyTypedArrayMapTest
   extends TestCase {
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Method \stdClass::key() is undefined
+   * @expectedExceptionMessage Method stdClass::key() is undefined
    * @throws \Throwable
    */
   public function testConstructor() {
@@ -26,8 +26,8 @@ class StrictlyTypedArrayMapTest
 
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Element 0 is \stdClass, \Xtuple\Util\Collection\Map\ArrayMap\StrictType\TestEntry is
-   *                           required
+   * @expectedExceptionMessage Element 0 must be of the type Xtuple\Util\Collection\Map\ArrayMap\StrictType\TestEntry,
+   *                           instance of stdClass given.
    * @throws \Throwable
    */
   public function testKey() {

@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\Collection\Sequence\ArrayList\StrictType;
 
-use Xtuple\Util\Collection\Exception\ElementTypeException;
 use Xtuple\Util\Collection\Sequence\ArrayList\AbstractArrayList;
+use Xtuple\Util\Generics\Type\Exception\ElementTypeException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArrayList
@@ -21,7 +21,7 @@ abstract class AbstractStrictlyTypedArrayList
         $strict->cast($element);
       }
       catch (\Throwable $e) {
-        throw new ElementTypeException((string) $i, $strict, $element, $e);
+        throw new ElementTypeException((string) $i, $strict->fqn(), $element, $e);
       }
     }
     parent::__construct($elements);

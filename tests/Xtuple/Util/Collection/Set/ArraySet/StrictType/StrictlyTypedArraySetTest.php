@@ -3,12 +3,12 @@
 namespace Xtuple\Util\Collection\Set\ArraySet\StrictType;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\Exception\Undefined\Method\UndefinedMethodException;
+use Xtuple\Util\Generics\Type\Exception\ElementTypeException;
 
 class StrictlyTypedArraySetTest
   extends TestCase {
   /**
-   * @expectedException \Throwable
-   * @expectedExceptionMessage Element 0 is array, \stdClass is required.
    * @throws \Throwable
    */
   public function testConstructor() {
@@ -16,17 +16,17 @@ class StrictlyTypedArraySetTest
     new StrictlyTypedArraySet(\stdClass::class, [
       (object) ['value' => 1],
     ]);
+    $this->expectException(ElementTypeException::class);
     new StrictlyTypedArraySet(\stdClass::class, [
       ['value' => 1],
     ]);
   }
 
   /**
-   * @expectedException \Throwable
-   * @expectedExceptionMessage Method \stdClass::key() is undefined
    * @throws \Throwable
    */
   public function testKeyConstructor() {
+    $this->expectException(UndefinedMethodException::class);
     new StrictlyTypedArraySet(\stdClass::class, [
       (object) ['value' => 1],
     ], 'key');

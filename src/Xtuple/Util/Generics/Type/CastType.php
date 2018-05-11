@@ -2,7 +2,7 @@
 
 namespace Xtuple\Util\Generics\Type;
 
-use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\Generics\Type\Exception\ValueTypeException;
 
 final class CastType
   implements Type {
@@ -33,10 +33,7 @@ final class CastType
       return (new StrictType($this->class))->cast($instance);
     }
     if ($this->type !== gettype($instance)) {
-      throw new Exception('{type} is passed, {required} is required', [
-        'type' => gettype($instance),
-        'required' => $this->type,
-      ]);
+      throw new ValueTypeException($this->type, gettype($instance));
     }
     return $instance;
   }

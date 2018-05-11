@@ -2,9 +2,9 @@
 
 namespace Xtuple\Util\Collection\Set\ArraySet\StrictType;
 
-use Xtuple\Util\Collection\Exception\ElementTypeException;
 use Xtuple\Util\Collection\Set\ArraySet\AbstractArraySet;
 use Xtuple\Util\Exception\Undefined\Method\UndefinedMethodException;
+use Xtuple\Util\Generics\Type\Exception\ElementTypeException;
 use Xtuple\Util\Generics\Type\StrictType;
 
 abstract class AbstractStrictlyTypedArraySet
@@ -26,7 +26,7 @@ abstract class AbstractStrictlyTypedArraySet
         $strict->cast($element);
       }
       catch (\Throwable $e) {
-        throw new ElementTypeException((string) $i, $strict, $element, $e);
+        throw new ElementTypeException((string) $i, $strict->fqn(), $element, $e);
       }
     }
     parent::__construct($elements, $key ? function ($element) use ($key) {

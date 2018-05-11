@@ -8,7 +8,7 @@ class StrictlyTypedArrayStackTest
   extends TestCase {
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Element 0 is array, \stdClass is required.
+   * @expectedExceptionMessage Element 0 must be of the type stdClass, instance of array given
    * @throws \Throwable
    */
   public function testConstructor() {
@@ -23,7 +23,7 @@ class StrictlyTypedArrayStackTest
 
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage array is passed, \stdClass is required
+   * @expectedExceptionMessage Value must be of the type stdClass, instance of array given
    * @throws \Throwable
    */
   public function testStack() {

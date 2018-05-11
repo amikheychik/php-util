@@ -2,9 +2,11 @@
 
 namespace Xtuple\Util\Generics\Type;
 
+use Xtuple\Util\Generics\Type\Exception\TypeThrowable;
+
 interface Type {
   /**
-   * @throws \Throwable
+   * @throws TypeThrowable
    *
    * @param mixed $instance
    *

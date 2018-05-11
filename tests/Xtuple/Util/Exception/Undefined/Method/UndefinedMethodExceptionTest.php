@@ -8,6 +8,6 @@ class UndefinedMethodExceptionTest
   extends TestCase {
   public function testException() {
     $e = new UndefinedMethodException(\stdClass::class, 'get');
-    self::assertEquals('Method \stdClass::get() is undefined', $e->getMessage());
+    self::assertEquals('Method stdClass::get() is undefined', $e->getMessage());
   }
 }
