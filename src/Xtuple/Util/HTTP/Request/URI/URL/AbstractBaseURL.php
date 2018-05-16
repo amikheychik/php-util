@@ -15,9 +15,9 @@ abstract class AbstractBaseURL
    * @param string $fragment
    */
   public function __construct(string $base, string $path, array $query = [], string $fragment = '') {
-    parent::__construct(new URLString(strtr('{base}/{path}{query}{fragment}', [
+    parent::__construct(new URLString(strtr('{base}{path}{query}{fragment}', [
       '{base}' => rtrim($base, '/'),
-      '{path}' => ltrim($path, '/'),
+      '{path}' => ($path = ltrim($path, '/')) ? "/{$path}" : '',
       '{query}' => $query ? strtr('?{query}', [
         '{query}' => http_build_query($query),
       ]) : '',
