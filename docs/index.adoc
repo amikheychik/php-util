@@ -970,6 +970,7 @@ Use `StrictType` when instance of a class/interface is required, and `ScalarType
 
 [source]
 ----
+use Xtuple\Util\Generics\Type\ResourceType;
 use Xtuple\Util\Generics\Type\ScalarType;
 use Xtuple\Util\Generics\Type\StrictType;
 
@@ -994,6 +995,14 @@ $scalar->cast(1);
 
 // Throws an exception, null is not a scalar.
 $scalar->cast(null);
+
+$resource = new ResourceType();
+
+// Returns resource handler created by tmpfile().
+$resource->cast(tmpfile());
+
+// Throws an exception, as \stdClass() is not a resource.
+$resource->cast(new \stdClass());
 ----
 
 Use `NullableType` when instance of a class/interface or `null` can be passed, and `NullableScalarType` when a scalar or `null` can be passed.
@@ -1015,6 +1024,207 @@ $nullableScalar = new NullabaleScalarType();
 $nullalbeScalar->cast(null);
 ----
 <1> `::class` constant doesn't have a leading root namespace `\`, but it's recommended to provide one when it's passed as a string.
+
+=== HTTP
+
+`Xtuple\Util\HTTP` package contains interfaces and classes to work with HTTP protocol (currently, only `HTTP/1.1` is supported). `Xtuple\Util\HTTP\Message`, `Xtuple\Util\HTTP\Request` and `Xtuple\Util\HTTP\Response` packages provide interfaces and classes as close to HTTP protocol terms as possible, while `Xtuple\Util\HTTP\Client` package provides an HTTP client to make requests.
+
+==== Client
+
+`Xtuple\Util\HTTP\Client` declares an interface for an HTTP client and provides a default implementation `Xtuple\Util\HTTP\Client\CURL` using http://php.net/manual/en/book.curl.php[PHP Curl extension].
+
+`Xtuple\Util\HTTP\Client\Client` interface declares two methods:
+
+* `send(Request $request): Result` - `send()` is a safe method, and must not throw an exception directly. Exception should be returned inside the `Result` object.
+* `sendMany(MapRequest $requests): MapResult` - `sendMany()` is an unsafe method, it may throw an exception, if the whole requests processing failed. Yet, if any single request failed with an exception, that exception should be returned inside the `Result` object too. Results in `MapResults` returned by `sendMany()` must have the same keys as the requests passed in `MapRequest`. `sendMany()` doesn't specify if requests should be done asynchronously, but the default implementation `Xtuple\Util\HTTP\Client\CURL\CURLClient` sends requests in parallel.
+
+.Using `Xtuple\Util\HTTP\Client\CURL\CURLClient`.
+[source]
+----
+use Xtuple\Util\HTTP\Client\CURL\Configuration\DefaultConfiguration;
+use Xtuple\Util\HTTP\Client\CURL\CURLClient;
+use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
+use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
+use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Request\Method\Method\GET;
+use Xtuple\Util\HTTP\Request\RequestStruct;
+use Xtuple\Util\HTTP\Request\URI\URL\URLWithQuery;
+
+$client = new CURLClient(new DefaultConfiguration());
+/** @noinspection PhpUnhandledExceptionInspection - $url is verified */ // <1>
+$result = $client->send(new RequestStruct( // <2>
+  new GET(),
+  new URLWithQuery('http://example.com/api', [
+    'sort' => 'ASC',
+  ]),
+  new ArraySetHeader([
+    new HeaderStruct('Content-Type', 'application/json'),
+  ]),
+  new JSONBodyData([
+    'filters' => [
+      'exclusive' => true,
+      'in_stock' => true,
+    ]
+  ])
+));
+try {
+  $response = $result->response();
+  // Returns HTTP code as integer (e.g. 200)
+  $response->status()->code();
+  // Returns HTTP reason as string (e.g. "OK")
+  $response->status()->reason();
+  // Each header may be retrieved by name; a Header type is returned, if it exists (or null otherwise)
+  $response->headers()->get('Content-Type');
+  // Body type extends Stream, so by default only provides a reference to a resource
+  $response->body()->resource();
+}
+catch (Throwable $e) {
+  // Handling response exception
+}
+
+/** @noinspection PhpUnhandledExceptionInspection - $requests types are verified */ // <3>
+$requests = new ArrayMapRequest([
+  // If request keys are not specified, integer indexes are used and casted to strings.
+  'get' => new GETRequest(new URLString('http://example.com')),
+  'delete' => new DELETERequest(new URLWithQuery('http://example.com/resource', ['id' => 1])),
+]);
+try {
+  $results = $client->sendMany($requests);
+  // Results may be retrieved by their key, or simply iterated
+  try {
+    $response = $results->get('get')->response();
+    // Response can be treated the same way as if it was returned by `Client::send()`
+    $response->body();
+  }
+  catch (Throwable $e) {
+    // Handle a specific response exception.
+  }
+}
+catch (Throwable $e) {
+  // Handle generic problem occured, that prevented requests from being sent.
+}
+----
+<1> `@noinspection` references `URLWithQuery`, as generic URL string may be incorrect.
+<2> Using `RequestStruct` and other generic classes is tedious. It's recommended to create custom classes for the often used URLs (see example below).
+<3> `@noinspection` references `ArrayMapRequest`, as all the elements of passed array are guaranteed to be of type `Request`.
+
+Generic classes are not convenient to use more than once. To avoid code duplication, it's recommended to create concrete implementations for them. This also would allow simplify testing of each element.
+
+.Implementing custom `Request`, `Response`, `URL`, etc.
+[source]
+----
+use Xtuple\Util\HTTP\Client\CURL\Configuration\DefaultConfiguration;
+use Xtuple\Util\HTTP\Client\CURL\CURLClient;
+use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
+use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
+use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Request\AbstractRequest;
+use Xtuple\Util\HTTP\Request\Method\Method\POST;
+use Xtuple\Util\HTTP\Request\Request\GETRequest;
+use Xtuple\Util\HTTP\Request\Request\JSON\POSTJSONRequest;
+use Xtuple\Util\HTTP\Request\RequestStruct;
+use Xtuple\Util\HTTP\Request\URI\URL\AbstractBaseURL;
+use Xtuple\Util\HTTP\Request\URI\URL\AbstractURL;
+use Xtuple\Util\HTTP\Response\JSON\AbstractJSONResponse;
+use Xtuple\Util\HTTP\Response\JSON\JSONResponseStruct;
+use Xtuple\Util\HTTP\Response\Response;
+
+// A base URL for a service, allows to provide a specific path with a query and a fragment
+final class ExampleURL
+  extends AbstractBaseURL {
+  public function __construct(string $path, array $query = [], string $fragment = '') {
+    parent::__construct('http://example.com', $path, $query, $fragment);
+  }
+}
+
+// Concrete URL for a service, may be used not only to specify the URL, but to request different parameters.
+final class ProductsExampleURL
+  extends AbstractURL {
+  public function __construct(string $sort = 'title') {
+    /** @noinspection PhpUnhandledExceptionInspection - $url is verified */
+    parent::__construct(new ExampleURL('products', [
+      'sort' => $title,
+    ]));
+  }
+}
+
+// Concrete Request class to retrieve products
+final class GETExampleProductsRequest
+  extends AbstractRequest {
+  public function __construct(string $sort = 'title') {
+    parent::__construct(new GETRequest(
+      new ProductsExampleURL($sort)
+    ));
+  }
+}
+
+// Concrete Request class to create a product:
+// ensapculating all the information of how to send info, exposing only parameters required by the API
+final class POSTProductRequest
+  extends AbstractRequest {
+  public function __construct(string $title, string $subTitle) {
+    /** @noinspection PhpUnhandledExceptionInspection - $headers types are verified */
+    parent::__construct(new RequestStruct(
+      new POST(),
+      new ProductsExampleURL(),
+      new ArraySetHeader([
+        new HeaderStruct('Content-Type', 'application/json'),
+      ]),
+      new JSONBodyData([
+        'title' => $title,
+        'subTitle' => $subTitle,
+      ])
+    ));
+  }
+}
+
+// Alternative implementation, using POSTJSONRequest class, to simplify passing headers.
+final class POSTJSONProductRequest
+  extends AbstractRequest {
+  public function __construct(string $title, string $subTitle) {
+    parent::__construct(new POSTJSONRequest(
+      new ProductsExampleURL(),
+      new JSONBodyData([
+        'title' => $title,
+        'subTitle' => $subTitle,
+      ])
+    ));
+  }
+}
+
+// Concerete class to handle a generic response for POSTJSONProductRequest (or POSTProductRequest)
+final class POSTProductJSONResponse
+  extends AbstractJSONResponse {
+  public function __construct(Response $response) {
+    parent::__construct(new JSONResponseStruct($response));
+  }
+}
+
+// Final code to send and handle the request contains only the necessary in the context information
+$client = new CURLClient(new DefaultConfiguration());
+try {
+  $response = new POSTProductJSONResponse(
+    $client->send(new POSTJSONProductRequest('Example', 'A very good product'))->response()
+  );
+  // JSON data is available for work
+  $response->json();
+}
+catch (Throwable $e) {
+  // Handle request or JSON errors
+}
+----
+
+==== Message
+
+`Xtuple\Util\HTTP\Message` package contains classes to represent HTTP message elements as described in `link:https://tools.ietf.org/html/rfc7230#section-3[RFC 7230]`.
+
+==== Request
+
+`Xtuple\Util\HTTP\Request` package contains classes to represent HTTP request elements as described in `link:https://tools.ietf.org/html/rfc7231[RFC 7231]`.
+
+==== Response
+
+`Xtuple\Util\HTTP\Response` package contains classes to represent HTTP request elements as described in `link:https://tools.ietf.org/html/rfc7231[RFC 7231]`.
 
 === RegEx
 
@@ -1230,6 +1440,63 @@ $units->get('gram') === null;
 $units->find('kgs')->is(new Kilogram()) === true;
 // Throws an exception, as "gram" unit is not found
 $units->find('gram');
+----
+
+==== Stream
+
+`Xtuple\Util\Type\Stream` package provide classes to work with PHP streams (resources). As of PHP 7.1, `resource` keyword can not be used as a type hint, and resources themselves are very generic, may represent very different types (e.g. resource handler created by `curl_init()` and resource created by `tmpfile()` are different). `Stream` package defines the direction to specify and handle different resource types.
+
+.Using `Xtuple\Util\Type\Stream` package classes.
+----
+use Xtuple\Util\Generics\Type\Exception\TypeThrowable;
+use Xtuple\Util\Type\Stream\Exception\Throwable as StreamThrowable;
+use Xtuple\Util\Type\Stream\StreamStruct;
+use Xtuple\Util\Type\Stream\String\StringStreamStruct;
+use Xtuple\Util\Type\Stream\String\StringStreamWithContent;
+use Xtuple\Util\Type\Stream\TemporaryStream;
+
+try {
+  $stream = new StreamStruct(tmpfile());
+}
+catch (TypeThrowable $e) {
+  // tmpfile() may return false, StreamStruct would throw an exception
+}
+try {
+  fwrite($stream->resource(), 'Temporary');
+}
+catch (StreamThrowable $e) {
+  // Stream::resource() is allowed to throw an exception,
+  // as Stream implementations may try to create a resource only when called.
+}
+
+try {
+  // Using TemporaryStream class, to avoid manual check for types.
+  $temporary = new TemporaryStream();
+  fwrite($temporary->resource(), 'Another temporary');
+}
+catch (StreamThrowable $e) {
+  // Working with resources is unsafe, exceptions may happen often.
+}
+
+// If a Stream is expected to contain string data, we can wrap it up into a narrower type
+$string = new StringStreamStruct($temporary);
+try {
+  // StringStream::content() method is unsafe, as it tries to read from the provided resource
+  $content = $string->content();
+}
+catch (StreamThrowable $e) {
+}
+// __toString() method in PHP must not throw exceptions
+// StringStream::__toString() returns an empty string, if an error occured reading content.
+$content = (string) $string;
+
+try {
+  // Using StringStreamWithContent to write content into a Stream
+  $string = new StringStreamWithContent($stream, $content);
+}
+catch (StreamThrowable $e) {
+  // Handling an exception, if write operation failed
+}
 ----
 
 ==== String
