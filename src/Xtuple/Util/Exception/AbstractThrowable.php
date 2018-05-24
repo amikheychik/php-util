@@ -28,7 +28,7 @@ abstract class AbstractThrowable
   public final function __toString(): string {
     if (is_null($this->string)) {
       $output = [];
-      foreach ($this->exceptions() as $i => $exception) {
+      foreach ($this->previous() as $i => $exception) {
         $output[] = strtr('{tab}{type}:{code} {message} in {file}:{line}', [
           '{tab}' => $i ? strtr('{pad}+ ', [
             '{pad}' => str_repeat("\t", $i),
@@ -58,7 +58,7 @@ abstract class AbstractThrowable
     return $this->translatable;
   }
 
-  public final function exceptions(): ListThrowable {
+  public final function previous(): ListThrowable {
     /** @var \Throwable[] $exceptions */
     $exceptions = [];
     $exception = $this;
@@ -66,7 +66,7 @@ abstract class AbstractThrowable
       $exceptions[] = $exception;
     }
     while ($exception = $exception->getPrevious());
-    /** @noinspection PhpUnhandledExceptionInspection - ensured to be \Throwable */
+    /** @noinspection PhpUnhandledExceptionInspection ElementTypeException */
     return new ArrayListThrowable($exceptions);
   }
 
