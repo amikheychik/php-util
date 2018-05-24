@@ -101,18 +101,20 @@ class ExceptionTest
     ], 'Async requests failed for {url}', [
       'url' => 'http://httpbin.org',
     ]);
-    $e = new ChainException($e, 'API request failed', [], new ArrayListMessage([
+    $chained = new ChainException($e, 'API request failed');
+    self::assertEquals('HTTP request to URL http://httpbin.org failed', (string) $chained->errors()->get(0));
+    $chained = new ChainException($e, 'API request failed', [], new ArrayListMessage([
       new MessageWithTokens('Failed {count} requests', [
         'count' => $e->errors()->count(),
       ]),
     ]));
     self::assertEquals(implode("\n", [
-      "Xtuple\\Util\\Exception\\ChainException: API request failed in {$this->file}:104",
+      "Xtuple\\Util\\Exception\\ChainException: API request failed in {$this->file}:106",
       "\t- Failed 2 requests",
       "\t+ Xtuple\\Util\\Exception\\MultiErrorException: Async requests failed for http://httpbin.org in {$this->file}:94",
       "\t\t- HTTP request to URL http://httpbin.org failed",
       "\t\t- HTTP request to URL http://example.com failed",
-    ]), $e->__toString());
+    ]), (string) $chained);
   }
 
   public function testLastError() {
