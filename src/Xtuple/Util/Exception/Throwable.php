@@ -10,7 +10,7 @@ interface Throwable
   extends \Throwable {
   public function message(): Message;
 
-  public function exceptions(): ListThrowable;
+  public function previous(): ListThrowable;
 
   public function errors(): ?ListMessage;
 }
