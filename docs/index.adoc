@@ -1288,6 +1288,14 @@ $regex->all($domain, $set = true, $capture = true) === [
 $regex->replace('$2.example.com', $domain) === '255-249-199-99.example.com';
 ----
 
+=== SOAP
+
+`Xtuple\Util\SOAP` package provides classes to work with Simple Object Access Protocol (SOAP), using https://secure.php.net/manual/en/book.soap.php[PHP SOAP] extension.
+
+SOAP extension provides `link:https://secure.php.net/manual/en/class.soapvar.php[\SoapVar]` and `link:https://secure.php.net/manual/en/class.soapparam.php[\SoapParam]` classes to pass data to be sent by the `link:https://secure.php.net/manual/en/class.soapclient.php[\SoapClient]`. `\SoapParam` is a simple class to send generic data and is not covered by `Xtuple\Util\SOAP` package. Instead package covers `\SoapVar` as it's very flexible and allow to specify data types.
+
+`\SoapVar::__constructor(mixed $data, string $encoding, string $type_name, string $type_namespace, string $node_name, string $node_namespace)` requires to provide information about both type and element, which is problematic and introduces code duplication. `Xtuple\Util\SOAP` package separates `Xtuple\Util\SOAP\Type` to encapsulate information about the data type (name, namespace and encoding) and `Xtuple\Util\SOAP\Element` to carry actual data and nodes. This allows to re-use types by creating a standalone class for each of them, and to avoid code duplication for elements, by encapsulating these custom types in the custom elements.
+
 === Type
 
 `Xtuple\Util\Type` package contains subpackages to handle real-world data types.
