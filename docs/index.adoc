@@ -398,7 +398,7 @@ Comments should be considered a code-smell and a failure to write readable code.
 
 ==== PHPDoc
 
-[Scalar type hints](https://wiki.php.net/rfc/scalar_type_hints_v5) and [return types declarations](https://wiki.php.net/rfc/return_types) have been introduced in PHP 7. This allows remove substantial amount of PHPDocs used previously to declare types to be removed. PHPDocs should be used for types only to overcome current limitations of PHP (no `throws` keyword, no generics, etc.) to provide as strict typing as possible.
+https://wiki.php.net/rfc/scalar_type_hints_v5[Scalar type hints] and https://wiki.php.net/rfc/return_types[return types declarations] have been introduced in PHP 7. This allows remove substantial amount of PHPDocs used previously to declare types to be removed. PHPDocs should be used for types only to overcome current limitations of PHP (no `throws` keyword, no generics, etc.) to provide as strict typing as possible.
 
 * PHPDocs *must not* be used if information can be provided via PHP itself.
 * PHPDocs *must* be used for class properties.
@@ -479,7 +479,8 @@ Inspections can be set for IDE or for the Project only. These settings are recom
 [NOTE]
 Details of how to configure Code Style in PHPStorm are described in its https://www.jetbrains.com/help/phpstorm/configuring-code-style.html[Confgiring Code Style] documentation.
 
-[IMPORTANT] Code style can be imported from the `link:https://github.com/xtuple/php-util/blob/master/resources/phpstorm/code-style.xml[resources/phpstorm/code-style.xml]` file.
+[IMPORTANT]
+Code style can be imported from the `link:https://github.com/xtuple/php-util/blob/master/resources/phpstorm/code-style.xml[resources/phpstorm/code-style.xml]` file.
 
 ====== Tabs and Indents
 
