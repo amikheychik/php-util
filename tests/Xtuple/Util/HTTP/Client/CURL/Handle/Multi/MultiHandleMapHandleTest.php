@@ -78,7 +78,7 @@ final class MultiHandleMapHandleTest
       ),
       new BinaryHandle(
         'fail',
-        new GETRequest(new URLComponents(['scheme' => 'https'])),
+        new GETRequest(new URLComponents(['scheme' => 'https', 'host' => '\\'])),
         new DebugConfiguration()
       ),
     ]));

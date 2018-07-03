@@ -14,7 +14,7 @@ final class CURLExceptionTest
     $exception = new CURLException($resource);
     self::assertEquals('cURL error: [0] No error', $exception->getMessage());
     curl_close($resource);
-    $resource = curl_init('http://');
+    $resource = curl_init('http://\\');
     curl_exec($resource);
     $exception = new CURLException($resource);
     self::assertEquals("cURL error: [6] Couldn't resolve host name", $exception->getMessage());

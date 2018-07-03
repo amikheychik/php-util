@@ -51,7 +51,7 @@ final class BinaryHandleTest
       new GETRequest(new URLString('http://httpbin.org/get')),
       new DebugConfiguration()
     );
-    curl_setopt($handle->handle(), CURLOPT_URL, 'http://');
+    curl_setopt($handle->handle(), CURLOPT_URL, 'http://\\');
     error_reporting(E_ERROR);
     $this->expectException(Throwable::class);
     $handle->response();
