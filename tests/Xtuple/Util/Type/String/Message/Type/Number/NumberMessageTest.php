@@ -15,14 +15,14 @@ class NumberMessageTest
   extends TestCase {
   public function testCurrency() {
     $argument = new CurrencyMessage(5000, 'USD');
-    self::assertEquals('5000.00', $argument->template());
+    self::assertEquals('5000', $argument->template());
     self::assertEquals('$5,000.00', (string) $argument);
     self::assertEquals('5 000,00 $', $argument->format('ru_RU')); // 5&nbsp;000,00&nbsp;$
     $argument = new CurrencyMessage(5432.10, 'USD');
-    self::assertEquals('5432.10', $argument->template());
+    self::assertEquals('5432.1', $argument->template());
     self::assertEquals('$5,432.10', (string) $argument);
     $argument = new CurrencyMessage(-5432.10, 'USD');
-    self::assertEquals('-5432.10', $argument->template());
+    self::assertEquals('-5432.1', $argument->template());
     self::assertEquals('-$5,432.10', (string) $argument);
     $argument = new CurrencyMessage(5432.1024, 'USD');
     self::assertEquals('5432.1024', $argument->template());
@@ -45,7 +45,7 @@ class NumberMessageTest
     self::assertEquals('count', $argument->key());
     self::assertTrue($argument->arguments()->isEmpty());
     $argument = new FloatArgument('count', 5432.10);
-    self::assertEquals('5432.10', $argument->template());
+    self::assertEquals('5432.1', $argument->template());
     self::assertEquals('5,432.1', (string) $argument);
     $argument = new FloatArgument('count', 5000.54321);
     self::assertEquals('5,000.543', (string) $argument);
@@ -53,7 +53,7 @@ class NumberMessageTest
     self::assertEquals('5 000,543', $argument->format('ru_RU')); // 5&nbsp;000,543
     $argument = new FloatArgument('count', 6.54321, '#,#00.000#');
     self::assertEquals('6.54321', $argument->template());
-    self::assertEquals('006.5432', (string) $argument);
+    self::assertEquals('06.5432', (string) $argument);
     $argument = new FloatArgument('count', 123456.54321, '#,#000.000#');
     self::assertEquals('12,3456.5432', (string) $argument);
     $argument = new FloatArgument('count', 6543.21, '#.#');
