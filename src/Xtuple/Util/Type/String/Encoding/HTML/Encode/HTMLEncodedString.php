@@ -22,7 +22,7 @@ final class HTMLEncodedString
   }
 
   public function charset(): string {
-    return (string) ($this->charset ?: ini_get('default_charset'));
+    return $this->charset ?: ini_get('default_charset');
   }
 
   public function __toString(): string {

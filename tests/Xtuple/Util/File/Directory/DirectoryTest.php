@@ -81,7 +81,7 @@ class DirectoryTest
    */
   public function testPackage() {
     $package = new PackageDirectory(__NAMESPACE__, __DIR__);
-    $dirname = dirname(dirname($GLOBALS['__PHPUNIT_BOOTSTRAP']));
+    $dirname = dirname($GLOBALS['__PHPUNIT_BOOTSTRAP'], 2);
     self::assertEquals($dirname, $package->path()->absolute());
     self::assertEquals((new \SplFileInfo($dirname))->getFilename(), $package->name());
     self::assertEquals(filemtime($dirname), $package->modified());

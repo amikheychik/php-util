@@ -20,7 +20,7 @@ final class ArrayMapHandleTest
       new DebugConfiguration()
     );
     $handles = new ArrayMapHandle([$handle]);
-    self::assertTrue($handles->getByResource($handle->handle()) === $handle);
+    self::assertSame($handles->getByResource($handle->handle()), $handle);
     $new = curl_init();
     self::assertNull($handles->getByResource($new));
   }

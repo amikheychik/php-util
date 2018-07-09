@@ -56,6 +56,9 @@ class StrictlyTypedArraySetTest
 class TestElement {
   private $value;
 
+  /**
+   * @param mixed $value
+   */
   public function __construct($value) {
     $this->value = $value;
   }

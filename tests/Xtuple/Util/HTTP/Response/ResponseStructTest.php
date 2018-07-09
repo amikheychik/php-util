@@ -20,8 +20,8 @@ final class ResponseStructTest
     ]);
     $body = new BodyStream(tmpfile());
     $response = new ResponseStruct($status, $headers, $body);
-    self::assertTrue($response->status() === $status);
-    self::assertTrue($response->headers() === $headers);
-    self::assertTrue($response->body() === $body);
+    self::assertSame($response->status(), $status);
+    self::assertSame($response->headers(), $headers);
+    self::assertSame($response->body(), $body);
   }
 }

@@ -26,22 +26,23 @@ abstract class AbstractThrowable
   private $string;
 
   public final function __toString(): string {
-    if (is_null($this->string)) {
+    if ($this->string === null) {
       $output = [];
       foreach ($this->previous() as $i => $exception) {
         $output[] = strtr('{tab}{type}:{code} {message} in {file}:{line}', [
           '{tab}' => $i ? strtr('{pad}+ ', [
             '{pad}' => str_repeat("\t", $i),
           ]) : '',
-          '{type}' => get_class($exception),
+          '{type}' => ($exception !== null) ? get_class($exception) : '',
           '{code}' => $exception->getCode() ?: '',
           '{message}' => $exception->getMessage(),
           '{file}' => $exception->getFile(),
           '{line}' => $exception->getLine(),
         ]);
         if ($exception instanceof Throwable
-          && $exception->errors()) {
-          foreach ($exception->errors() as $error) {
+          && ($errors = $exception->errors())
+          && $errors !== null) {
+          foreach ($errors as $error) {
             $output[] = strtr('{tab}- {message}', [
               '{tab}' => str_repeat("\t", $i + 1),
               '{message}' => (string) $error,
@@ -54,6 +55,7 @@ abstract class AbstractThrowable
     return $this->string;
   }
 
+  /** @noinspection ClassMethodNameMatchesFieldNameInspection */
   public final function message(): Message {
     return $this->translatable;
   }
@@ -66,7 +68,7 @@ abstract class AbstractThrowable
       $exceptions[] = $exception;
     }
     while ($exception = $exception->getPrevious());
-    /** @noinspection PhpUnhandledExceptionInspection ElementTypeException */
+    /** @noinspection PhpUnhandledExceptionInspection - $exceptions types verified */
     return new ArrayListThrowable($exceptions);
   }
 

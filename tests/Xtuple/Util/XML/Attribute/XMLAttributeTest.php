@@ -45,7 +45,4 @@ class XMLAttributeTest
 
 final class TestAbstract
   extends AbstractXMLAttribute {
-  public function __construct(XMLAttribute $attribute, ?string $value = null) {
-    parent::__construct($attribute, $value);
-  }
 }

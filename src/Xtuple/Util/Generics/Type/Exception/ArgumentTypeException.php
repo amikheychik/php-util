@@ -8,11 +8,10 @@ final class ArgumentTypeException
   extends AbstractTypeThrowable {
   public function __construct(string $required, string $given, int $argument = 1, ?\Throwable $previous = null) {
     parent::__construct(
-      new MessageWithTokens('Argument {argument} must be of the type {required}, instance of {given} given', [
-        'argument' => $argument,
-        'required' => $required,
-        'given' => $given,
-      ]),
+      new MessageWithTokens(
+        'Argument {argument} must be of the type {required}, instance of {given} given',
+        compact('argument', 'required', 'given')
+      ),
       $previous
     );
   }

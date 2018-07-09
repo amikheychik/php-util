@@ -20,7 +20,7 @@ final class XMLElementSimple
    * @param \SimpleXMLElement $element
    */
   public function __construct(\SimpleXMLElement $element) {
-    if (is_null($element->attributes())) {
+    if ($element->attributes() === null) {
       throw new Exception('Passed element is an attribute.');
     }
     /** @workaround Remove default namespace as \SimpleXMLElement->xpath() doesn't support default namespaces */
@@ -57,7 +57,7 @@ final class XMLElementSimple
 
   public function children(?string $xpath = null, ?string $ns = null, bool $isPrefix = false): ListXMLElement {
     $elements = [];
-    $children = is_null($xpath)
+    $children = $xpath === null
       ? $this->element->children($ns, $isPrefix)
       : $this->element->xpath($xpath);
     foreach ($children as $child) {

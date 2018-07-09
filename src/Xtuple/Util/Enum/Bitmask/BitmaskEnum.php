@@ -54,7 +54,7 @@ abstract class BitmaskEnum {
         $bitmask |= $mask;
       }
       $size = log($bitmask + 1, 2);
-      $max = (int) pow(2, ceil($size)) - 1;
+      $max = (int) (2 ** ceil($size) - 1);
       if (ceil($size) !== floor($size)) {
         throw new Exception('Bitmask {class} values do not form full {value} (0b{bin}) mask', [
           'class' => static::class,

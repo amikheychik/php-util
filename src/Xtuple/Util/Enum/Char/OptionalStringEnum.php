@@ -14,13 +14,12 @@ abstract class OptionalStringEnum {
    * @param string|null $value
    */
   public final function __construct(?string $value) {
-    if (!is_null($value)) {
-      if (!in_array($value, self::values(), true)) {
-        throw new Exception('Value `{value}` is not supported in {class} enum', [
-          'value' => $value,
-          'class' => static::class,
-        ]);
-      }
+    if ($value !== null
+      && !in_array($value, self::values(), true)) {
+      throw new Exception('Value `{value}` is not supported in {class} enum', [
+        'value' => $value,
+        'class' => static::class,
+      ]);
     }
     $this->value = $value;
   }
@@ -30,8 +29,8 @@ abstract class OptionalStringEnum {
   }
 
   public final function is(?string $value): bool {
-    if (is_null($value)) {
-      return is_null($this->value);
+    if ($value === null) {
+      return $this->value === null;
     }
     return $this->value === $value;
   }

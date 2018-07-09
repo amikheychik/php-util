@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 class XSDBooleanElementStructTest
   extends TestCase {
   public function testConstructor() {
-    $element = new XSDBooleanElementStruct('Example', 'http://www.example.com/ExampleSchema', true);
+    $element = new XSDBooleanElementStruct('TestExample', 'http://www.example.com/ExampleSchema', true);
     self::assertEquals('boolean', $element->type()->name());
-    self::assertEquals('Example', $element->name());
+    self::assertEquals('TestExample', $element->name());
     self::assertEquals('http://www.example.com/ExampleSchema', $element->namespace());
     self::assertTrue($element->soap()->value());
-    $element = new XSDBooleanElementStruct('Example', null, false);
+    $element = new XSDBooleanElementStruct('TestExample', null, false);
     self::assertNull($element->namespace());
     self::assertFalse($element->soap()->value());
   }

@@ -14,7 +14,7 @@ final class BodyStreamTest
   public function testConstructor() {
     $stream = tmpfile();
     $body = new TestBodyStream(new BodyStream($stream));
-    self::assertTrue($stream === $body->resource());
+    self::assertSame($stream, $body->resource());
   }
 
   /**

@@ -19,7 +19,7 @@ final class ExceptionTest
       new StringMessage('Error message'),
     ]), 1);
     self::assertEquals('Exception: test', $exception->getMessage());
-    self::assertTrue($exception->getPrevious() === $previous);
+    self::assertSame($exception->getPrevious(), $previous);
     self::assertEquals('Error message', (string) $exception->errors()->get(0));
     self::assertEquals(1, $exception->getCode());
   }

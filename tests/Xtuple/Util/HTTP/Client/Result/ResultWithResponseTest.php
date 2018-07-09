@@ -21,6 +21,6 @@ final class ResultWithResponseTest
     );
     $result = new ResultWithResponse('test', $response);
     self::assertEquals('test', $result->key());
-    self::assertTrue($result->response() === $response);
+    self::assertSame($result->response(), $response);
   }
 }

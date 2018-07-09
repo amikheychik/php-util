@@ -15,7 +15,7 @@ abstract class AbstractXMLAttribute
   }
 
   public final function __toString(): string {
-    return is_null($this->value)
+    return $this->value === null
       ? $this->attribute->__toString()
       : strtr('{name}="{value}"', [
         '{name}' => $this->attribute->name(),

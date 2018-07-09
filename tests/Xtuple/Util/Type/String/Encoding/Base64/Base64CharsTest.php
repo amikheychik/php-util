@@ -12,10 +12,6 @@ use Xtuple\Util\Type\String\Encoding\Base64\Encode\URLSafe\URLSafeBase64EncodedS
 
 class Base64CharsTest
   extends TestCase {
-  /**
-   * @expectedException \Throwable
-   * @expectedExceptionMessage The input contains character from outside of the base64 alphabet.
-   */
   public function testEncodeDecode() {
     $encoded = new Base64EncodedStringFromDecoded(
       new Base64DecodedString('decoded')
@@ -26,7 +22,7 @@ class Base64CharsTest
     $failed = new Base64DecodedStringFromEncoded(
       new Base64EncodedString('ŻGVjb2RlZÄ==')
     );
-    $failed->__toString();
+    self::assertEquals('', $failed->__toString());
   }
 
   public function testURLSafe() {

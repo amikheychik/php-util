@@ -28,7 +28,7 @@ abstract class AbstractArrayCollection
   }
 
   public final function valid() {
-    return !is_null(key($this->elements));
+    return key($this->elements) !== null;
   }
 
   public final function rewind() {
@@ -36,6 +36,6 @@ abstract class AbstractArrayCollection
   }
 
   public final function count() {
-    return sizeof($this->elements);
+    return count($this->elements);
   }
 }

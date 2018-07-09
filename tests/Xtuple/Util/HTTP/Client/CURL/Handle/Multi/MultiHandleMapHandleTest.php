@@ -51,10 +51,11 @@ final class MultiHandleMapHandleTest
     self::assertEquals('OK', $response->status()->reason());
     self::assertEquals('image/png', $response->headers()->get('Content-Type')->value());
     $png = '/tmp/phpunit/http/image-multi.png';
-    $copy = fopen($png, 'w+');
+    $copy = fopen($png, 'w+b');
     stream_copy_to_stream($response->body()->resource(), $copy);
     fclose($copy);
-    self::assertEquals('image/png', getimagesize($png)['mime']);
+    $imageSize = getimagesize($png);
+    self::assertEquals('image/png', $imageSize['mime']);
     unlink($png);
     self::assertEquals(
       'https://httpbin.org/get',

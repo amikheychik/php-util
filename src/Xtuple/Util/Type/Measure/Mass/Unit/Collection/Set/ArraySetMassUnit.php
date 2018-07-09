@@ -23,7 +23,7 @@ final class ArraySetMassUnit
     $search = strtolower($search);
     foreach ($this as $symbol => $unit) {
       /** @var MassUnit $unit */
-      if (in_array($search, array_merge([strtolower($symbol)], $unit->synonyms()))) {
+      if (in_array($search, array_merge([strtolower($symbol)], $unit->synonyms()), true)) {
         return $unit;
       }
     }

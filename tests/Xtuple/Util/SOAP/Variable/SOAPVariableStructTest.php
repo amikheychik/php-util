@@ -8,10 +8,10 @@ class SOAPVariableStructTest
   extends TestCase {
   public function testConstructor() {
     $variable = new SOAPVariableStruct(
-      new \SoapVar('Example', XSD_STRING, 'string', 'http://www.w3.org/2001/XMLSchema')
+      new \SoapVar('TestExample', XSD_STRING, 'string', 'http://www.w3.org/2001/XMLSchema')
     );
-    self::assertEquals('Example', $variable->value());
+    self::assertEquals('TestExample', $variable->value());
     /** @noinspection PhpUndefinedFieldInspection */
-    self::assertEquals('Example', $variable->variable()->enc_value);
+    self::assertEquals('TestExample', $variable->variable()->enc_value);
   }
 }

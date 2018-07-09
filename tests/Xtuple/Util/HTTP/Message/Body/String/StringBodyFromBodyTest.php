@@ -15,7 +15,7 @@ final class StringBodyFromBodyTest
     $stream = tmpfile();
     fwrite($stream, 'Test content');
     $body = new StringBodyFromBody(new BodyStream($stream));
-    self::assertTrue($body->resource() === $stream);
+    self::assertSame($body->resource(), $stream);
     self::assertEquals('Test content', (string) $body);
     self::assertEquals('Test content', $body->content());
   }

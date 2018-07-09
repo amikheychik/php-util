@@ -47,7 +47,7 @@ class TypeTest
     $instance1 = new \ArrayObject();
     self::assertInstanceOf(\ArrayObject::class, $stdClass->cast($instance1));
     $instance2 = $stdClass->cast($instance1);
-    self::assertTrue($instance1 === $instance2);
+    self::assertSame($instance1, $instance2);
     $this->expectException(TypeThrowable::class);
     $this->expectExceptionMessage('Value must be of the type Countable, instance of NULL given');
     $stdClass->cast(null);
@@ -76,7 +76,7 @@ class TypeTest
    * @throws \Throwable
    */
   public function testInstanceOfValidation() {
-    $stdClass = new NullableType('\Countable');
+    $stdClass = new NullableType(\Countable::class);
     $stdClass->cast(new \ArrayObject());
     $this->expectException(TypeThrowable::class);
     $this->expectExceptionMessage('Value must be of the type Countable, instance of stdClass given');
@@ -104,7 +104,7 @@ class TypeTest
     }
     $type = new CastType((object) []);
     $instance = (object) ['test' => 'instance'];
-    self::assertEquals('stdClass', $type->fqn());
+    self::assertEquals(\stdClass::class, $type->fqn());
     self::assertEquals($instance, $type->cast($instance));
     try {
       $type->cast(['standard' => 'class']);
@@ -126,7 +126,7 @@ class TypeTest
   public function testResource() {
     $type = new ResourceType();
     $temp = tmpfile();
-    self::assertTrue($temp === $type->cast($temp));
+    self::assertSame($temp, $type->cast($temp));
     try {
       $type->cast(null);
     }

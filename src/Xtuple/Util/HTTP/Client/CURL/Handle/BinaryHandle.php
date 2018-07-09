@@ -69,10 +69,9 @@ final class BinaryHandle
 
   public function response(): Response {
     /** @workaround checking total time to know that handle was executed, as it may be executed by multi handles */
-    if (curl_getinfo($this->handle, CURLINFO_TOTAL_TIME) === 0.0) {
-      if (curl_exec($this->handle) === false) {
-        throw new CURLException($this->handle);
-      }
+    if ((curl_getinfo($this->handle, CURLINFO_TOTAL_TIME) === 0.0)
+      && curl_exec($this->handle) === false) {
+      throw new CURLException($this->handle);
     }
     return new ResponseStreams($this->header, $this->body);
   }

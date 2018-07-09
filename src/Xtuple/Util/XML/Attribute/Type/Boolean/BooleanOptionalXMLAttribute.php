@@ -9,11 +9,12 @@ final class BooleanOptionalXMLAttribute
   extends AbstractXMLAttribute
   implements BooleanXMLAttribute {
   public function __construct(XMLAttribute $attribute, bool $default) {
-    parent::__construct(new XMLAttributeBoolean(
-      $attribute->name(),
-      ($attribute->value() || is_bool($attribute->value()))
-        ? (is_bool($attribute->value()) ? $attribute->value() : strtolower($attribute->value()) === 'true')
-        : $default
-    ));
+    $value = $default;
+    if ($attribute->value() || is_bool($attribute->value())) {
+      $value = is_bool($attribute->value())
+        ? $attribute->value()
+        : (strtolower($attribute->value()) === 'true');
+    }
+    parent::__construct(new XMLAttributeBoolean($attribute->name(), $value));
   }
 }

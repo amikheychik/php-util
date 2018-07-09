@@ -33,7 +33,7 @@ abstract class AbstractArrayTree
   public final function get(array $path) {
     $data = &$this->data;
     foreach ($this->keys($path) as $key) {
-      if (!is_array($data) || (!isset($data[$key]))) {
+      if (!is_array($data) || !isset($data[$key])) {
         return null;
       }
       $data = &$data[$key];
@@ -81,7 +81,7 @@ abstract class AbstractArrayTree
   }
 
   public final function count() {
-    return sizeof($this->data);
+    return count($this->data);
   }
 
   private function keys(array $path): array {

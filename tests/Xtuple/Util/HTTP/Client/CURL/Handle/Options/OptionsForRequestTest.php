@@ -27,6 +27,7 @@ final class OptionsForRequestTest
       new StreamStruct($header),
       new StreamStruct($body)
     );
+    /** @noinspection CurlSslServerSpoofingInspection - testing values */
     self::assertEquals([
       CURLOPT_TIMEOUT => 60.0,
       CURLOPT_FOLLOWLOCATION => true,

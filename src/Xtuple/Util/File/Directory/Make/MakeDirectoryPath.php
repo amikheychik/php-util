@@ -15,10 +15,13 @@ final class MakeDirectoryPath
    * @param int    $mode
    */
   public function __construct(string $path, int $mode = 0777) {
-    if (!is_dir($path) && !mkdir($path, $mode, true)) {
-      throw new LastErrorException('Failed to create a directory {dir}', [
-        'dir' => $path,
-      ]);
+    if (!is_dir($path)) {
+      $mkdir = mkdir($path, $mode, true);
+      if (!$mkdir) {
+        throw new LastErrorException('Failed to create a directory {dir}', [
+          'dir' => $path,
+        ]);
+      }
     }
     parent::__construct(new DirectoryPath($path));
   }

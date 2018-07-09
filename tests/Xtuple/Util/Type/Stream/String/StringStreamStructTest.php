@@ -17,7 +17,7 @@ final class StringStreamStructTest
     $stream = new StringStreamStruct(new StreamStruct($resource));
     self::assertEquals('test', (string) $stream);
     self::assertEquals('test', $stream->content());
-    self::assertTrue($stream->resource() === $resource);
+    self::assertSame($stream->resource(), $resource);
   }
 
   /**

@@ -26,7 +26,7 @@ final class ArraySetLengthUnit
     $search = strtolower($search);
     foreach ($this as $symbol => $unit) {
       /** @var LengthUnit $unit */
-      if (in_array($search, array_merge([strtolower($symbol)], $unit->synonyms()))) {
+      if (in_array($search, array_merge([strtolower($symbol)], $unit->synonyms()), true)) {
         return $unit;
       }
     }

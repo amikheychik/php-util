@@ -27,7 +27,7 @@ final class RequestStructTest
     $request = new RequestStruct(new POST(), new URLString('http://example.com/post'), new ArraySetHeader([
       new HeaderStruct('ETag', (string) $etag),
     ]), new QueryBody([
-      'title' => 'Example',
+      'title' => 'TestExample',
       'content' => [
         'header' => 'Lorem Ipsum',
         'footer' => 'O tempora o mores!',
@@ -38,7 +38,7 @@ final class RequestStructTest
     self::assertEquals("ETag: {$etag}", (string) $request->headers()->get('ETag'));
     self::assertEquals(1, $request->headers()->count());
     self::assertEquals(
-      'title=Example&content%5Bheader%5D=Lorem+Ipsum&content%5Bfooter%5D=O+tempora+o+mores%21',
+      'title=TestExample&content%5Bheader%5D=Lorem+Ipsum&content%5Bfooter%5D=O+tempora+o+mores%21',
       (string) new StringStreamFromResource($request->body()->resource())
     );
   }

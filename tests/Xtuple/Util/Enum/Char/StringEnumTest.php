@@ -22,6 +22,6 @@ class StringEnumTest
 
 final class TestStringEnum
   extends StringEnum {
-  const STRING = 'value';
-  const INT = 0;
+  public const STRING = 'value';
+  public const INT = 0;
 }

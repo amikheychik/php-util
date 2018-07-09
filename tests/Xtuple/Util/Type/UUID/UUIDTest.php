@@ -32,11 +32,11 @@ class UUIDTest
     $uuid1 = new UUIDv4();
     $uuid2 = new UUIDv4();
     self::assertFalse($uuid1->equals($uuid2));
-    self::assertFalse($uuid1->urn() === $uuid2->urn());
-    self::assertEquals('4', substr((string) $uuid1, 14, 1));
-    self::assertEquals('4', substr((string) $uuid2, 14, 1));
-    self::assertTrue(in_array(substr((string) $uuid1, 19, 1), ['8', '9', 'a', 'b']));
-    self::assertTrue(in_array(substr((string) $uuid2, 19, 1), ['8', '9', 'a', 'b']));
+    self::assertNotSame($uuid1->urn(), $uuid2->urn());
+    self::assertEquals('4', ((string) $uuid1)[14]);
+    self::assertEquals('4', ((string) $uuid2)[14]);
+    self::assertContains(((string) $uuid1)[19], ['8', '9', 'a', 'b']);
+    self::assertContains(((string) $uuid2)[19], ['8', '9', 'a', 'b']);
   }
 
   /**

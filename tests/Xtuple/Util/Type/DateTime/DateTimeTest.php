@@ -176,7 +176,7 @@ class DateTimeTest
     );
     $timestamp = new DateTimeTimestamp(0);
     self::assertEquals('1970-01-01T00:00:00+00:00', (string) $timestamp);
-    $timestamp = new DateTimeTimestamp(pow(2, 32) / 2);
+    $timestamp = new DateTimeTimestamp((2 ** 32) / 2);
     self::assertEquals('2038-01-19T03:14:08+00:00', (string) $timestamp);
     $timestamp = new DateTimeTimestamp(PHP_INT_MAX);
     self::assertEquals('6596-12-04T15:30:07+00:00', (string) $timestamp);

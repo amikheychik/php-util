@@ -24,7 +24,7 @@ final class XMLElementStruct
     /** @noinspection PhpUnhandledExceptionInspection - XML should be valid */
     parent::__construct(new XMLElementString(strtr('<{name}{attributes}>{children}{value}</{name}>', [
       '{name}' => $name,
-      '{attributes}' => ($attributes = (string) $attributes) ? " {$attributes}" : '',
+      '{attributes}' => ($flatten = (string) $attributes) ? " {$flatten}" : '',
       '{children}' => (string) $children,
       '{value}' => $value,
     ])));
