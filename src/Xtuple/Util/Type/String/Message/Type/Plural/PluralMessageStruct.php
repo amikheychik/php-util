@@ -55,11 +55,15 @@ final class PluralMessageStruct
     foreach ($this->arguments as $argument) {
       $arguments[$argument->key()] = (string) $argument;
     }
+    $count = $this->count->format($locale);
+    if ($this->offset) {
+      $count = ($offset = $this->arguments->get('offset'))
+        ? $offset->format($locale)
+        : '#';
+    }
     return \MessageFormatter::formatMessage($locale, strtr('{self, plural, {formats}}', [
       '{formats}' => strtr(implode(' ', $formats), [
-        '{count}' => $this->offset
-          ? (($offset = $this->arguments->get('offset')) ? $offset->format($locale) : '#')
-          : $this->count->format($locale),
+        '{count}' => $count,
       ]),
     ]), $arguments);
   }

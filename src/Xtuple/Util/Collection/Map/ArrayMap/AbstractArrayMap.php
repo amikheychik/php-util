@@ -14,7 +14,7 @@ abstract class AbstractArrayMap
   public function __construct(iterable $elements = [], ?callable $map = null) {
     $this->index = [];
     foreach ($elements as $i => $element) {
-      $i = (string) ($map ? call_user_func($map, $element) : $i);
+      $i = (string) ($map ? $map($element) : $i);
       $this->index[$i] = $element;
     }
     parent::__construct($this->index);

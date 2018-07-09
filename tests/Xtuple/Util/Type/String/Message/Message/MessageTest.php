@@ -74,7 +74,7 @@ class MessageTest
   public function testPluralsArgs() {
     $codes = [];
     $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
-      new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
+      new PluralArgumentFromStrings('discounts', count($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
       ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),
@@ -83,7 +83,7 @@ class MessageTest
     self::assertEquals('No discounts applied.', $message->__toString());
     $codes = ['DOLLAROFF'];
     $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
-      new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
+      new PluralArgumentFromStrings('discounts', count($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
       ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),
@@ -92,7 +92,7 @@ class MessageTest
     self::assertEquals('Discount DOLLAROFF applied.', $message->__toString());
     $codes = ['DOLLAROFF', 'ONEFREE'];
     $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
-      new PluralArgumentFromStrings('discounts', sizeof($codes), 'Discounts {codes}', 'Discount {codes}', [
+      new PluralArgumentFromStrings('discounts', count($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
       ], new ArrayMapArgument([
         new StringArgument('codes', implode(', ', $codes)),

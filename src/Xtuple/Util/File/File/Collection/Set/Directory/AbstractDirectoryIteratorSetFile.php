@@ -66,7 +66,7 @@ abstract class AbstractDirectoryIteratorSetFile
   }
 
   public final function valid() {
-    return !is_null($this->current());
+    return $this->current() !== null;
   }
 
   public final function rewind() {

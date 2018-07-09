@@ -12,7 +12,7 @@ final class NullableType
   }
 
   public function cast($instance) {
-    if (is_null($instance)) {
+    if ($instance === null) {
       return $instance;
     }
     return $this->type->cast($instance);

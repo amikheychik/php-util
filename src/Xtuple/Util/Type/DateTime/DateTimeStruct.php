@@ -34,7 +34,7 @@ final class DateTimeStruct
 
   public function compare(DateTime $to): int {
     /** @noinspection PhpUnhandledExceptionInspection - UTC format should be parsed without an exception */
-    return (int) ($this->date <=> new \DateTimeImmutable($to->utc()));
+    return $this->date <=> new \DateTimeImmutable($to->utc());
   }
 
   public function equals(DateTime $to): bool {

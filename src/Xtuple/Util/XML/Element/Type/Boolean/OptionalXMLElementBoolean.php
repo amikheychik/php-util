@@ -11,7 +11,7 @@ final class OptionalXMLElementBoolean
   extends AbstractOptionalXMLElement {
   public function __construct(string $name, ?bool $value = null, ?MapXMLAttribute $attributes = null,
                               ?ListXMLElement $children = null) {
-    parent::__construct(is_null($value)
+    parent::__construct($value === null
       ? new XMLElementStruct($name, '', $attributes, $children)
       : new XMLElementBoolean($name, $value, $attributes, $children)
     );

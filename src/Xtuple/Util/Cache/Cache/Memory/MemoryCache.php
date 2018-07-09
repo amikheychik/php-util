@@ -31,10 +31,9 @@ final class MemoryCache
   }
 
   public function find(Key $key): ?Record {
-    if ($record = $this->cache()->get((new MemoryCacheKey($this->bucket, $key))->key())) {
-      if ($record instanceof Record) {
-        return $record;
-      }
+    if (($record = $this->cache()->get((new MemoryCacheKey($this->bucket, $key))->key()))
+      && ($record instanceof Record)) {
+      return $record;
     }
     return null;
   }
@@ -53,7 +52,7 @@ final class MemoryCache
         $this->cache()->remove($path);
       }
     }
-    while (sizeof($path) > 1);
+    while (count($path) > 1);
   }
 
   public function insert(Record $record): Record {

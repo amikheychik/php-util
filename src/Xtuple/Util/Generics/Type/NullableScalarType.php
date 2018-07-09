@@ -15,10 +15,10 @@ final class NullableScalarType
    * @return string|float|int|bool|null
    */
   public function cast($instance) {
-    if (is_null($instance)) {
+    if ($instance === null) {
       return null;
     }
-    if (is_null($this->type)) {
+    if ($this->type === null) {
       $this->type = new ScalarType();
     }
     return $this->type->cast($instance);

@@ -17,7 +17,7 @@ abstract class AbstractStrictlyTypedArrayMap
    * @param null|string $key
    */
   public function __construct(string $type, iterable $elements = [], ?string $key = null) {
-    if (!is_null($key) && !method_exists($type, $key)) {
+    if ($key !== null && !method_exists($type, $key)) {
       throw new UndefinedMethodException($type, $key);
     }
     $strict = new StrictType($type);
@@ -30,7 +30,7 @@ abstract class AbstractStrictlyTypedArrayMap
       }
     }
     parent::__construct($elements, $key ? function ($element) use ($key) {
-      return call_user_func([$element, $key]);
+      return $element->{$key}();
     } : null);
   }
 }

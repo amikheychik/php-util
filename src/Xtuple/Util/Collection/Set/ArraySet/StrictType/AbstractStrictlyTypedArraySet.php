@@ -30,7 +30,7 @@ abstract class AbstractStrictlyTypedArraySet
       }
     }
     parent::__construct($elements, $key ? function ($element) use ($key) {
-      return call_user_func([$element, $key]);
+      return $element->{$key}();
     } : null);
   }
 }

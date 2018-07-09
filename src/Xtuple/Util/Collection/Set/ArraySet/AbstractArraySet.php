@@ -21,7 +21,7 @@ abstract class AbstractArraySet
   public function __construct(iterable $elements = [], ?callable $map = null) {
     $this->index = [];
     foreach ($elements as $i => $element) {
-      $i = (string) ($map ? call_user_func($map, $element) : $i);
+      $i = (string) ($map ? $map($element) : $i);
       if (isset($this->index[$i])) {
         throw new Exception('Element {i} is duplicated', [
           'i' => $i,

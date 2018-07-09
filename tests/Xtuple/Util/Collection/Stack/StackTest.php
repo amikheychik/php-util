@@ -19,8 +19,7 @@ class StackTest
     $i = 0;
     foreach ($stack as $key => $value) {
       self::assertEquals($i, $key);
-      self::assertEquals($i + 1, $value);
-      $i += 1;
+      self::assertEquals(++$i, $value);
     }
     self::assertEquals(3, $stack->count());
     self::assertFalse($stack->isEmpty());

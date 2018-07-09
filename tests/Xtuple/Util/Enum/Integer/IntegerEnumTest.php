@@ -21,5 +21,5 @@ class IntegerEnumTest
 
 final class TestIntegerEnum
   extends IntegerEnum {
-  const INT = 1;
+  public const INT = 1;
 }

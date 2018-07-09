@@ -9,8 +9,7 @@ use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
 use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
 
 final class PluralMessageFromStrings
-  extends AbstractPluralMessage
-  implements PluralMessage {
+  extends AbstractPluralMessage {
   /**
    * @param float|int        $count
    * @param string           $plural

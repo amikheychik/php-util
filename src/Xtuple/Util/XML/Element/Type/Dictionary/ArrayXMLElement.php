@@ -31,17 +31,17 @@ final class ArrayXMLElement {
     }
     $lists = [];
     foreach ($this->element->children(null, $this->ns, $this->isPrefix) as $child) {
-      if (!isset($value[$child->name()])) {
-        $value[$child->name()] = (new ArrayXMLElement($child))->value();
-      }
-      else {
+      if (isset($value[$child->name()])) {
         $lists[] = $child->name();
         $value[$child->name()] = (array) $value[$child->name()];
         $value[$child->name()][] = (new ArrayXMLElement($child))->value();
       }
+      else {
+        $value[$child->name()] = (new ArrayXMLElement($child))->value();
+      }
     }
     $lists = array_unique($lists);
-    if (sizeof($lists) === 1) {
+    if (count($lists) === 1) {
       $value = array_merge($value, $value[$lists[0]]);
       unset($value[$lists[0]]);
     }

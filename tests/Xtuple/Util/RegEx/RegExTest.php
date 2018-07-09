@@ -67,7 +67,7 @@ class RegExTest
       ['255-249-199-99'],
       ['compute-1.amazonaws.com'],
       'ip' => ['255-249-199-99'],
-    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', false, false));
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com'));
     self::assertEquals([
       [
         'ec2-255-249-199-99.compute-1.amazonaws.com',
@@ -76,7 +76,7 @@ class RegExTest
         'compute-1.amazonaws.com',
         'ip' => '255-249-199-99',
       ],
-    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', true, false));
+    ], $regex->all('ec2-255-249-199-99.compute-1.amazonaws.com', true));
     self::assertEquals([
       [
         ['ec2-255-249-199-99.compute-1.amazonaws.com', 0],

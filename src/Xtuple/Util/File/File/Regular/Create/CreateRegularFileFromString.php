@@ -19,7 +19,7 @@ final class CreateRegularFileFromString
   public function __construct(string $path, string $content) {
     try {
       new MakeDirectoryPath(dirname($path));
-      $resource = fopen($path, 'w');
+      $resource = fopen($path, 'wb');
       fwrite($resource, $content);
       fclose($resource);
       parent::__construct(new RegularFile(new FileFromPathString($path)));

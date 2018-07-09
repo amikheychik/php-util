@@ -24,6 +24,6 @@ class OptionalStringEnumTest
 
 final class TestOptionalStringEnum
   extends OptionalStringEnum {
-  const STRING = 'value';
-  const INT = 0;
+  public const STRING = 'value';
+  public const INT = 0;
 }

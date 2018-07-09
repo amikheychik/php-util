@@ -38,8 +38,7 @@ class StrictlyTypedArrayStackTest
     $i = 0;
     foreach ($stack as $key => $value) {
       self::assertEquals($i, $key);
-      self::assertEquals($i + 1, $value->key);
-      $i += 1;
+      self::assertEquals(++$i, $value->key);
     }
     self::assertEquals(3, $stack->count());
     self::assertFalse($stack->isEmpty());
