@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 class XSDStringElementStructTest
   extends TestCase {
   public function testConstructor() {
-    $element = new XSDStringElementStruct('TestExample', 'http://www.example.com/ExampleSchema', 'Test');
+    $element = new XSDStringElementStruct('Example', 'http://www.example.com/Schema', 'Test');
     self::assertEquals('string', $element->type()->name());
-    self::assertEquals('TestExample', $element->name());
-    self::assertEquals('http://www.example.com/ExampleSchema', $element->namespace());
+    self::assertEquals('Example', $element->name());
+    self::assertEquals('http://www.example.com/Schema', $element->namespace());
     self::assertEquals('Test', $element->soap()->value());
-    $element = new XSDStringElementStruct('TestExample', null, 'Test');
+    $element = new XSDStringElementStruct('Example', null, 'Test');
     self::assertNull($element->namespace());
   }
 }

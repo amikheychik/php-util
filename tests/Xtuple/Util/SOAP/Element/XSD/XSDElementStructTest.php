@@ -8,14 +8,14 @@ use Xtuple\Util\SOAP\Type\XSD\String\XSDString;
 class XSDElementStructTest
   extends TestCase {
   public function testConstructor() {
-    $element = new class (new XSDElementStruct(new XSDString(), 'TestExample', 'http://www.example.com/ExampleSchema', 'Test'))
+    $element = new class (new XSDElementStruct(new XSDString(), 'Example', 'http://www.example.com/ExampleSchema', 'Test'))
       extends AbstractXSDElement {
     };
     self::assertEquals('string', $element->type()->name());
-    self::assertEquals('TestExample', $element->name());
+    self::assertEquals('Example', $element->name());
     self::assertEquals('http://www.example.com/ExampleSchema', $element->namespace());
     self::assertEquals('Test', $element->soap()->value());
-    $element = new class (new XSDElementStruct(new XSDString(), 'TestExample', null, 'Test'))
+    $element = new class (new XSDElementStruct(new XSDString(), 'Example', null, 'Test'))
       extends AbstractXSDElement {
     };
     self::assertNull($element->namespace());

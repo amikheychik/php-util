@@ -10,14 +10,14 @@ use Xtuple\Util\SOAP\Type\Sequence\SequenceTypeStruct;
 class SequenceElementStructTest
   extends TestCase {
   public function testConstructor() {
-    $type = new SequenceTypeStruct('TestExample', 'http://www.example.com/ExampleSchema');
+    $type = new SequenceTypeStruct('Example', 'http://www.example.com/ExampleSchema');
     $elements = [];
     $element = new class(
       new SequenceElementStruct($type, 'Sequence', 'http://www.example.com/ExampleSchema', ...$elements)
     )
       extends AbstractSequenceElement {
     };
-    self::assertEquals('TestExample', $element->type()->name());
+    self::assertEquals('Example', $element->type()->name());
     self::assertEquals('Sequence', $element->name());
     self::assertEquals('http://www.example.com/ExampleSchema', $element->namespace());
     self::assertEquals([], $element->soap()->value());
