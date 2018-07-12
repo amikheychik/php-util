@@ -594,7 +594,7 @@ final class PHPDocsExample
 | Alias functions usage | Warning |
 | Argument unpacking can be used | Warning |
 | Cascading `dirname()` calls | Warning |
-| `::class` can be used | Warning | Lookup root namespace classes
+| `::class` can be used | Off | Lookup root namespace classes conflicts too often with regular words.
 | Deprecated constructor style | Error |
 | Deprecated dynamic calls to scope introspection | Error |
 | `__DIR__` constant can be used | Warning |
