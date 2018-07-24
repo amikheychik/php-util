@@ -5,7 +5,7 @@ namespace Xtuple\Util\Type\String\Message\Type\Plural;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Type\String\Message\Argument\Collection\Map\ArrayMapArgument;
 use Xtuple\Util\Type\String\Message\Message\AbstractMessage;
-use Xtuple\Util\Type\String\Message\Type\Number\Currency\CurrencyMessage;
+use Xtuple\Util\Type\String\Message\Type\Number\Currency\CurrencyMessageStruct;
 use Xtuple\Util\Type\String\Message\Type\Number\Float\FloatArgument;
 use Xtuple\Util\Type\String\Message\Type\Number\Float\FloatMessage;
 use Xtuple\Util\Type\String\Message\Type\Number\Integer\IntegerMessage;
@@ -89,12 +89,12 @@ class PluralMessageTest
   }
 
   public function testCurrency() {
-    $count = new CurrencyMessage(3.1415, 'USD');
+    $count = new CurrencyMessageStruct(3.1415, 'USD');
     $plural = new TestMessageEn($count);
     self::assertEquals('$3.14 dollars', $plural->__toString());
     $plural = new TestMessageRu($count);
     self::assertEquals('3,14 $ долларов', $plural->format('ru_RU'));
-    $count = new CurrencyMessage(2.7182, 'USD');
+    $count = new CurrencyMessageStruct(2.7182, 'USD');
     $plural = new TestMessageEn($count);
     self::assertEquals('$2.72 dollars', $plural->__toString());
     $plural = new TestMessageRu($count);
