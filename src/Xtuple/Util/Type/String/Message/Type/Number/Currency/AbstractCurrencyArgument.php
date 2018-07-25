@@ -5,6 +5,7 @@ namespace Xtuple\Util\Type\String\Message\Type\Number\Currency;
 use Xtuple\Util\Type\String\Message\Type\Number\AbstractNumberArgument;
 
 /** @noinspection LongInheritanceChainInspection */
+
 abstract class AbstractCurrencyArgument
   extends AbstractNumberArgument
   implements CurrencyMessage {
