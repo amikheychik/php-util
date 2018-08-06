@@ -486,6 +486,8 @@ final class PHPDocsExample
 | Traditional syntax array literal detected | Warning |
 | Unnecessary fully qualified name | Weak warning |
 | Usage of a variable variable | Weak warning |
+3+| Composer
+| Extension is missing in composer.json | Warning |
 3+| Control flow
 | Unreachable statement | Warning |
 3+| Error handling
@@ -714,6 +716,7 @@ final class PHPDocsExample
 | Missing `@return` tag | Weak warning |
 | Missing `@throws` tag(s) | No highlighting, only fix | https://youtrack.jetbrains.com/issue/WI-41446
 | Missing PHPDoc comment | Off |
+| Non-canonical order of elements | Weak warning |
 | PHPDoc comment matches function/method signature | Weak warning |
 | Redundant `@throws` tag(s) | Weak warning |
 3+| PHPUnit
@@ -732,16 +735,21 @@ final class PHPDocsExample
 | Method `__toString` implementation | Warning | Check `__toString` exists for each expression type
 | Method `__toString` return type | Error |
 | Missing `break` statement | Warning |
+| Missing parent call for constructor | Error |
 | Missing parent call for magic methods | Warning |
 | Missing parent call for method | Warning |
 | Nested vs outer `foreach` variables conflict | Warning |
 | Non-strict object equality | Warning |
+| Optional before required parameter | Warning |
 | Pass parameter by reference | Error |
 | Silly assignment | Warning |
 | Statement has empty body | Warning |
 | Unnecessary statement use | Warning |
 | Void function result used | Warning |
 | Wrong string concatenation | Warning |
+3+| Quality tools
+| PHP Code Sniffer validation | Off |
+| PHP Code Detector validation | Off |
 3+| Replacement assignments
 | Reports assignment operations which can be replaced by increment or decrement. | No highlighting, fix only |
 | Reports assignment operations which can be replaced by operator assignment. | No highlighting, fix only |
