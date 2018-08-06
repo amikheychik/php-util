@@ -16,7 +16,7 @@
                    enabled_by_default="true"/>
   <inspection_tool class="CallableReferenceNameMismatchInspection" enabled="true" level="WARNING"
                    enabled_by_default="true"/>
-  <inspection_tool class="ClassConstantCanBeUsedInspection" enabled="true" level="WARNING" enabled_by_default="true">
+  <inspection_tool class="ClassConstantCanBeUsedInspection" enabled="false" level="WARNING" enabled_by_default="false">
     <option name="LOOK_ROOT_NS_UP" value="true"/>
   </inspection_tool>
   <inspection_tool class="ClassExistenceCheckInspection" enabled="false" level="ERROR" enabled_by_default="false"/>
@@ -28,9 +28,7 @@
                    enabled_by_default="false"/>
   <inspection_tool class="CompactCanBeUsedInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true"/>
   <inspection_tool class="ComparisonOperandsOrderInspection" enabled="true" level="WEAK WARNING"
-                   enabled_by_default="true">
-    <option name="PREFER_REGULAR_STYLE" value="true"/>
-  </inspection_tool>
+                   enabled_by_default="true"/>
   <inspection_tool class="CoreInterfacesUsageInspection" enabled="false" level="ERROR" enabled_by_default="false"/>
   <inspection_tool class="DisallowWritingIntoStaticPropertiesInspection" enabled="true" level="WEAK WARNING"
                    enabled_by_default="true"/>
@@ -117,7 +115,6 @@
   <inspection_tool class="IfReturnReturnSimplificationInspection" enabled="false" level="WARNING"
                    enabled_by_default="false"/>
   <inspection_tool class="IllusionOfChoiceInspection" enabled="false" level="WARNING" enabled_by_default="false"/>
-  <inspection_tool class="InArrayMissUseInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
   <inspection_tool class="InsufficientTypesControlInspection" enabled="false" level="WARNING"
                    enabled_by_default="false"/>
   <inspection_tool class="InvertedIfElseConstructsInspection" enabled="true" level="WEAK WARNING"
@@ -185,12 +182,16 @@
                    enabled_by_default="true"/>
   <inspection_tool class="PhpMissingParentCallMagicInspection" enabled="true" level="WARNING"
                    enabled_by_default="true"/>
+  <inspection_tool class="PhpMissingParentConstructorInspection" enabled="true" level="ERROR"
+                   enabled_by_default="true"/>
   <inspection_tool class="PhpMissingStrictTypesDeclarationInspection" enabled="true" level="WARNING"
                    enabled_by_default="true"/>
   <inspection_tool class="PhpMultipleClassesDeclarationsInOneFile" enabled="true" level="WARNING"
                    enabled_by_default="false">
     <scope name="Source" level="WARNING" enabled="true"/>
   </inspection_tool>
+  <inspection_tool class="PhpNonCanonicalElementsOrderInspection" enabled="true" level="WEAK WARNING"
+                   enabled_by_default="true"/>
   <inspection_tool class="PhpParamsInspection" enabled="true" level="ERROR" enabled_by_default="true"/>
   <inspection_tool class="PhpShortOpenTagInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
   <inspection_tool class="PhpSignatureMismatchDuringInheritanceInspection" enabled="true" level="ERROR"
