@@ -18,9 +18,12 @@
   },
   "require": {
     "php": "^7.1",
+    "lib-openssl": "*",
+    "ext-curl": "*",
+    "ext-json": "*",
     "ext-intl": "*",
-    "ext-simplexml": "*",
-    "lib-openssl": "*"
+    "ext-SimpleXML": "*",
+    "ext-soap": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.2"
