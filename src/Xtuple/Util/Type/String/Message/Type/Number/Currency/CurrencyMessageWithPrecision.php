@@ -38,11 +38,15 @@ final class CurrencyMessageWithPrecision
         implode($symbol, $parts),
       ];
       if ($this->precision > 0) {
+        $repeat = 0;
+        if ($this->precision > 1
+          || ($this->amount > 0 && floor($this->amount) === $this->amount)
+          || ($this->amount < 0 && ceil($this->amount) === $this->amount)
+        ) {
+          $repeat = $this->precision;
+        }
         $formatter = new \NumberFormatter($locale, \NumberFormatter::PATTERN_DECIMAL, strtr('#.{precision}#', [
-          '{precision}' => str_repeat('0', $this->precision > 1 || floor($this->amount) === $this->amount
-            ? $this->precision
-            : 0
-          ),
+          '{precision}' => str_repeat('0', $repeat),
         ]));
         $decimal = explode(
           $formatter->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL),
