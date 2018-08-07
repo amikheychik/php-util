@@ -70,6 +70,10 @@ class NumberMessageTest
     self::assertEquals('-0.12', $argument->template());
     self::assertEquals('-RUB0.12', (string) $argument);
     self::assertEquals('-0,12 руб.', $argument->format('ru_RU'));
+    $argument = new CurrencyArgumentWithPrecision('amount', -0.19, 'RUB', 1);
+    self::assertEquals('-0.19', $argument->template());
+    self::assertEquals('-RUB0.2', (string) $argument);
+    self::assertEquals('-0,2 руб.', $argument->format('ru_RU'));
     $argument = new CurrencyArgumentWithPrecision('amount', -0.12, 'RUB', 3);
     self::assertEquals('-0.12', $argument->template());
     self::assertEquals('-RUB0.120', (string) $argument);
@@ -79,11 +83,15 @@ class NumberMessageTest
     self::assertEquals('-RUB12', (string) $argument);
     self::assertEquals('-12 руб.', $argument->format('ru_RU'));
     $argument = new CurrencyArgumentWithPrecision('amount', -12, 'RUB', 1);
-    self::assertEquals('-12.0', $argument->template());
+    self::assertEquals('-12', $argument->template());
     self::assertEquals('-RUB12.0', (string) $argument);
     self::assertEquals('-12,0 руб.', $argument->format('ru_RU'));
+    $argument = new CurrencyArgumentWithPrecision('amount', -12.19, 'RUB', 1);
+    self::assertEquals('-12.19', $argument->template());
+    self::assertEquals('-RUB12.2', (string) $argument);
+    self::assertEquals('-12,2 руб.', $argument->format('ru_RU'));
     $argument = new CurrencyArgumentWithPrecision('amount', -12, 'RUB', 2);
-    self::assertEquals('-12.00', $argument->template());
+    self::assertEquals('-12', $argument->template());
     self::assertEquals('-RUB12.00', (string) $argument);
     self::assertEquals('-12,00 руб.', $argument->format('ru_RU'));
   }
