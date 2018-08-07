@@ -3,7 +3,7 @@
 namespace Xtuple\Util\Type\DateTime\Timestamp;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Type\DateTime\DateTimeTimestamp;
+use Xtuple\Util\Type\DateTime\DateTimeTimestampSeconds;
 
 class TimestampTest
   extends TestCase {
@@ -23,12 +23,12 @@ class TimestampTest
    */
   public function testDateTime() {
     $time = time();
-    $date = new DateTimeTimestamp($time);
+    $date = new DateTimeTimestampSeconds($time);
     $timestamp = new TimestampDateTime($date);
     self::assertEquals($time, $timestamp->seconds());
     self::assertEquals(
       0,
-      (new TimestampDateTime(new DateTimeTimestamp(0)))->seconds()
+      (new TimestampDateTime(new DateTimeTimestampSeconds(0)))->seconds()
     );
   }
 }
