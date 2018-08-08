@@ -8,7 +8,7 @@ class FileTest
   extends TestCase {
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Failed to load file ./FileTest.php
+   * @expectedExceptionMessage File ./FileTest.php not found
    * @throws \Throwable
    */
   public function testSplInfo() {
@@ -21,7 +21,7 @@ class FileTest
 
   /**
    * @expectedException \Throwable
-   * @expectedExceptionMessage Failed to load file ./FileTest.php
+   * @expectedExceptionMessage Failed to load file from path ./FileTest.php
    * @throws \Throwable
    */
   public function testFromPathString() {

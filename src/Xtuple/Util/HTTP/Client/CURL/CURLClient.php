@@ -50,7 +50,7 @@ final class CURLClient
       return $handle->execute();
     }
       // @codeCoverageIgnoreStart
-      // Unable to reproduce if curl_multi_exec() failure
+      // Unable to reproduce curl_multi_exec() failure
     catch (Throwable $e) {
       throw new Exception('Failed to process multiple HTTP requests', [], $e);
     }

@@ -5,7 +5,7 @@ namespace Xtuple\Util\HTTP\Response\JSON;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Message\Header\Header\ContentType\JSONContentTypeHeader;
 use Xtuple\Util\HTTP\Response\ResponseStruct;
 use Xtuple\Util\HTTP\Response\Status\StatusString;
 
@@ -19,7 +19,7 @@ final class JSONResponseTest
       new ResponseStruct(
         new StatusString('HTTP/1.1 200 OK'),
         new ArraySetHeader([
-          new HeaderStruct('Content-Type', 'application/json'),
+          new JSONContentTypeHeader(),
         ]),
         new JSONBodyData([
           'test' => 'example',

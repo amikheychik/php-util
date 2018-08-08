@@ -3,11 +3,12 @@
 namespace Xtuple\Util\File\File;
 
 use Xtuple\Util\Exception\ChainException;
+use Xtuple\Util\Exception\Throwable;
 
 final class FileFromPathString
   extends AbstractFile {
   /**
-   * @throws \Throwable
+   * @throws Throwable
    *
    * @param string $path
    */
@@ -18,7 +19,7 @@ final class FileFromPathString
       ));
     }
     catch (\Throwable $e) {
-      throw new ChainException($e, 'Failed to load file {path}', [
+      throw new ChainException($e, 'Failed to load file from path {path}', [
         'path' => $path,
       ]);
     }

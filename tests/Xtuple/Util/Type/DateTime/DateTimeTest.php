@@ -152,7 +152,7 @@ class DateTimeTest
    */
   public function testTimestamp() {
     // Timestamp by default use timezone of the system
-    $timestamp = new DateTimeTimestamp($this->time);
+    $timestamp = new DateTimeTimestampSeconds($this->time);
     self::assertEquals(
       date(
         'Y-m-d\TH:i:s\Z',
@@ -160,27 +160,27 @@ class DateTimeTest
       ),
       $timestamp->utc()
     );
-    $timestamp = new DateTimeTimestamp(
+    $timestamp = new DateTimeTimestampSeconds(
       (int) (new DateTimeMessageStruct(new DateTimeString('Jan 1, 2018', 'UTC'), 'U'))->format('en_US')
     );
     self::assertEquals(
       '2018-01-01T00:00:00+00:00',
       (string) $timestamp
     );
-    $timestamp = new DateTimeTimestamp(
+    $timestamp = new DateTimeTimestampSeconds(
       (int) (new DateTimeMessageStruct(new DateTimeString('Jan 1, 2018', 'EST'), 'U'))->format('en_US')
     );
     self::assertEquals(
       '2018-01-01T05:00:00+00:00',
       (string) $timestamp
     );
-    $timestamp = new DateTimeTimestamp(0);
+    $timestamp = new DateTimeTimestampSeconds(0);
     self::assertEquals('1970-01-01T00:00:00+00:00', (string) $timestamp);
-    $timestamp = new DateTimeTimestamp((2 ** 32) / 2);
+    $timestamp = new DateTimeTimestampSeconds((2 ** 32) / 2);
     self::assertEquals('2038-01-19T03:14:08+00:00', (string) $timestamp);
-    $timestamp = new DateTimeTimestamp(PHP_INT_MAX);
+    $timestamp = new DateTimeTimestampSeconds(PHP_INT_MAX);
     self::assertEquals('6596-12-04T15:30:07+00:00', (string) $timestamp);
-    new DateTimeTimestamp(-1);
+    new DateTimeTimestampSeconds(-1);
   }
 
   /**

@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Xtuple\Util\HTTP\Client\CURL\Configuration\ConfigurationStruct;
 use Xtuple\Util\HTTP\Client\CURL\Configuration\DebugConfiguration;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Message\Header\Header\ContentType\JSONContentTypeHeader;
 use Xtuple\Util\HTTP\Request\Request\GETRequest;
 use Xtuple\Util\HTTP\Request\URI\URL\URLString;
 use Xtuple\Util\Type\Stream\StreamStruct;
@@ -21,7 +21,7 @@ final class OptionsForRequestTest
     $body = tmpfile();
     $options = new OptionsForRequest(
       new GETRequest(new URLString('http://example.com'), new ArraySetHeader([
-        new HeaderStruct('Content-Type', 'application/json'),
+        new JSONContentTypeHeader(),
       ])),
       new DebugConfiguration(new ConfigurationStruct(false, 60.0)),
       new StreamStruct($header),

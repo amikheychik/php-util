@@ -8,7 +8,7 @@ use Xtuple\Util\HTTP\Client\CURL\Configuration\DebugConfiguration;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\QueryBody;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Message\Header\Header\ContentType\JSONContentTypeHeader;
 use Xtuple\Util\HTTP\Request\Collection\Map\ArrayMapRequest;
 use Xtuple\Util\HTTP\Request\Method\Method\DELETE;
 use Xtuple\Util\HTTP\Request\Method\Method\GET;
@@ -75,7 +75,7 @@ class CURLClientTest
   public function testPost() {
     $response = $this->httpClient->send(
       new RequestStruct(new POST(), new HTTPBinURL('post'), new ArraySetHeader([
-        new HeaderStruct('Content-Type', 'application/json'),
+        new JSONContentTypeHeader(),
       ]), new JSONBodyData([
         'test' => 'value',
       ]))
@@ -108,7 +108,7 @@ class CURLClientTest
   public function testPut() {
     $response = $this->httpClient->send(
       new RequestStruct(new PUT(), new HTTPBinURL('put'), new ArraySetHeader([
-        new HeaderStruct('Content-Type', 'application/json'),
+        new JSONContentTypeHeader(),
       ]), new JSONBodyData([
         'test' => 'value',
       ]))
@@ -158,12 +158,12 @@ class CURLClientTest
         'get' => new RequestStruct(new GET(), new HTTPBinURL('get')),
         'redirect' => new RequestStruct(new GET(), new HTTPBinURL('redirect/6')),
         'post' => new RequestStruct(new POST(), new HTTPBinURL('post'), new ArraySetHeader([
-          new HeaderStruct('Content-Type', 'application/json'),
+          new JSONContentTypeHeader(),
         ]), new JSONBodyData([
           'test' => 'value',
         ])),
         'put' => new RequestStruct(new PUT(), new HTTPBinURL('put'), new ArraySetHeader([
-          new HeaderStruct('Content-Type', 'application/json'),
+          new JSONContentTypeHeader(),
         ]), new JSONBodyData([
           'test' => 'value',
         ])),

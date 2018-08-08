@@ -5,7 +5,7 @@ namespace Xtuple\Util\HTTP\Response;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\HTTP\Message\Body\BodyStream;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Message\Header\Header\ContentType\JSONContentTypeHeader;
 use Xtuple\Util\HTTP\Response\Status\StatusString;
 
 final class ResponseStructTest
@@ -16,7 +16,7 @@ final class ResponseStructTest
   public function testConstructor() {
     $status = new StatusString('HTTP/1.1 200 OK');
     $headers = new ArraySetHeader([
-      new HeaderStruct('Content-Type', 'application/json'),
+      new JSONContentTypeHeader(),
     ]);
     $body = new BodyStream(tmpfile());
     $response = new ResponseStruct($status, $headers, $body);

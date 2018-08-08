@@ -2,8 +2,8 @@
 
 namespace Xtuple\Util\File\File;
 
-use Xtuple\Util\Exception\ChainException;
 use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\Path\Path;
 use Xtuple\Util\File\Path\PathString;
 
@@ -13,21 +13,14 @@ final class FileSplFileInfo
   private $file;
 
   /**
-   * @throws \Throwable
+   * @throws Throwable
    *
    * @param \SplFileInfo $file
    */
   public function __construct(\SplFileInfo $file) {
-    try {
-      if ($file->getRealPath() === false) {
-        throw new Exception('File {file} not found', [
-          'file' => $file->getPathname(),
-        ]);
-      }
-    }
-    catch (\Throwable $e) {
-      throw new ChainException($e, 'Failed to load file {path}', [
-        'path' => $file->getPathname(),
+    if ($file->getRealPath() === false) {
+      throw new Exception('File {file} not found', [
+        'file' => $file->getPathname(),
       ]);
     }
     $this->file = $file;
@@ -37,7 +30,16 @@ final class FileSplFileInfo
     return $this->file->getBasename();
   }
 
+  /**
+   * @throws Throwable
+   * @return Path
+   */
   public function path(): Path {
+    if ($this->file->getRealPath() === false) {
+      throw new Exception('File {file} not found', [
+        'file' => $this->file->getPathname(),
+      ]);
+    }
     return new PathString($this->file->getRealPath());
   }
 

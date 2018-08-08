@@ -5,7 +5,7 @@ namespace Xtuple\Util\HTTP\Request\Request;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
+use Xtuple\Util\HTTP\Message\Header\Header\ContentType\JSONContentTypeHeader;
 use Xtuple\Util\HTTP\Request\URI\URL\URLString;
 use Xtuple\Util\Type\Stream\String\StringStreamStruct;
 
@@ -18,7 +18,7 @@ final class POSTRequestTest
     $request = new POSTRequest(
       new URLString('http://example.com'),
       new ArraySetHeader([
-        new HeaderStruct('Content-Type', 'application/json'),
+        new JSONContentTypeHeader(),
       ]),
       new JSONBodyData([
         'example' => 'text',

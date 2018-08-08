@@ -3,6 +3,7 @@
 namespace Xtuple\Util\File\File\Regular\Create;
 
 use Xtuple\Util\Exception\ChainException;
+use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\Directory\Make\MakeDirectoryPath;
 use Xtuple\Util\File\File\FileFromPathString;
 use Xtuple\Util\File\File\Regular\AbstractRegular;
@@ -11,7 +12,7 @@ use Xtuple\Util\File\File\Regular\RegularFile;
 final class CreateRegularFileFromString
   extends AbstractRegular {
   /**
-   * @throws \Throwable
+   * @throws Throwable
    *
    * @param string $path
    * @param string $content

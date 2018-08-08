@@ -3,6 +3,7 @@
 namespace Xtuple\Util\File\Directory;
 
 use Xtuple\Util\Exception\Exception;
+use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\File\AbstractFile;
 use Xtuple\Util\File\File\FileSplFileInfo;
 
@@ -10,7 +11,7 @@ final class DirectoryPath
   extends AbstractFile
   implements Directory {
   /**
-   * @throws \Throwable
+   * @throws Throwable
    *
    * @param string $path
    */

@@ -18,21 +18,25 @@ final class RequestStructTest
    * @throws \Throwable
    */
   public function testConstructor() {
-    $request = new RequestStruct(new GET(), new URLString('http://example.com'));
+    $request = new TestLazyRequest(
+      new RequestStruct(new GET(), new URLString('http://example.com'))
+    );
     self::assertEquals('GET', (string) $request->method());
     self::assertEquals('http://example.com', (string) $request->uri());
     self::assertTrue($request->headers()->isEmpty());
     self::assertEquals('', (string) new StringStreamFromResource($request->body()->resource()));
     $etag = new UUIDv4();
-    $request = new RequestStruct(new POST(), new URLString('http://example.com/post'), new ArraySetHeader([
-      new HeaderStruct('ETag', (string) $etag),
-    ]), new QueryBody([
-      'title' => 'Example',
-      'content' => [
-        'header' => 'Lorem Ipsum',
-        'footer' => 'O tempora o mores!',
-      ],
-    ]));
+    $request = new TestLazyRequest(
+      new RequestStruct(new POST(), new URLString('http://example.com/post'), new ArraySetHeader([
+        new HeaderStruct('ETag', (string) $etag),
+      ]), new QueryBody([
+        'title' => 'Example',
+        'content' => [
+          'header' => 'Lorem Ipsum',
+          'footer' => 'O tempora o mores!',
+        ],
+      ]))
+    );
     self::assertEquals('POST', (string) $request->method());
     self::assertEquals('http://example.com/post', (string) $request->uri());
     self::assertEquals("ETag: {$etag}", (string) $request->headers()->get('ETag'));
@@ -41,5 +45,19 @@ final class RequestStructTest
       'title=Example&content%5Bheader%5D=Lorem+Ipsum&content%5Bfooter%5D=O+tempora+o+mores%21',
       (string) new StringStreamFromResource($request->body()->resource())
     );
+  }
+}
+
+final class TestLazyRequest
+  extends AbstractLazyRequest {
+  /** @var Request */
+  private $request;
+
+  public function __construct(Request $request) {
+    $this->request = $request;
+  }
+
+  protected function request(): Request {
+    return $this->request;
   }
 }
