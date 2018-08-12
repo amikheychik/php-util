@@ -30,7 +30,7 @@ class XMLElementTest
    */
   public function testXML() {
     $element = new TestXMLElement(new XMLElementString(implode('', [
-      '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
+      '<Test name="test" debug="true" xmlns="https://xtuple.com/schema/test">',
       '<Child name="not-empty">Test</Child>',
       '</Test>',
     ])));
@@ -40,7 +40,7 @@ class XMLElementTest
     );
     $element = new TestXMLElement(new XMLElementString(implode('', [
       '<?xml version="1.0" encoding="UTF-8" ?>',
-      '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
+      '<Test name="test" debug="true" xmlns="https://xtuple.com/schema/test">',
       '<Child name="not-empty">Test</Child>',
       '</Test>',
     ])));
@@ -58,7 +58,7 @@ class XMLElementTest
    */
   public function testElement() {
     $element = new TestXMLElement(new XMLElementString(implode('', [
-      '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
+      '<Test name="test" debug="true" xmlns="https://xtuple.com/schema/test">',
       '<Child name="empty"></Child>',
       '<Child name="not-empty">Test</Child>',
       '<Element>Element</Element>',
@@ -83,7 +83,7 @@ class XMLElementTest
   public function testRegularFile() {
     $element = new XMLElementRegularFile(
       new CreateRegularFileFromString('/tmp/phpunit/php-util/element.xml', implode('', [
-        '<Test name="test" debug="true" xmlns="https://xdruple.xtuple.com/schema/test">',
+        '<Test name="test" debug="true" xmlns="https://xtuple.com/schema/test">',
         '<Child name="empty"></Child>',
         '<Child name="not-empty">Test</Child>',
         '<Element>Element</Element>',

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema targetNamespace="https://xtuple.com/schema/xtuple.util.test"
+           xmlns="https://xtuple.com/schema/xtuple.util.test"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:postgres="https://xtuple.com/schema/xtuple.util.postgres.pdo.test"
+           elementFormDefault="qualified">
+  <xs:complexType name="environment">
+    <xs:all>
+      <xs:element name="postgres" type="postgres:connection" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>
