@@ -15,9 +15,12 @@ final class JSONBodyFromStringBody
   }
 
   public function data(): Tree {
-    $data = json_decode((string) $this, true);
-    if ($data === null) {
-      throw new JSONException();
+    $data = [];
+    if ($content = (string) $this) {
+      $data = json_decode($content, true);
+      if ($data === null) {
+        throw new JSONException();
+      }
     }
     return new ArrayTree((array) $data);
   }

@@ -27,6 +27,17 @@ class JSONBodyFromStringBodyTest
   /**
    * @throws \Throwable
    */
+  public function testEmptyBody() {
+    $stream = tmpfile();
+    fwrite($stream, '');
+    $body = new BodyStream($stream);
+    $json = new JSONBodyFromStringBody(new StringBodyFromBody($body));
+    self::assertEquals([], $json->data()->data());
+  }
+
+  /**
+   * @throws \Throwable
+   */
   public function testDecodeException() {
     $stream = tmpfile();
     fwrite($stream, '{broken:"json"}');
