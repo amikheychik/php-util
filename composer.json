@@ -18,10 +18,10 @@
   },
   "require": {
     "php": "^7.1",
-    "lib-openssl": "*",
     "ext-curl": "*",
-    "ext-json": "*",
     "ext-intl": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
     "ext-SimpleXML": "*",
     "ext-soap": "*"
   },

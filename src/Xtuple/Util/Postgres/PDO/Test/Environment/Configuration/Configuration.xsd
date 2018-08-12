@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema targetNamespace="https://xtuple.com/schema/xtuple.util.postgres.pdo.test"
+           xmlns="https://xtuple.com/schema/xtuple.util.postgres.pdo.test"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <xs:complexType name="connection">
+    <xs:attribute name="host" type="xs:string" default="localhost" use="required"/>
+    <xs:attribute name="port" type="xs:string" default="5432" use="required"/>
+    <xs:attribute name="database" type="xs:string" use="required"/>
+    <xs:attribute name="username" type="xs:string" use="required"/>
+    <xs:attribute name="password" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>
