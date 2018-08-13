@@ -16,10 +16,11 @@ final class JSONBodyDataTest
       'integer' => 1,
       'null' => null,
       'string' => 'content',
+      'url' => 'http://example.com',
     ]);
-    $expected = '{"integer":1,"null":null,"string":"content"}';
+    $expected = '{"integer":1,"null":null,"string":"content","url":"http://example.com"}';
     self::assertEquals($expected, (string) $body);
-    self::assertEquals($expected, json_encode($body));
+    self::assertEquals($expected, json_encode($body, JSON_UNESCAPED_SLASHES));
     self::assertEquals($expected, $body->content());
     self::assertEquals($expected, new StringStreamFromResource($body->resource()));
     self::assertEquals(1, $body->data()->get(['integer']));

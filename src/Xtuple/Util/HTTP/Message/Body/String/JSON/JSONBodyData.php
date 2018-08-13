@@ -32,7 +32,7 @@ final class JSONBodyData
    * @return string
    */
   public function content(): string {
-    $json = json_encode($this->jsonSerialize());
+    $json = json_encode($this->jsonSerialize(), JSON_UNESCAPED_SLASHES);
     if ($json === false) {
       throw new JSONException();
     }

@@ -25,16 +25,23 @@ class URLSafeBase64EncodedMapClaimTest
       new IssuedAtStruct(new DateTimeTimestampSeconds(1516239022)),
     ])));
     /** @noinspection SpellCheckingInspection */
-    $jwtIO = 'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ';
-    self::assertEquals("{$jwtIO}==", base64_encode(json_encode([
+    $jwtIO = implode('', [
+      'eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6M',
+      'TUxNjIzOTAyMiwidXJsIjoiaHR0cDovL2V4YW1wbGUuY29tIn0'
+    ]);
+    self::assertEquals("{$jwtIO}=", base64_encode(json_encode([
       'sub' => '1234567890',
       'name' => 'John Doe',
+      'admin' => true,
       'iat' => 1516239022,
-    ])));
+      'url' => 'http://example.com'
+    ], JSON_UNESCAPED_SLASHES)));
     self::assertEquals($jwtIO, (string) new URLSafeBase64EncodedMapClaim(new ArrayMapClaim([
       new SubjectStruct('1234567890'),
       new ClaimStruct('name', 'John Doe'),
+      new ClaimStruct('admin', true),
       new IssuedAtStruct(new DateTimeTimestampSeconds(1516239022)),
+      new ClaimStruct('url', 'http://example.com')
     ])));
     self::assertEquals('e30', (string) new URLSafeBase64EncodedMapClaim(new ArrayMapClaim()));
   }

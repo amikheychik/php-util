@@ -31,7 +31,7 @@ final class PKCS12File
 
   public function serialize() {
     try {
-      return json_encode([$this->file->path()->absolute(), base64_encode($this->password)]);
+      return json_encode([$this->file->path()->absolute(), base64_encode($this->password)], JSON_UNESCAPED_SLASHES);
     }
     catch (\Throwable $e) {
       return null;

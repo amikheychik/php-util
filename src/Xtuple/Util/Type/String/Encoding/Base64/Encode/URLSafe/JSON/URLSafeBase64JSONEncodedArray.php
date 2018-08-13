@@ -14,6 +14,6 @@ final class URLSafeBase64JSONEncodedArray
   }
 
   public function __toString(): string {
-    return (string) new URLSafeBase64EncodedStringFromString(json_encode($this->data));
+    return (string) new URLSafeBase64EncodedStringFromString(json_encode($this->data, JSON_UNESCAPED_SLASHES));
   }
 }
