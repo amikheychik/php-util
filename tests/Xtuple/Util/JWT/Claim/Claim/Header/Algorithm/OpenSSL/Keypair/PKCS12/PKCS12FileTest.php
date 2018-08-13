@@ -4,6 +4,7 @@ namespace Xtuple\Util\JWT\Claim\Claim\Header\Algorithm\OpenSSL\Keypair\PKCS12;
 
 use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\File\File\FileFromPathString;
+use Xtuple\Util\JWT\Claim\Claim\Header\Algorithm\OpenSSL\Keypair\AbstractKeypair;
 use Xtuple\Util\JWT\Claim\Claim\Header\Algorithm\OpenSSL\Test\AbstractOpenSSLTestCase;
 
 class PKCS12FileTest
@@ -14,6 +15,8 @@ class PKCS12FileTest
   public function testPrivate() {
     openssl_pkey_export($this->private, $expected);
     $pkcs12 = new PKCS12File(new FileFromPathString("{$this->directory}/localhost.p12"), $this->password);
+    openssl_pkey_export($pkcs12->private(), $private);
+    $pkcs12 = new TestAbstractKeypair($pkcs12);
     openssl_pkey_export($pkcs12->private(), $private);
     self::assertEquals($expected, $private);
   }
@@ -29,7 +32,15 @@ class PKCS12FileTest
     $pkcs12 = unserialize(serialize($pkcs12));
     openssl_pkey_export($pkcs12->private(), $private);
     self::assertEquals($expected, $private);
+    $abstract = new TestAbstractKeypair($pkcs12);
+    $abstract = unserialize(serialize($abstract));
+    openssl_pkey_export($abstract->private(), $private);
+    self::assertEquals($expected, $private);
     rename("{$this->directory}/localhost.p12", "{$this->directory}/temp.p12");
+    self::assertEquals(
+      'C:87:"Xtuple\Util\JWT\Claim\Claim\Header\Algorithm\OpenSSL\Keypair\PKCS12\TestAbstractKeypair":2:{N;}',
+      serialize($abstract)
+    );
     self::assertEquals('N;', serialize($pkcs12));
     rename("{$this->directory}/temp.p12", "{$this->directory}/localhost.p12");
     $damaged = strtr('C:78:"{class}":50:{["\/tmp\/phpunit\/php-util\/openssl\/temp.p12",""]}', [
@@ -45,6 +56,7 @@ class PKCS12FileTest
     try {
       openssl_pkey_export($this->private, $expected);
       $pkcs12 = new PKCS12File(new FileFromPathString("{$this->directory}/localhost.csr"), $this->password);
+      $pkcs12 = new TestAbstractKeypair($pkcs12);
       $pkcs12->private();
     }
     catch (Throwable $e) {
@@ -56,4 +68,8 @@ class PKCS12FileTest
       }
     }
   }
+}
+
+final class TestAbstractKeypair
+  extends AbstractKeypair {
 }
