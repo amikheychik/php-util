@@ -13,7 +13,7 @@ final class ArrayMapRequest
    *
    * @param Request[]|iterable $requests
    */
-  public function __construct(iterable $requests) {
+  public function __construct(iterable $requests = []) {
     parent::__construct(Request::class, $requests);
   }
 }
