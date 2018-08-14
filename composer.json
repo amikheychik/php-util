@@ -22,7 +22,7 @@
     "ext-intl": "*",
     "ext-json": "*",
     "ext-openssl": "*",
-    "ext-pdo": "*",
+    "ext-PDO": "*",
     "ext-SimpleXML": "*",
     "ext-soap": "*"
   },
