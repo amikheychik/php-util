@@ -21,20 +21,20 @@ class DirectoryTest
    * @throws \Throwable
    */
   public function testDirectory() {
-    $dirname = '/tmp/phpunit/php-util/dir-test';
-    $make = new MakeDirectoryPath($dirname);
+    $directory = '/tmp/phpunit/php-util/dir-test';
+    $make = new MakeDirectoryPath($directory);
     self::assertEquals('dir-test', $make->name());
-    self::assertEquals($dirname, $make->path()->absolute());
-    self::assertEquals(filemtime($dirname), $make->modified());
+    self::assertEquals($directory, $make->path()->absolute());
+    self::assertEquals(filemtime($directory), $make->modified());
     $dir = new DirectoryPath('/tmp/phpunit/php-util');
     self::assertEquals('php-util', $dir->name());
     self::assertEquals('/tmp/phpunit/php-util', $dir->path()->absolute());
-    self::assertEquals(filemtime($dirname), $dir->modified());
+    self::assertEquals(filemtime($directory), $dir->modified());
     $relative = new RelativeDirectory($dir, 'dir-test');
     self::assertEquals('dir-test', $relative->name());
-    self::assertEquals($dirname, $relative->path()->absolute());
+    self::assertEquals($directory, $relative->path()->absolute());
     self::assertEquals($make->modified(), $relative->modified());
-    rmdir($dirname);
+    rmdir($directory);
     rmdir('/tmp/phpunit/php-util');
   }
 
@@ -81,9 +81,9 @@ class DirectoryTest
    */
   public function testPackage() {
     $package = new PackageDirectory(__NAMESPACE__, __DIR__);
-    $dirname = dirname($GLOBALS['__PHPUNIT_BOOTSTRAP'], 2);
-    self::assertEquals($dirname, $package->path()->absolute());
-    self::assertEquals((new \SplFileInfo($dirname))->getFilename(), $package->name());
-    self::assertEquals(filemtime($dirname), $package->modified());
+    $directory = dirname($GLOBALS['__PHPUNIT_BOOTSTRAP'], 2);
+    self::assertEquals($directory, $package->path()->absolute());
+    self::assertEquals((new \SplFileInfo($directory))->getFilename(), $package->name());
+    self::assertEquals(filemtime($directory), $package->modified());
   }
 }

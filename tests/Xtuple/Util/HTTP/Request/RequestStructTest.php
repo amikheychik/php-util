@@ -26,6 +26,7 @@ final class RequestStructTest
     self::assertTrue($request->headers()->isEmpty());
     self::assertEquals('', (string) new StringStreamFromResource($request->body()->resource()));
     $etag = new UUIDv4();
+    /** @noinspection SpellCheckingInspection */
     $request = new TestLazyRequest(
       new RequestStruct(new POST(), new URLString('http://example.com/post'), new ArraySetHeader([
         new HeaderStruct('ETag', (string) $etag),
@@ -41,6 +42,7 @@ final class RequestStructTest
     self::assertEquals('http://example.com/post', (string) $request->uri());
     self::assertEquals("ETag: {$etag}", (string) $request->headers()->get('ETag'));
     self::assertEquals(1, $request->headers()->count());
+    /** @noinspection SpellCheckingInspection */
     self::assertEquals(
       'title=Example&content%5Bheader%5D=Lorem+Ipsum&content%5Bfooter%5D=O+tempora+o+mores%21',
       (string) new StringStreamFromResource($request->body()->resource())

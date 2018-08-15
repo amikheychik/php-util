@@ -8,6 +8,7 @@ use Xtuple\Util\RegEx\String\NewLineRegEx;
 class ResponseRegExTest
   extends TestCase {
   public function testHTML() {
+    /** @noinspection SpellCheckingInspection */
     $response = (new NewLineRegEx())->replace("\r\n", <<<EOT
 HTTP/1.1 302 FOUND
 Connection: keep-alive
@@ -41,6 +42,7 @@ EOT
   }
 
   public function testJSON() {
+    /** @noinspection SpellCheckingInspection */
     $response = <<<EOT
 HTTP/1.1 200 OK
 Server: nginx

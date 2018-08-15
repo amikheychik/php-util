@@ -13,6 +13,7 @@ final class ResponseStringTest
    * @throws \Throwable
    */
   public function testConstructor() {
+    /** @noinspection SpellCheckingInspection */
     $response = (new NewLineRegEx())->replace("\r\n", <<<EOT
 HTTP/1.1 302 FOUND
 Connection: keep-alive

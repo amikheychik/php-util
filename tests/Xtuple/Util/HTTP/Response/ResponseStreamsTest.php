@@ -17,6 +17,7 @@ final class ResponseStreamsTest
 
   public function setUp() {
     parent::setUp();
+    /** @noinspection SpellCheckingInspection */
     $this->header = (new NewLineRegEx())->replace("\r\n", <<<EOT
 HTTP/1.1 302 FOUND
 Connection: keep-alive

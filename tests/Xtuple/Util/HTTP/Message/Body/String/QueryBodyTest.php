@@ -19,6 +19,7 @@ final class QueryBodyTest
         'value' => 'abc',
       ],
     ]);
+    /** @noinspection SpellCheckingInspection */
     $expected = 'sort=ASC&filter%5Bfield%5D=title&filter%5Boperator%5D=LIKE&filter%5Bvalue%5D=abc';
     self::assertEquals($expected, (string) $body);
     self::assertEquals($expected, $body->content());
