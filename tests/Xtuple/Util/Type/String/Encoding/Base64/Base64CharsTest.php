@@ -27,6 +27,7 @@ class Base64CharsTest
 
   public function testURLSafe() {
     $encoded = new URLSafeBase64EncodedStringFromString('ZG-j_2RlZA');
+    /** @noinspection SpellCheckingInspection */
     self::assertEquals('Wkctal8yUmxaQQ', $encoded->__toString());
   }
 
@@ -35,6 +36,7 @@ class Base64CharsTest
       'decoded' => 'decoded',
       'encoded' => 'ZGVjb2RlZA',
     ]);
+    /** @noinspection SpellCheckingInspection */
     self::assertEquals('eyJkZWNvZGVkIjoiZGVjb2RlZCIsImVuY29kZWQiOiJaR1ZqYjJSbFpBIn0', $encoded->__toString());
   }
 }

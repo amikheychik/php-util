@@ -81,7 +81,7 @@ class MessageTest
       ])),
     ]));
     self::assertEquals('No discounts applied.', $message->__toString());
-    $codes = ['DOLLAROFF'];
+    $codes = ['DOLLAR_OFF'];
     $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
       new PluralArgumentFromStrings('discounts', count($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
@@ -89,8 +89,8 @@ class MessageTest
         new StringArgument('codes', implode(', ', $codes)),
       ])),
     ]));
-    self::assertEquals('Discount DOLLAROFF applied.', $message->__toString());
-    $codes = ['DOLLAROFF', 'ONEFREE'];
+    self::assertEquals('Discount DOLLAR_OFF applied.', $message->__toString());
+    $codes = ['DOLLAR_OFF', 'ONE_FREE'];
     $message = new MessageStruct('{discounts} applied.', new ArrayMapArgument([
       new PluralArgumentFromStrings('discounts', count($codes), 'Discounts {codes}', 'Discount {codes}', [
         '=0' => 'No discounts',
@@ -98,7 +98,7 @@ class MessageTest
         new StringArgument('codes', implode(', ', $codes)),
       ])),
     ]));
-    self::assertEquals('Discounts DOLLAROFF, ONEFREE applied.', $message->__toString());
+    self::assertEquals('Discounts DOLLAR_OFF, ONE_FREE applied.', $message->__toString());
   }
 
   /**
