@@ -11,7 +11,7 @@ final class AccessTokenHeader
   public function __construct(AccessToken $token) {
     parent::__construct(new HeaderStruct(
       'Authorization',
-      "{$token->type()}: {$token->value()}"
+      "{$token->type()} {$token->value()}"
     ));
   }
 }

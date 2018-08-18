@@ -23,7 +23,7 @@ class AccessTokenSetHeaderTest
     self::assertEquals(1, $headers->count());
     $header = $headers->get('Authorization');
     self::assertEquals('Authorization', $header->name());
-    self::assertEquals("Bearer: {$uuid}", $header->value());
-    self::assertEquals("Authorization: Bearer: {$uuid}", (string) $header);
+    self::assertEquals("Bearer {$uuid}", $header->value());
+    self::assertEquals("Authorization: Bearer {$uuid}", (string) $header);
   }
 }

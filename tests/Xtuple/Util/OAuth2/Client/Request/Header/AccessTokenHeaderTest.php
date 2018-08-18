@@ -21,7 +21,7 @@ class AccessTokenHeaderTest
       new TimestampStruct($now)
     ));
     self::assertEquals('Authorization', $header->name());
-    self::assertEquals("Bearer: {$uuid}", $header->value());
-    self::assertEquals("Authorization: Bearer: {$uuid}", (string) $header);
+    self::assertEquals("Bearer {$uuid}", $header->value());
+    self::assertEquals("Authorization: Bearer {$uuid}", (string) $header);
   }
 }

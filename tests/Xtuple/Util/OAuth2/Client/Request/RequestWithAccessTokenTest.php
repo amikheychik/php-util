@@ -37,7 +37,7 @@ class RequestWithAccessTokenTest
     self::assertEquals('{"scope":"example scope"}', (new StringBodyFromBody($request->body()))->content());
     $header = $request->headers()->get('Authorization');
     self::assertEquals('Authorization', $header->name());
-    self::assertEquals("Bearer: {$uuid}", $header->value());
-    self::assertEquals("Authorization: Bearer: {$uuid}", (string) $header);
+    self::assertEquals("Bearer {$uuid}", $header->value());
+    self::assertEquals("Authorization: Bearer {$uuid}", (string) $header);
   }
 }
