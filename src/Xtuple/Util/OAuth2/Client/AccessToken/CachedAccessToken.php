@@ -8,7 +8,6 @@ use Xtuple\Util\Exception\Throwable;
 use Xtuple\Util\HTTP\Client\Client;
 use Xtuple\Util\OAuth2\Client\AccessToken\Cache\RecordAccessToken;
 use Xtuple\Util\OAuth2\Client\AccessToken\Request\AccessTokenRequest;
-use Xtuple\Util\OAuth2\Client\AccessToken\Request\Cache\KeyAccessTokenRequest;
 
 final class CachedAccessToken
   extends AbstractAccessToken {
@@ -21,7 +20,7 @@ final class CachedAccessToken
    */
   public function __construct(Cache $cache, Client $http, AccessTokenRequest $accessTokenRequest) {
     try {
-      $key = new KeyAccessTokenRequest($accessTokenRequest);
+      $key = $accessTokenRequest->key();
       if ($record = $cache->find($key)) {
         /** @var AccessToken $token */
         $token = $record->value();

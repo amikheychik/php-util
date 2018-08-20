@@ -3,6 +3,7 @@
 namespace Xtuple\Util\OAuth2\Client\AccessToken\Request;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\StringBodyFromBody;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
@@ -29,7 +30,11 @@ class AccessTokenRequestStructTest
             new HeaderStruct('Content-Length', (string) 25),
           ])
         ),
-        new TimestampStruct($now)
+        new TimestampStruct($now),
+        new KeyStruct([
+          'https://example.com',
+          'example test',
+        ])
       )
     );
     $content = '{"scope":"example scope"}';
@@ -41,6 +46,10 @@ class AccessTokenRequestStructTest
       $request->headers()->get('Content-Length')->value()
     );
     self::assertEquals($now, $request->issuedAt()->seconds());
+    self::assertEquals([
+      'https://example.com',
+      'example test',
+    ], $request->key()->fields());
   }
 }
 

@@ -3,6 +3,7 @@
 namespace Xtuple\Util\OAuth2\Client\AccessToken;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\HTTP\Client\Client;
 use Xtuple\Util\HTTP\Client\Test\TestClient;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
@@ -46,7 +47,11 @@ class FreshAccessTokenTest
         'token_type' => 'bearer',
         'expires_in' => 3600,
       ]),
-      new TimestampStruct($this->now)
+      new TimestampStruct($this->now),
+      new KeyStruct([
+        'https://example.com/token',
+        (string) $this->uuid,
+      ])
     );
   }
 
@@ -79,7 +84,11 @@ class FreshAccessTokenTest
           new HeaderStruct('Response-Reason', 'Not found'),
         ])
       ),
-      new TimestampStruct($this->now)
+      new TimestampStruct($this->now),
+      new KeyStruct([
+        'https://example.com/token',
+        (string) $this->uuid,
+      ])
     );
     new FreshAccessToken($this->http, $request);
   }

@@ -5,6 +5,7 @@ namespace Xtuple\Util\OAuth2\Client\AccessToken;
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Cache\Cache;
 use Xtuple\Util\Cache\Cache\Memory\MemoryCache;
+use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\Cache\Record\RecordStruct;
 use Xtuple\Util\HTTP\Client\Client;
 use Xtuple\Util\HTTP\Client\Test\TestClient;
@@ -15,7 +16,6 @@ use Xtuple\Util\HTTP\Request\Request\JSON\POSTJSONRequest;
 use Xtuple\Util\HTTP\Request\URI\URL\URLString;
 use Xtuple\Util\OAuth2\Client\AccessToken\Request\AccessTokenRequest;
 use Xtuple\Util\OAuth2\Client\AccessToken\Request\AccessTokenRequestStruct;
-use Xtuple\Util\OAuth2\Client\AccessToken\Request\Cache\KeyAccessTokenRequest;
 use Xtuple\Util\OAuth2\Client\AccessToken\Request\JSON\AccessTokenJSONRequest;
 use Xtuple\Util\OAuth2\Client\Endpoint\EndpointStruct;
 use Xtuple\Util\Type\DateTime\Timestamp\TimestampStruct;
@@ -53,7 +53,11 @@ class CachedAccessTokenTest
         'token_type' => 'bearer',
         'expires_in' => 3600,
       ]),
-      new TimestampStruct($this->now)
+      new TimestampStruct($this->now),
+      new KeyStruct([
+        'https://example.com/token',
+        (string) $this->uuid,
+      ])
     );
   }
 
@@ -70,7 +74,7 @@ class CachedAccessTokenTest
     self::assertEquals((string) $this->uuid, $cached->value());
     self::assertEquals($this->now + 3600, $cached->expiresAt()->seconds());
     $this->cache->insert(new RecordStruct(
-      new KeyAccessTokenRequest($this->request),
+      $this->request->key(),
       null
     ));
     $fresh = new CachedAccessToken($this->cache, $this->http, $this->request);
@@ -98,7 +102,11 @@ class CachedAccessTokenTest
           new HeaderStruct('Response-Reason', 'Not found'),
         ])
       ),
-      new TimestampStruct($this->now)
+      new TimestampStruct($this->now),
+      new KeyStruct([
+        'https://example.com/token',
+        (string) $this->uuid,
+      ])
     );
     new CachedAccessToken($this->cache, $this->http, $request);
   }

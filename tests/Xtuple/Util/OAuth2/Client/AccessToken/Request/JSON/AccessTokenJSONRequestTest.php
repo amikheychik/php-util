@@ -3,6 +3,7 @@
 namespace Xtuple\Util\OAuth2\Client\AccessToken\Request\JSON;
 
 use PHPUnit\Framework\TestCase;
+use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\HTTP\Message\Body\BodyStream;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\StringBodyFromBody;
@@ -24,7 +25,11 @@ class AccessTokenJSONRequestTest
       new JSONBodyData([
         'scope' => 'example test',
       ]),
-      new TimestampStruct($now)
+      new TimestampStruct($now),
+      new KeyStruct([
+        'https://example.com',
+        'example test',
+      ])
     );
     self::assertEquals('POST', (string) $request->method());
     self::assertEquals('https://example.com', (string) $request->uri());

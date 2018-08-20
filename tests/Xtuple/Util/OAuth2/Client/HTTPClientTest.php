@@ -4,6 +4,7 @@ namespace Xtuple\Util\OAuth2\Client;
 
 use PHPUnit\Framework\TestCase;
 use Xtuple\Util\Cache\Cache\Memory\MemoryCache;
+use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\HTTP\Client\Test\TestClient;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\StringBodyFromBody;
@@ -38,7 +39,11 @@ class HTTPClientTest
           new HeaderStruct('Content-Length', (string) 25),
         ])
       ),
-      new TimestampStruct($now)
+      new TimestampStruct($now),
+      new KeyStruct([
+        'https://example.com',
+        'example scope',
+      ])
     );
     $client = new HTTPClient(
       new TestClient(),

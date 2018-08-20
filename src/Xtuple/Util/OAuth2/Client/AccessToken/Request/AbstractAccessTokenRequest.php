@@ -2,6 +2,7 @@
 
 namespace Xtuple\Util\OAuth2\Client\AccessToken\Request;
 
+use Xtuple\Util\Cache\Key\Key;
 use Xtuple\Util\HTTP\Request\AbstractRequest;
 use Xtuple\Util\Type\DateTime\Timestamp\Timestamp;
 
@@ -14,6 +15,10 @@ abstract class AbstractAccessTokenRequest
   public function __construct(AccessTokenRequest $request) {
     parent::__construct($request);
     $this->request = $request;
+  }
+
+  public final function key(): Key {
+    return $this->request->key();
   }
 
   public final function issuedAt(): Timestamp {
