@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\OAuth2\Client\AccessToken;
+namespace Xtuple\Util\OAuth2\Client\Token\Access;
 
 use Xtuple\Util\Type\DateTime\Timestamp\Timestamp;
 
@@ -23,5 +23,9 @@ abstract class AbstractAccessToken
 
   public final function expiresAt(): Timestamp {
     return $this->token->expiresAt();
+  }
+
+  public final function refresh(): ?string {
+    return $this->token->refresh();
   }
 }

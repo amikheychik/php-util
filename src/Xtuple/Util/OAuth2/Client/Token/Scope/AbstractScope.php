@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Xtuple\Util\OAuth2\Client\AccessToken\Scope;
+namespace Xtuple\Util\OAuth2\Client\Token\Scope;
 
 abstract class AbstractScope
   implements Scope {

@@ -10,7 +10,9 @@ final class JSONPatchArrayTest
     $patch = new JSONPatchArray([], [
       'add' => 'added',
     ]);
-    $patch = new class ($patch) extends AbstractJSONPatch {};
+    $patch = new class ($patch)
+      extends AbstractJSONPatch {
+    };
     self::assertEquals('[{"op":"add","path":"\/add","value":"added"}]', json_encode($patch));
   }
 
@@ -21,7 +23,9 @@ final class JSONPatchArrayTest
     ], [
       'remain' => 'value2',
     ]);
-    $patch = new class ($patch) extends AbstractJSONPatch {};
+    $patch = new class ($patch)
+      extends AbstractJSONPatch {
+    };
     self::assertEquals('[{"op":"remove","path":"\/remove"}]', json_encode($patch));
   }
 
@@ -33,7 +37,9 @@ final class JSONPatchArrayTest
       'remain' => 'value2',
       'replace' => true,
     ]);
-    $patch = new class ($patch) extends AbstractJSONPatch {};
+    $patch = new class ($patch)
+      extends AbstractJSONPatch {
+    };
     self::assertEquals('[{"op":"replace","path":"\/replace","value":true}]', json_encode($patch));
   }
 

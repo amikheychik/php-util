@@ -7,7 +7,7 @@ use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\StringBodyFromBody;
 use Xtuple\Util\HTTP\Request\Request\JSON\POSTJSONRequest;
 use Xtuple\Util\HTTP\Request\URI\URL\URLString;
-use Xtuple\Util\OAuth2\Client\AccessToken\AccessTokenStruct;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessTokenStruct;
 use Xtuple\Util\Type\DateTime\Timestamp\TimestampStruct;
 use Xtuple\Util\Type\UUID\UUIDv4;
 
@@ -29,7 +29,8 @@ class RequestWithAccessTokenTest
       new AccessTokenStruct(
         (string) $uuid,
         'Bearer',
-        new TimestampStruct($now)
+        new TimestampStruct($now),
+        null
       )
     );
     self::assertEquals('POST', (string) $request->method());

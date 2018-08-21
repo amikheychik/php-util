@@ -2,7 +2,6 @@
 
 namespace Xtuple\Util\OAuth2\Client;
 
-use Xtuple\Util\Cache\Cache;
 use Xtuple\Util\Exception\ChainException;
 use Xtuple\Util\HTTP\Client\Client as HTTP;
 use Xtuple\Util\HTTP\Client\Exception\Exception;
@@ -12,23 +11,19 @@ use Xtuple\Util\HTTP\Client\Result\ResultWithThrowable;
 use Xtuple\Util\HTTP\Request\Collection\Map\ArrayMapRequest;
 use Xtuple\Util\HTTP\Request\Collection\Map\MapRequest;
 use Xtuple\Util\HTTP\Request\Request;
-use Xtuple\Util\OAuth2\Client\AccessToken\CachedAccessToken;
-use Xtuple\Util\OAuth2\Client\AccessToken\Request\AccessTokenRequest;
 use Xtuple\Util\OAuth2\Client\Request\RequestWithAccessToken;
+use Xtuple\Util\OAuth2\Client\Token\Exchange\Exchange;
 
 final class HTTPClient
   implements Client {
   /** @var HTTP */
   private $http;
-  /** @var Cache */
-  private $tokens;
-  /** @var AccessTokenRequest */
-  private $requestAccessToken;
+  /** @var Exchange */
+  private $exchange;
 
-  public function __construct(HTTP $http, Cache $tokens, AccessTokenRequest $requestAccessToken) {
+  public function __construct(HTTP $http, Exchange $exchange) {
     $this->http = $http;
-    $this->tokens = $tokens;
-    $this->requestAccessToken = $requestAccessToken;
+    $this->exchange = $exchange;
   }
 
   public function send(Request $request): Result {
@@ -45,13 +40,11 @@ final class HTTPClient
 
   public function sendMany(MapRequest $requests): MapResult {
     try {
+      $token = $this->exchange->token();
       /** @var Request[] $requestsWithTokens */
       $requestsWithTokens = [];
       foreach ($requests as $i => $request) {
-        $requestsWithTokens[$i] = new RequestWithAccessToken(
-          $request,
-          new CachedAccessToken($this->tokens, $this->http, $this->requestAccessToken)
-        );
+        $requestsWithTokens[$i] = new RequestWithAccessToken($request, $token);
       }
       return $this->http->sendMany(new ArrayMapRequest($requestsWithTokens));
     }

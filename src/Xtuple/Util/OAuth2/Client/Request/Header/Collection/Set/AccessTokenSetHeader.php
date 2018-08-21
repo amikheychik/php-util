@@ -4,8 +4,8 @@ namespace Xtuple\Util\OAuth2\Client\Request\Header\Collection\Set;
 
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\AbstractSetHeader;
 use Xtuple\Util\HTTP\Message\Header\Collection\Set\ArraySetHeader;
-use Xtuple\Util\OAuth2\Client\AccessToken\AccessToken;
 use Xtuple\Util\OAuth2\Client\Request\Header\AccessTokenHeader;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessToken;
 
 final class AccessTokenSetHeader
   extends AbstractSetHeader {

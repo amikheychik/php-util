@@ -6,8 +6,8 @@ use Xtuple\Util\HTTP\Message\Header\Collection\Set\MergeSetHeader;
 use Xtuple\Util\HTTP\Request\AbstractRequest;
 use Xtuple\Util\HTTP\Request\Request;
 use Xtuple\Util\HTTP\Request\RequestStruct;
-use Xtuple\Util\OAuth2\Client\AccessToken\AccessToken;
 use Xtuple\Util\OAuth2\Client\Request\Header\Collection\Set\AccessTokenSetHeader;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessToken;
 
 final class RequestWithAccessToken
   extends AbstractRequest {

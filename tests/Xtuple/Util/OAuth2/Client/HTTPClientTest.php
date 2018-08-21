@@ -3,8 +3,6 @@
 namespace Xtuple\Util\OAuth2\Client;
 
 use PHPUnit\Framework\TestCase;
-use Xtuple\Util\Cache\Cache\Memory\MemoryCache;
-use Xtuple\Util\Cache\Key\KeyStruct;
 use Xtuple\Util\HTTP\Client\Test\TestClient;
 use Xtuple\Util\HTTP\Message\Body\String\JSON\JSONBodyData;
 use Xtuple\Util\HTTP\Message\Body\String\StringBodyFromBody;
@@ -15,8 +13,11 @@ use Xtuple\Util\HTTP\Request\Method\Method\POST;
 use Xtuple\Util\HTTP\Request\Request\JSON\POSTJSONRequest;
 use Xtuple\Util\HTTP\Request\RequestStruct;
 use Xtuple\Util\HTTP\Request\URI\URL\URLString;
-use Xtuple\Util\OAuth2\Client\AccessToken\Request\AccessTokenRequestStruct;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessToken;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessTokenStruct;
+use Xtuple\Util\OAuth2\Client\Token\Exchange\Exchange;
 use Xtuple\Util\Type\DateTime\Timestamp\TimestampStruct;
+use Xtuple\Util\Type\UUID\UUIDv4;
 
 class HTTPClientTest
   extends TestCase {
@@ -29,26 +30,9 @@ class HTTPClientTest
   protected function setUp() {
     parent::setUp();
     $now = time();
-    $request = new AccessTokenRequestStruct(
-      new POSTJSONRequest(
-        new URLString('https://example.com'),
-        new JSONBodyData([
-          'scope' => 'example scope',
-        ]),
-        new ArraySetHeader([
-          new HeaderStruct('Content-Length', (string) 25),
-        ])
-      ),
-      new TimestampStruct($now),
-      new KeyStruct([
-        'https://example.com',
-        'example scope',
-      ])
-    );
     $client = new HTTPClient(
       new TestClient(),
-      new MemoryCache('oauth2'),
-      $request
+      new TestExchange($now)
     );
     $this->oauth2 = new class ($client)
       extends AbstractClient {
@@ -84,5 +68,25 @@ class HTTPClientTest
       ]),
       null
     ))->response();
+  }
+}
+
+final class TestExchange
+  implements Exchange {
+  /** @var int */
+  private $now;
+
+  public function __construct(int $now) {
+    $this->now = $now;
+  }
+
+  public function token(): AccessToken {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    return new AccessTokenStruct(
+      (string) new UUIDv4(),
+      'Bearer',
+      new TimestampStruct($this->now),
+      null
+    );
   }
 }

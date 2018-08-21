@@ -4,7 +4,7 @@ namespace Xtuple\Util\OAuth2\Client\Request\Header;
 
 use Xtuple\Util\HTTP\Message\Header\AbstractHeader;
 use Xtuple\Util\HTTP\Message\Header\HeaderStruct;
-use Xtuple\Util\OAuth2\Client\AccessToken\AccessToken;
+use Xtuple\Util\OAuth2\Client\Token\Access\AccessToken;
 
 final class AccessTokenHeader
   extends AbstractHeader {
