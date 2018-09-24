@@ -41,12 +41,12 @@ final class PDODatabaseTest
   public function testQuery() {
     $db = $this->environment->database();
     $db->query(new QueryStruct('DROP TABLE IF EXISTS test_database;'));
-    $db->query(new QueryStruct("
-      CREATE TEMPORARY TABLE test_database (
-        id SERIAL PRIMARY KEY NOT null,
-        name VARCHAR(255) DEFAULT ''::character
-      );
-    "));
+    $db->query(new QueryStruct(implode("\n", [
+      'CREATE TEMPORARY TABLE test_database (',
+      'id SERIAL PRIMARY KEY NOT null,',
+      "name VARCHAR(255) DEFAULT ''::character",
+      ')',
+    ])));
     $db->query(new QueryStruct('CREATE INDEX test_database_name_index ON test_database (name)'));
     $db->query(new QueryStruct("INSERT INTO test_database (name) VALUES ('Record 1')"));
     $db->query(new QueryStruct("INSERT INTO test_database (name) VALUES ('Record 2')"));

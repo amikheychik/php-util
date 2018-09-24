@@ -1,0 +1,409 @@
+= Design Patterns
+:toc: left
+:toclevels: 3
+:icons: font
+:source-highlighter: coderay
+:source-language: php
+:sourcedir: ../../src/Xtuple/Util
+
+== Object-oriented programming
+
+Objected-oriented programming is based on polymorphism, encapsulation and inheritance.
+Unfortunately, those concepts themselves are not sufficient to ensure high-quality and maintainability of the code.
+Thus design patterns as a form of code organization and limitations have to be used,
+to speed up development, simplify support and ensure extensibility of the code base.
+
+A basic example of limitations to apply to the object-oriented principles would be
+limiting number of inheritance levels:
+if the number of classes in the inheritance chain grows,
+the odds of breaking the behavior in the parent classes.
+Similar example comes from the PHP languages itself,
+which allows to extend one class only
+(unlike, for example, C++).
+
+While adding limitations on the code standards level
+is supposed to craft a given programming language into a more robust tool for development,
+code organization patterns are more focused on requirements
+that allow making code maintainable in a long run.
+An example for such pattern could be a strict requirement of using only interfaces as method parameters.
+
+Following patterns and requirements at moment might not cover all the cases
+that are available in
+https://github.com/xtuple/php-util[php-util]
+(and especially other xTuple's libraries),
+but the goal is to eventually cover all of them.
+
+[NOTE]
+PHP is an object-oriented language,
+but it has a lot of functions (procedures)
+that are coming straightforward from libraries written in C.
+Such functions must always be wrapped into classes at the lowest level possible
+to provide a unified approach to working with functionality.
+
+[NOTE]
+PHP borrows some features from functional programming
+(like anonymous functions and closures),
+but it doesn't have all the strict limitations that functional paradigm requires
+(e.g. data immutability)
+and so it's impractical to write in PHP in functional style.
+
+=== Polymorphism
+
+Polymorphism is the most important idea of object-oriented paradigm,
+as it separates interfaces and implementations.
+Interface is a mere declaration of what a certain type must implement,
+while an exact behavior would depend based on implementation.
+
+Such separation allows a class to require a `Log` interface to write down some information,
+allowing to decide what kind of log is actually needed only at the time of object instantiation.
+So based on system configuration,
+a `Syslog` or `DatabaseLog` (or both) log may be used.
+
+Thus it is critical to *always declare an interface first
+and use interfaces for all method (and constructor) parameters*.
+It makes code easier to change as it would never depend on an existing implementation.
+
+=== Encapsulation [[patterns-oop-encapsulation]]
+
+Encapsulation is the second most important idea of OOP.
+It extends polymorphism allowing to separate implementation-specific details
+and hide them from other class users.
+
+Implementation differences consist not only of business logic,
+but of memory handling too.
+Class must rely that the memory has not been changed without its permission.
+Hence *the lowest level of access to the properties must be used*
+(which on practice means properties must always be `private`).
+
+[IMPORTANT]
+There is a distinction between memory not being changed by a class
+and data immutability.
+A class might reference another class,
+that contains mutable data
+(e.g. a log).
+But the reference itself would remain the same,
+and so allocated memory for that object would be immutable.
+
+Taking the previous example of `Syslog` and `DatabaseLog` logs,
+each implementation must only comply with the `Log` interface,
+while they would require different set of information
+to work properly:
+`DatabaseLog` would require a database connection,
+which is irrelevant for the `Log`
+and won't have any use in `Syslog`.
+
+Encapsulation introduces an important conclusion,
+that commonly-used "setter" methods should not exist in interfaces.
+As a result,
+as it's shown in
+xref:anti-patterns-setters[anti-patterns section],
+setters should be fully avoided in concrete implementations too.
+
+=== Inheritance [[patterns-oop-inheritance]]
+
+Inheritance is the third idea of object-oriented programming,
+that is supposed to simplify code re-usage,
+yet it introduces risks and complications,
+requiring very cautious and controlled usage.
+
+The problem with inheritance is that in uncontrolled usage of it,
+it brings back the need of knowing how each parent class behaves.
+
+.An example to illustrate possible side-effect in inheritance chains.
+[source,php]
+----
+<?php
+
+class Car {
+  /** @var int */
+  protected $mileage = 0;
+
+  public function drive(int $miles): void {
+    // ...
+    $this->mileage += $miles;
+    // ...
+  }
+}
+
+class SUV
+  extends Car {
+  public function drive(int $miles): void {
+    parent::drive($miles);
+    $this->mileage += $miles; // <1>
+  }
+}
+----
+<1> Mileage is already increased in the `Car::drive()`,
+but it's called again in `SUV::drive()`.
+Developer of the `SUV` class must learn that before extending the implementation.
+While in this example it's a pretty obvious mistake,
+as longer the chain gets, as harder it is to control the tree of calls.
+
+To minimize risks that are coming from inheritance,
+it's critical to make all methods' implementations must be final,
+so *any method must be either `final` or `abstract`*.
+
+Consequently, *any class must be either `final` or `abstract` too
+(as the classes that contain `abstract` methods must be declared `abstract`,
+and classes that contain all `final` methods are effectively `final`).
+
+Which means that any chain of inheritance may consist of only one concrete class
+and any number of abstract classes
+(each may implement some of the methods
+and possibly introduce additional abstract methods).
+
+The example above always may be changed to make `$mileage` private
+and add `protected function addMileage(int $miles)`.
+This introduces another rule important for inheritance in conjunction with encapsulation:
+*the lowest access to a method must be used*.
+
+== Patterns [[patterns]]
+
+=== Type interfaces
+
+Design of any package should start with an interface.
+In most cases, interface represents an object of the real world,
+and so will be named with a simple noun.
+Such interfaces we will call a _type interfaces_ (or _types_).
+
+[IMPORTANT]
+In PHP community it is a common standard to add word `Interface` to every interface.
+Such approach is not practical,
+as in that case every parameter in the method would also use word `Interface` in it,
+which is just a waste of characters
+and visual noise in the code.
+On the opposite,
+a default implementation of any interface usually named with a noun.
+This approach is also inconvenient,
+as it would not describe a chosen way of the implementation.
+
+_Type interfaces_ must have one or more _property methods_.
+Property methods are considered methods without parameters
+that return another _type_ (_type interface_ or PHP type).
+Such methods should be considered idempotent
+and return different values on each run.
+
+.Example `\Xtuple\Util\Postgres\Query\Query` interface.
+[source,php]
+----
+include::{sourcedir}/Postgres/Query/Query.php[]
+----
+Package `\Xtuple\Util\Postgres` contains classes to work with Postgres database,
+including `\Xtuple\Util\Postgres\Query` sub-package to deal with database queries
+and their results.
+`Query` interface declares a minimum information needed to perform a query to the database.
+Both methods of the interface are property methods that return specific data.
+
+=== Pure classes [[patterns-patterns-pure-classes]]
+
+Any type interface may be implemented as a pure class.
+This is usually a default implementation provided by any package.
+As the name of the file and class must be different from the name of the interface,
+the `Struct` prefix is used
+(as effectively such classes are not different from read-only C-language `struct`s).
+
+[NOTE]
+Term _pure_ here is borrowed from _pure functions_
+(functions that do not change the state of the program).
+In other languages or frameworks such classes are usually called _data classes_
+Pure classes are immutable and always return the same data.
+
+.Example `\Xtuple\Util\Postgres\Query\QueryStruct` — a pure class implementation of `Query` interface
+[source,php]
+----
+include::{sourcedir}/Postgres/Query/QueryStruct.php[]
+----
+Pure class (struct) implementations are always straightforward
+and must simply pass properties from constructor into methods.
+Because of that, constructor properties' types must match the returns types of the methods.
+
+=== Type delegation
+
+In
+xref:patterns-oop-inheritance[inheritance]
+section it was shown that classes should be either `final` or `abstract`
+and so a pure class implementation is `final` as shown in the
+xref:patterns-patterns-pure-classes[`Query Struct` example].
+
+That obviously raises a question of how to organize inheritance and reuse existing code.
+For that delegation should be used.
+In the most basic case,
+an abstract class added that accepts only an interface which is being implemented,
+and all the methods are called on the property from the received parameter.
+
+.Example `\Xtuple\Util\Postgres\Query\AbstractQuery` — an abstract class to be extended to implement `Query` interface.
+[source,php]
+----
+include::{sourcedir}/Postgres/Query/AbstractQuery.php[]
+----
+Both methods of `Query` interface are implemented by calling those methods on the object passed to the constructor.
+Note that it's an `Query` interface that is required in constructor,
+not a `QueryStruct` implementation.
+
+Now in order to reuse an existing implementation,
+it's only needed to extend an abstract class
+and convert constructor parameters of the new implementation
+into any chosen existing implementation.
+
+.Example `\Xtuple\Util\Postgres\Query\QueryWithTokens` —
+an implementation of the `Query` interface
+that allows to use replace tokens in the query
+(tokens should be used where regular query parameters are not possible).
+[source,php]
+----
+include::{sourcedir}/Postgres/Query/QueryWithTokens.php[]
+----
+`QueryWithTokens` reuses `QueryStruct` and just converts once set of parameters into another.
+
+[NOTE]
+`QueryWithTokens` name is using
+link:https://www.joelonsoftware.com/2005/05/11/making-wrong-code-look-wrong/[app hungarian notation].
+The direction of the words `Query → Tokens` is not only readable,
+but also matches the direction of data:
+`Query` itself would be expected on the left (e.g. assignment)
+and tokens are located on the right (as a parameter).
+
+==== Lazy initialization
+
+The default approach used for type delegation has one limitation:
+it's happening during instantiation of a new object,
+and so computation are done at that moment.
+In some cases it may not be practical for performance reasons,
+or straight impossible,
+because the system is only being initialized.
+
+To resolve that, a lazy initialization is required.
+In that case,
+object constructor only collects context information required to make initialization later.
+
+.Example `\Xtuple\Util\Postgres\Query\QueryFile` — an implementation of the `Query` interface
+that reads query string from a regular file.
+[source,php]
+----
+include::{sourcedir}/Postgres/Query/QueryFile.php[]
+----
+`QueryFile` takes a `Regular` file as a parameter,
+but doesn't parse it right away.
+It allows to use this implementation in situation when query might not be actually called.
+For example, if there is a collection of queries,
+out of which one is selected based on a given condition,
+parsing whole collection of queries would be wasteful.
+
+[NOTE]
+`QueryFile` example also uses memoization:
+once file is parsed an instantiated query is stored,
+and new further calls will not require parsing of the file.
+Memoization is not a requirement,
+and in some cases it may be require the opposite,
+to read data on each method call.
+
+[NOTE]
+`QueryFile` also uses
+link:https://www.joelonsoftware.com/2005/05/11/making-wrong-code-look-wrong/[app hungarian notation],
+but unlike `QueryWithTokens`,
+a preposition is avoided.
+It's done because `QueryFile` does not convert a given file itself into a `Query`,
+and, if ever required,
+`File` (or in this case `Regular`) interface may be implemented by `QueryFile` seamlessly,
+using `$file` itself as a delegate to implement required methods.
+
+=== Narrowing types
+
+It's a common situation when generic types are being used
+accompanied with a documentation of what data should actually be passed.
+Such anti-pattern has even been named as "string-typed" development.
+As the most common example would be to use a `string` parameter or a property
+(e.g. named `$url`)
+an expecting developers to pass an actual URL.
+Even such approach is named after strings,
+any kind of parameters may be used.
+
+To avoid that it is always good to narrow down types,
+even of a new subtype does not add any methods.
+In this case, the subtype is a declaration of requirements
+(e.g. `interface PositiveInteger extends Integer`),
+and in the future it would be much easier to extend it,
+if required.
+It allows to avoid adding documentation
+(or at least avoid duplicating it)
+and allows to provide custom implementations that would strictly comply with the requirements
+(e.g. `PositiveIntegerStruct` class may throw an exception if a constructed integer is non-positive).
+
+.Example of a JWT claim types chain.
+[source,php]
+----
+// \Xtuple\Util\JWT\Claim\Claim <1>
+include::{sourcedir}/JWT/Claim/Claim.php[lines=3..-1]
+
+// \Xtuple\Util\JWT\Claim\Type\StringOrURI\StringOrURIClaim <2>
+include::{sourcedir}/JWT/Claim/Type/StringOrURI/StringOrURIClaim.php[lines=3..-1]
+
+// \Xtuple\Util\JWT\Claim\Claim\Registered\Audience\Audience <3>
+include::{sourcedir}/JWT/Claim/Claim/Registered/Audience/Audience.php[lines=3..-1]
+----
+<1> `Claim` interface defines methods required to build a JSON Web Token (JWT).
+<2> `StringOrURIClaim` interface narrows a generic claim down to a string or URI value,
+an so `value()` method is redefined.
+<3> `Audience` interface is a case of a `StringOrURIClaim`,
+but it does not have any distinctive characteristics,
+as value indeed may be a URI or a random string.
+Yet, defining such interface allows to require specifically `Audience`.
+
+=== Functional interfaces
+
+While _type interfaces_ describe entities with _property methods_,
+_functional interfaces_ on the other side define classes
+that use a once passed scope data,
+but perform operations using that context with different parameters.
+Usually, the methods of functional interfaces are named using verbs,
+as they complete an action with the given data.
+
+[NOTE]
+The term _functional interface_ is borrowed from Java 8,
+there is no requirement to have only one method in the interface to call it functional.
+
+.Example `\Xtuple\Util\Postgres\Database` interface.
+[source,php]
+----
+include::{sourcedir}/Postgres/Database.php[]
+----
+`Database` interface defines methods to query a Postgres database.
+Any call of the given methods may change the state of the database.
+
+Even it may seem that functional interfaces are different from type interfaces,
+they may still use the same patterns for delegation and inheritance,
+and represent not only general services,
+but a more concrete objects.
+Often in such cases a mix of type and functional interfaces occur.
+
+.Example `\Xtuple\RegEx\RegEx` interface.
+[source,php]
+----
+include::{sourcedir}/RegEx/RegEx.php[]
+----
+`RegEx` interface is not a purely functional interface.
+It has a `pattern(): string` property method to return a pattern over which functional methods are acting.
+
+== Anti-patterns [[anti-patterns]]
+
+=== Setters [[anti-patterns-setters]]
+
+As it's shown in the
+xref:patterns-oop-encapsulation[encapsulation section],
+setters are considered an anti-pattern.
+Setters expose a specific implementation of a class,
+hence they can not be used in a type interface.
+Additionally, it may not be safe to change a property value,
+if such value has natural restrictions and limitations.
+
+Instead, customer methods that actually change a state of an object *may be* used.
+For example, if there is a type `Date`,
+method `setDay()` may bring an object into inconsistent state,
+while a method `changeDate()` seem more appropriate.
+It's better to chose this approach if data in the type is mutable.
+
+If the type represents immutable data
+(e.g. `Date` is more appropriate as immutable),
+then the best solution would be to have different type implementations,
+e.g. `class DateFromDate` with constructor to convert one date into required.
+In that case it's clear that dates are immutable.

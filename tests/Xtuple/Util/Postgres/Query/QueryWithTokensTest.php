@@ -13,12 +13,12 @@ class QueryWithTokensTest
     ]);
     self::assertEquals("CREATE USER phpunit WITH PASSWORD 'phpunit'", $query->sql());
     self::assertEquals([], $query->parameters());
-    $query = new QueryWithTokens('SELECT FROM {table} WHERE id = :id', [
+    $query = new QueryWithTokens('SELECT * FROM {table} WHERE id = :id', [
       'table' => 'phpunit',
     ], [
       ':id' => 1,
     ]);
-    self::assertEquals('SELECT FROM phpunit WHERE id = :id', $query->sql());
+    self::assertEquals('SELECT * FROM phpunit WHERE id = :id', $query->sql());
     self::assertEquals([':id' => 1], $query->parameters());
   }
 }

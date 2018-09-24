@@ -4,6 +4,7 @@
 :icons: font
 :source-highlighter: coderay
 :source-language: php
+:sourcedir: ../src/Xtuple/Util
 
 == Coding standards
 
@@ -269,6 +270,8 @@ The header of a PHP file may consist of a number of different blocks. If present
 * Otherwise it _must_ have a blank line after the `use` import statement.
 * Each `insteadof` and `as` statement usage _must_ be on it own line, indented once.
 * `insteadof` and `as` keyword _must_ be have a space before and after.
+
+include::code/patterns.adoc[leveloffset=+2]
 
 === Exceptions
 
