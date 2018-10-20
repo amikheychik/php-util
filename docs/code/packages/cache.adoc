@@ -1,0 +1,52 @@
+= Cache
+
+`Xtuple\Util\Cache` package provides interfaces and classes to work cache data.
+Interface `Xtuple\Util\Cache\Cache` should be used to implement cache itself.
+Each cache is a set of records `Xtuple\Util\Cache\Record\Record` that are stored
+and identified by their key `Xtuple\Util\Cache\Key\Key`.
+`Key` and `Record` are generic types,
+and concrete implementations may extend them to provide more details.
+For example, implementation for an SQL database may use key as a string, stored in a column,
+or as a compound key, stored in multiple columns.
+In each case an extending interfaces and classes may specify this behavior.
+
+`Xtuple\Util\Cache\Cache` extends `\Serializable` interface.
+Caches are required to handle serialization correctly,
+without creation of duplicate set of data.
+
+`Xtuple\Util\Cache\Cache\Memory\MemoryCache` is a basic implementation of a cache
+that can be used to cache information during a request or for testing purposes.
+`MemoryCache` uses `static` variables to store data and is not persistent.
+
+[source]
+.Using `MemoryCache`
+----
+use Xtuple\Util\Cache\Cache\Memory\MemoryCache;
+use Xtuple\Util\Cache\Key\KeyStruct;
+use Xtuple\Util\Cache\Record\RecordStruct;
+use Xtuple\Util\Type\DateTime\DateTimeString;
+
+$cache = new MemoryCache('example');
+// This record has no expiration date.
+$cache->insert(new RecordStruct(new KeyStruct(['user', 1]), 'John Doe'));
+// Cache::find() returns null is record is not found.
+if ($record = $cache->find(new KeyStruct(['user', 1]))) {
+  $record->key()->fields() === ['user', 1];
+  $record->value() === 'John Doe';
+  $record->expiresAt() === null;
+}
+
+// This record expires in 1 hour
+$cache->insert(new RecordStruct(new KeyStruct(['user', 1, 'name']), 'John Doe', new DateTimeString('+1 hour')));
+// Note: key ['user', 1, 'name'] would override key ['user', 1] in MemoryCache
+$cache->find(new KeyStruct(['user', 1])) === null;
+$cache->find(new KeyStruct(['user', 1, 'name']))->value() === 'John Doe';
+
+// Records can be removed
+$cache->delete(new KeyStruct(['user', 1, 'name'));
+$cache->find(new KeyStruct(['user', 1, 'name'])) === null;
+
+// Cache can be cleared completely
+$cache->clear();
+$cache->isEmpty() === true;
+----

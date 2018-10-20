@@ -1,0 +1,35 @@
+= UUID
+
+`Xtuple\Util\Type\UUID` package allows to generate or handle
+link:https://en.wikipedia.org/wiki/Universally_unique_identifier[Universally Unique Identifiers].
+Currently only UUID v4 generation is supported.
+`UUID` package requires OpenSSL library to generate cryptographically strong random UUIDs.
+
+.Using `Xtuple\Util\Type\UUID`
+[source]
+----
+use Xtuple\Util\Type\UUID\OptionalUUIDString;
+use Xtuple\Util\Type\UUID\UUIDString;
+use Xtuple\Util\Type\UUID\UUIDv4;
+
+$uuid = new UUIDv4(); // <1>
+// Returns generated UUID:
+$uuid->__toString();
+// Returns generated UUID as Uniform Resource Name (URN):
+$uuid->urn();
+// UUIDs can be checked for equality.
+$uuid->equals(new UUIDv4());
+
+// An exception is thrown, if passed string is not a valid UUID
+$uuid = new UUIDString((string) $uuid);
+// If input may not be a valid UUID, and exception check is undesired, use Optional
+$optional = new OptionalUUIDStrong((string) $uuid);
+// Returns true, if UUID is valid
+$optional->isPresent();
+// Returns UUID object, if UUID is valid; returns null otherwise
+$optional->value();
+----
+<1> `UUIDv4` constructor may throw an exception,
+if OpenSSL library can't generate cryptographically strong random bytes.
+It's unlikely to happen, but
+link:https://secure.php.net/manual/en/function.openssl-random-pseudo-bytes.php["some systems may be broken or old."]

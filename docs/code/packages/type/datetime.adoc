@@ -1,0 +1,68 @@
+= DateTime
+
+`Xtuple\Util\Type\DateTime` package handles dates and time information.
+It uses PHP core
+link:https://secure.php.net/manual/en/book.datetime.php[DateTime]
+package underneath.
+
+`Xtuple\Util\Type\DateTime\DateTime` represents date and time in UTC.
+It's serializable and JSON serializable.
+To format `DateTime` into a custom string use `Xtuple\Util\Type\String\Message\Type\DateTime` package.
+
+`Xtuple\Util\Type\DateTime\Timestamp` represents Unix timestamp.
+
+.Using `Xtuple\Util\Type\DateTime` package
+[source]
+----
+use Xtuple\Util\Type\DateTime\DateTimeString;
+use Xtuple\Util\Type\DateTime\DateTimeStruct;
+
+// DateTime information depends on the timezone. Examples are shown for a specific timezone.
+$default = ini_get('date.timezone');
+ini_set('America/New_York');
+
+// \DateTimeImmutable is used as to handle datetime information. By default server timezone is used.
+$date = new DateTimeStruct(new \DateTimeImmutable('Jan 1, 2018'));
+// Jan 1, 2018 5am UTC
+$date->__toString() === '2018-01-01T05:00:00+00:00';
+$date->utc() === '2018-01-01T05:00:00Z';
+json_encode($date) === '"2018-01-01T05:00:00.000Z"';
+
+// Timezone information parsed from the date string preceeds explicit timezone
+$date = new DateTimeStruct(new \DateTimeImmutable('Jan 1, 2018 PST', new \DateTimeZone('UTC')));
+// Jan 1, 2018 8am UTC
+$date->utc() === '2018-01-01T08:00:00Z';
+
+// DateTimeString is a shortcut for DateTimeStruct
+$date = new DateTimeString('Jan 1, 2018', 'UTC');
+(string) $date === '2018-01-01T00:00:00+00:00';
+
+// DateTimeTimestamp is a shortcut to get DateTime from a timestamp.
+// Unix timestamp is counted from UTC, so custom timezone can not be specified.
+$date = new DateTimeTimestamp(0);
+(string) $date === '1970-01-01T00:00:00+00:00';
+
+try {
+  // Timestamp must be non-negative
+  $date = new DateTimeTimestamp(-1);
+}
+catch (\Throwable $e) {
+  $e->getMessage() === 'Unix timestamp must be non-negative.';
+}
+
+$timestamp = new TimestampStruct(0);
+$timestamp->seconds() === 0;
+
+$timestamp = new TimestampDateTime(new DateTimeTimestamp(0));
+$timestamp->seconds() === 0;
+
+try {
+  // Timestamp must be non-negative
+  $date = new TimestampStruct(-1);
+}
+catch (\Throwable $e) {
+  $e->getMessage() === 'Unix timestamp must be non-negative.';
+}
+
+ini_set($default);
+----

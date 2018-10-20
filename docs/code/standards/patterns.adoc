@@ -4,7 +4,7 @@
 :icons: font
 :source-highlighter: coderay
 :source-language: php
-:sourcedir: ../../src/Xtuple/Util
+:sourcedir: ../../../src/Xtuple/Util
 
 == Object-oriented programming
 

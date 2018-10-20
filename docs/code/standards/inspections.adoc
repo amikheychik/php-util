@@ -1,0 +1,327 @@
+= Code inspections
+
+== PHPStorm
+
+[%autowidth.stretch]
+[cols="~,20m,~"]
+|===
+| Inspection | Severity | Comment
+
+3+| Code Smell
+| Case mismatch in method call or class usage | Warning |
+| Inconsistent return points | Warning |
+| Parameters number mismatch declaration | Warning |
+| Too many parameters in function declaration | Off |
+| Usage of a silence operator | Warning |
+3+| Code Style
+| `array_fill` can be converted to loop | Weak warning |
+| `array_filter` can be converted to loop | Weak warning |
+| `array_map` can be converted to loop | Weak warning |
+| Class path doesn't match project structure | Error |
+| Fully qualified name usage | Weak warning | Ignore global namespaces
+| Loop can be converted to `array_fill` | Off |
+| Loop can be converted to `array_filter` call | Off |
+| Loop can be converted to `array_map` call | Off |
+| Multiple classes declarations in one file | Warning | `src` namespace only
+| Old style constructor | Warning |
+| Redundant closing tag | Weak warning |
+| Short open tag usage | Warning |
+| Traditional syntax array literal detected | Warning |
+| Unnecessary fully qualified name | Weak warning |
+| Usage of a variable variable | Weak warning |
+3+| Composer
+| Extension is missing in composer.json | Warning |
+3+| Control flow
+| Unreachable statement | Warning |
+3+| Error handling
+| Redundant catch clause | Warning |
+| Unhandled exception | Warning |
+| Wrong catch clauses order | Warning |
+3+| General
+| Class hierarchy checks | Error |
+| Deprecated | Weak warning |
+| Disable extension stubs | Error |
+| Dynamic method called as static | Error |
+| Ignored class alias declaration | Weak warning |
+| Invalid magic method modifiers | Error |
+| Language level | Error |
+| Method declaration of super class is incompatible with implemented interface | Error |
+| Static method called as dynamic | Warning |
+| Unresolved include | Warning |
+| Usage of internal entity | Weak warning |
+3+| Naming conventions
+| Class name is not following coding convention | |
+| Constant name is not following coding convention | |
+| Function name is not following coding convention | |
+| Method name is not following coding convention | |
+| Property name is not following coding convention | |
+| Variable name is not following coding convention | |
+3+| *PHP Attention (PHPStorm plugin)*
+| Possible `false` return | Off | Inspection behavior is unclear
+| Possible `null` return | Off | Inspection behavior is unclear
+3+| *PHP Inspections (EA Extended) (PHPStorm plugin)*
+3+| PHP Inspections (EA Extended) → *Architecture*
+| Badly organized exception handling | Off |
+| Callable parameter usage violated definition | Warning |
+| Class implements interfaces multiple times | Error |
+| Class overrides a field of a parent class | Warning | Ignore re-defining private fields
+| Declaration access can be weaker | Warning |
+| Efferent coupling between objects | Warning |
+| Empty class | Warning |
+| Long inheritance chain | Warning |
+| Multiple return statements usage | Off | Single return statements decrease readability (especially in loops)
+and introducing more variables.
+Also inconsistent with possibility of throwing exceptions.
+| Overriding deprecated methods | Weak warning |
+| Property could be static | Weak warning |
+| Too many parameters in a callable | Off | Under consideration
+3+| PHP Inspections (EA Extended) → *Code Style*
+| Access modifiers shall be defined | Warning |
+| Callable name case mismatched in a call | Warning |
+| Disallow writing into static properties | Weak warning |
+| Dynamic method invocation via `::` | Warning |
+| Implicit magic method calls | Weak warning |
+| Increment/decrement operation equivalent | Weak warning |
+| Missing or empty conditionals group statement | Warning |
+| Nested not operators usage | Weak warning |
+| Nested positive ifs | Weak warning |
+| Non-null parameters default value | Off |
+| PHP short open tag usage | Warning |
+| PSR-compliant modifiers order | Off | Code-style uses different order
+| Self class referencing | Weak warning |
+| Short syntax for applied operation | Weak warning |
+| Static method invocation via `->` | Warning |
+| Unknown inspection suppression | Weak warning |
+| Unnecessary double quotes | Weak warning |
+| Unnecessary final modifiers | Weak warning |
+| Unnecessary last comma in array definition | Off |
+| Unnecessary parentheses | Weak warning |
+| Unnecessary semicolon | Weak warning |
+| Unnecessary type casting | Weak warning |
+| Unnecessary use aliases | Weak warning |
+| Usage of inclusion return value | Weak warning |
+| Yoda/regular conditions style usage | Weak warning | Prefer regular style
+3+| PHP Inspections (EA Extended) → *Compatibility*
+| Binary-unsafe `fopen()` usage | Warning |
+| Deprecated configuration options | Warning |
+| `gmmktime()`/`mktime()` usage | Warning |
+| Random API migration | Warning |
+3+| PHP Inspections (EA Extended) → *Confusing constructs*
+| Method name matches existing field name | Weak warning |
+| Nested ternary operator | Warning |
+| Referencing objects | Warning |
+| Suspicious ternary operator | Warning |
+| Useless return | Warning |
+3+| PHP Inspections (EA Extended) → *Control Flow*
+| `array_search()` could be replaced by `in_array()` | Weak warning |
+| `array_unique()` can be used | Weak warning |
+| `compact()` can be used | Weak warning |
+| Exceptions handling and annotating | Off | Doesn't work correctly with parent PHPDocs.
+Default PHPStorm checks cover this functionality.
+| Foreach usage possible | Warning |
+| General `\Exception` thrown | Warning |
+| `gettype()` could be replaced with `is_*()` | Warning |
+| Inverted `if-else` constructs | Weak warning |
+| `isset()` usage | Warning | Only report concatenation in indexes
+| `list() = ` usage possible | Weak warning |
+| Loop which doesn't loop | Warning |
+| Non-optimal if conditions | Warning |
+| One-time use variables | Warning |
+| PDO API usage | Weak warning |
+| Redundant `else` keyword | Warning |
+| Statement could be decoupled from `foreach` | Weak warning |
+| Strings normalization | Weak warning |
+| `strtr()` could be replaced with `str_replace()` | Weak warning |
+| `substr()` could be replaced with `strpos()` | Weak warning |
+| Switch-case could be simplified | Weak warning |
+| Ternary operator could be simplified | Weak warning |
+| Unnecessary string case manipulation | Weak warning |
+| `unset()` calls could be merged | Weak warning |
+3+| PHP Inspections (EA Extended) → *Language level migration*
+| A constant can be used | Weak warning |
+| Alias functions usage | Warning |
+| Argument unpacking can be used | Warning |
+| Cascading `dirname()` calls | Warning |
+| `::class` can be used | Off | Lookup root namespace classes conflicts too often with regular words.
+| Deprecated constructor style | Error |
+| Deprecated dynamic calls to scope introspection | Error |
+| `__DIR__` constant can be used | Warning |
+| Elvis operator can be used | Weak warning |
+| `get_class()` usage correctness | Warning |
+| `instanceof` can be used | Warning |
+| `null === ` can be used | Warning |
+| Null coalescing operator can be used | Weak warning |
+| Power operator can be used | Warning |
+| Return type hint can be used | Off | Under consideration.
+| Short list syntax can be used | Weak warning |
+| Type casting can be used | Warning |
+| Unsupported empty list assignments | Error |
+| Unsupported string offset operators | Error |
+3+| PHP Inspections (EA Extended) → *Performance*
+| `array_push()` misused | Warning |
+| Callable calls in loop termination condition | Warning |
+| Cascading `str_replace()` calls | Warning |
+| Could be replaced with `(array)` | Off |
+| `explode()` misused | Warning |
+| `file()` misused | Warning |
+| `file_put_contents()` misused | Warning |
+| Fixed-time string starts with checks | Warning |
+| Foreach variables reference usage correctness | Warning |
+| `in_array` misused | Warning |
+| `(mb)_strlen()` misused | Warning |
+| Non-optimal regular expression | Warning |
+| Non-optimized arrays mapping | Warning |
+| Packed hashtable optimizations | Weak warning |
+| `scandir()` low-performing usage | Warning |
+| Slow array function used in loop | Warning |
+| `str(i)str()` could be replaced with `str(i)pos()` | Warning |
+| `stristr()`/`stripos()`/`strripos()` could be replaced with `strstr()` | Warning |
+| `strtotime()` misused | Warning |
+| `substr()` short-hand usage | Warning |
+| `substr()` used as index-based access | Warning |
+| Unqualified function/constant reference | Off | Under consideration
+| Variables function usage | Warning |
+3+| PHP Inspections (EA Extended) → *PHPUnit*
+| PHPUnit: bugs and best practices | Weak warning |
+| PHPUnit: unnecessary assertion | Weak warning |
+3+| PHP Inspections (EA Extended) → *Probable bugs*
+| Addition operation used on arrays | Off |
+| Array and string offset validity | Error |
+| Callable methods validity | Warning |
+| Class autoloading correctness | Warning |
+| `::class` constant usage correctness | Error |
+| `compact()` variables existence | Error |
+| Continue misbehaviour in `switch` | Error |
+| Date interval specification validity | Error |
+| `DateTime` constants usage validity | Error |
+| `DateTime::setTime()` usage correctness | Error |
+| Declare directive correctness | Error |
+| Empty/isset results correctness | Error |
+| Forgotten debug statements | Error |
+| Incomplete throw statements | Error |
+| Inconsistent `http_build_query()` result | Error |
+| Incorrect random generation range | Error |
+| Infinity loop detection | Error |
+| Isset operations variables existence | Warning |
+| Magic methods validity | Error |
+| `mkdir()` race condition | Error |
+| Mocking correctness | Error |
+| Null reference | Warning |
+| Passing arguments by reference correctness | Warning |
+| Phar-incompatible `realpath()` usage | Warning |
+| `*printf()`/`*scanf()` arguments count mismatches | Error |
+| Proper `preg_quote()` usage | Error |
+| Reference mismatch | Warning |
+| `simplexml_load_file()` usage correctness | Error |
+| Strings N-character comparison flaws | Error |
+| Summer-time unsafe date manipulations | Error |
+| Suspicious assignments | Error |
+| Suspicious binary operations | Error |
+| Suspicious loop | Error |
+| Suspicious return | Error |
+| Suspicious semicolon | Error |
+| Suspicious ternary operator | Error |
+| Suspicious usage of `include_once`/`require_once` return value | Error |
+| Traits properties conflicts resolution | Error |
+3+| PHP Inspections (EA Extended) → *Security*
+| Backtick operator usage | Warning |
+| Basic malware patterns | Error |
+| Cryptographically secure algorithms | Error |
+| Cryptographically secure randomness | Error |
+| CURL: SSL server spoofing (SSL MITM and Spoofing Attacks) | Error |
+| Encryption unserialize (PHP Object Injection Vulnerability) | Error |
+| Hostname substitution | Error |
+| Insecure `crypt()` usage (Cryptographically weak algorithms) | Error |
+| Insecure `extract()` usage (Variable extract vulnerability) | Error |
+| Insecure `parse_str()` usage (Variable extract vulnerability) | Error |
+| Insecure `uniqid()` usage (Insufficient Entropy vulnerability) | Error |
+| RSA oracle padding vulnerability | Error |
+| Security advisories for Composer packages | Warning |
+| Untrusted files inclusion | Error |
+3+| PHP Inspections (EA Extended) → *Type compatibility*
+| `empty()` usage | Warning |
+| Foreach source to iterate over | Warning |
+| `in_array()`, `array_search()` type unsafe usage | Weak warning |
+| Parameter could be declared as array | Weak warning |
+| Type unsafe comparison | Warning |
+3+| PHP Inspections (EA Extended) → *Unused*
+| Child method is exactly the same | Warning |
+| Class property initialization flaws | Weak warning |
+| Parameters/variable is not used | Weak warning |
+| Senseless proxy function | Warning |
+| Unnecessary `date()` arguments specification | Weak warning |
+| Unnecessary call arguments specification | Weak warning |
+| Unnecessary isset arguments specification | Weak warning |
+| Unused constructor dependencies | Weak warning |
+| Unused goto labels | Weak warning |
+| Useless unset | Weak warning |
+3+| PHP Strict Standards
+| Declaration of overridden method should be compatible with parent class | Error |
+| Static function should not be abstract | Error |
+3+| PHPDoc
+| Missing `@return` tag | Weak warning |
+| Missing `@throws` tag(s) | No highlighting, only fix | https://youtrack.jetbrains.com/issue/WI-41446
+| Missing PHPDoc comment | Off |
+| Non-canonical order of elements | Weak warning |
+| PHPDoc comment matches function/method signature | Weak warning |
+| Redundant `@throws` tag(s) | Weak warning |
+3+| PHPUnit
+| Covered function reference is provided without `::` | Warning |
+| Missing target element for PHPUnit test | Off |
+| Undefined PHPUnit data provider | Warning |
+3+| Probable bugs
+| Assignment in condition | Off |
+| Constant reassignment | Warning |
+| Division by zero | Error |
+| Duplicate array keys | Warning |
+| Duplicate case in switch statement | Warning |
+| Expression result unused | Warning |
+| Foreach array is used as value | Warning |
+| Goto into loop statement | Error |
+| Method `__toString` implementation | Warning | Check `__toString` exists for each expression type
+| Method `__toString` return type | Error |
+| Missing `break` statement | Warning |
+| Missing parent call for constructor | Error |
+| Missing parent call for magic methods | Warning |
+| Missing parent call for method | Warning |
+| Nested vs outer `foreach` variables conflict | Warning |
+| Non-strict object equality | Warning |
+| Optional before required parameter | Warning |
+| Pass parameter by reference | Error |
+| Silly assignment | Warning |
+| Statement has empty body | Warning |
+| Unnecessary statement use | Warning |
+| Void function result used | Warning |
+| Wrong string concatenation | Warning |
+3+| Quality tools
+| PHP Code Sniffer validation | Off |
+| PHP Code Detector validation | Off |
+3+| Replacement assignments
+| Reports assignment operations which can be replaced by increment or decrement. | No highlighting, fix only |
+| Reports assignment operations which can be replaced by operator assignment. | No highlighting, fix only |
+3+| Type compatibility
+| Illegal array key type | Warning |
+| Illegal string offset | Warning |
+| Incompatible return type | Error |
+| Invalid argument supplied for `foreach()` | Error |
+| Missing strict types declaration | Warning |
+| Parameter type | Error |
+| Strict type checking rules violation | Error |
+3+| Undefined
+| Undefined callback | Warning |
+| Undefined class | Warning |
+| Undefined class constant | Warning |
+| Undefined constant | Warning |
+| Undefined field | Warning |
+| Undefined function | Warning |
+| Undefined goto label | Warning |
+| Undefined method | Warning |
+| Undefined namespace | Warning |
+| Undefined variable | Warning |
+3+| Unused
+| Unused import| Warning |
+| Unused local variable | Warning |
+| Unused parameter | Warning |
+| Unused private field | Warning |
+| Unused private method | Warning |
+|===

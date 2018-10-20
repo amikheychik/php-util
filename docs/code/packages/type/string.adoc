@@ -1,0 +1,100 @@
+= String
+
+`Xtuple\Util\Type\String\Chars` interface describes default string data.
+It contains only `__toString(): string` method, as any string data must be easily casted to `string`.
+
+== Encoding
+
+`Xtuple\Util\Type\String\Encoding` package contains sub-packages to support various string encodings.
+
+`Xtuple\Util\Type\String\Encoding\Base64` is used to represent binary data in ASCII format.
+
+`Xtuple\Util\Type\String\Encoding\Base64\Encode\URLSafe` can be used to encode data
+that must be safe to pass in the URL.
+URL safe base64 encoding replaces `+` and `/` characters with `-` and `_`.
+
+`Xtuple\Util\Type\String\Encoding\Base64\Encode\URLSafe\JSON` is a shortcut,
+to additionally do JSON transformation of the data, before encoding it to base64.
+
+.Using `Xtuple\Util\Type\String\Encoding\Base64` package
+[source]
+----
+use Xtuple\Util\Type\String\Encoding\Base64\Decode\Base64DecodedString;
+use Xtuple\Util\Type\String\Encoding\Base64\Decode\Base64DecodedStringFromEncoded;
+use Xtuple\Util\Type\String\Encoding\Base64\Encode\Base64EncodedString;
+use Xtuple\Util\Type\String\Encoding\Base64\Encode\Base64EncodedStringFromDecoded;
+use Xtuple\Util\Type\String\Encoding\Base64\Encode\URLSafe\URLSafeBase64EncodedStringFromString;
+
+// Encoded string is built from decoded stringa and vice versa.
+$encoded = new Base64EncodedStringFromDecoded(
+  new Base64DecodedString('decoded')
+);
+$decoded = new Base64DecodedStringFromEncoded($encoded);
+// Following is true:
+$encoded->__toString() === 'ZGVjb2RlZA==';
+$decoded->__toString() === 'decoded';
+
+// Encoding and decoding are lazy by default (performed by __toString())
+$failed = new Base64DecodedStringFromEncoded(
+  new Base64EncodedString('ŻGVjb2RlZÄ==')
+);
+// Throws an exception, as input contains characters outside of the base64 alphabet
+$failed->__toString();
+----
+
+.Using `Xtuple\Util\Type\String\Encoding\HTML` package
+[source]
+----
+use Xtuple\Util\Type\String\Encoding\HTML\Decode\HTMLDecodedString;
+use Xtuple\Util\Type\String\Encoding\HTML\Decode\HTMLDecodedStringFromEncoded;
+use Xtuple\Util\Type\String\Encoding\HTML\Encode\HTMLEncodedStringFromDecoded;
+
+// By default, default_charset is used.
+ini_set('default_charset', 'iso-8859-1');
+
+// To get an encoded string, a decoded source string should be provided.
+$original = new HTMLDecodedString('<a href="/">Home\'s page</a>');
+$encoded = new HTMLEncodedStringFromDecoded($original);
+// Following is true:
+$encoded->__toString() === '&lt;a href=&quot;/&quot;&gt;Home\'s page&lt;/a&gt;';
+$encoded->charset() === 'iso-8859-1';
+
+$encoded = new HTMLEncodedStringFromDecoded(
+  // Custom charset and quotes handling can be provided
+  new HTMLDecodedString('<a href="/">Home\'s page</a>', ENT_QUOTES, 'UTF-8')
+);
+// Note: single quote is replaced with &#039;
+$encoded->__toString() === '&lt;a href=&quot;/&quot;&gt;Home&#039;s page&lt;/a&gt;';
+
+// Decoding a string
+$decoded = new HTMLDecodedStringFromEncoded($encoded);
+$decoded->__toString() === '<a href="/">Home\'s page</a>';
+----
+
+== Transliteration
+
+`Xtuple\Util\Type\String\Transliteration` package provides a basic classes
+to transform input in non-latin characters to latin.
+link:http://php.net/manual/en/book.intl.php[PHP Intl extension] is used to perform transliteration.
+
+`Xtuple\Util\Type\String\Transliteration\Slug` allows to prepare user input to be used in URLs.
+
+.Using `Xtuple\Util\Type\String\Transliteration`
+[source]
+----
+use Xtuple\Util\Type\String\Transliteration\ASCIITransliterationString;
+use Xtuple\Util\Type\String\Transliteration\Slug\URLSlugString;
+
+// Transforming text into ASCII characters text
+$ascii = new ASCIITransliterationString('Königsberg in Ostpreußen, 1255');
+$ascii->__toString() === 'Konigsberg in Ostpreussen, 1255';
+$ascii->original() === 'Königsberg in Ostpreußen, 1255';
+
+// Using text in URL
+$slug = new URLSlugString('Königsberg_in_Ostpreußen, 1255');
+// All non alphanum characters , except underscore ('_') are replaced with '-'. Text is turned to lowercase.
+$slug->__toString() === 'konigsberg_in_ostpreussen--1255';
+// This include slashes `/`, as they are used to separate parts (slugs) of the URL.
+$slug = new URLSlugString('Ostpreußen/Königsberg/1255');
+$slug->__toString() === 'ostpreussen-konigsberg-1255';
+----

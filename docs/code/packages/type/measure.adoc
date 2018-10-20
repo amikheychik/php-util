@@ -1,0 +1,101 @@
+= Measure
+
+`Xtuple\Util\Type\Measure` package handles units of measurement.
+
+`Xtuple\Util\Type\Measure\Unit` is a base interface for a UOM.
+Each unit must provide a symbol, name, list of synonyms
+and methods to convert to and from SI unit.
+Each measurement (e.g. `LengthUnit`) extends `Unit` it to provide additional methods.
+
+== Length
+
+`Xtuple\Util\Type\Measure\Length\Length` interface is used to handle measurement in length (distance) units
+(`Xtuple\Util\Type\Measure\Length\Unit\LengthUnit`).
+`Xtuple\Util\Type\Measure\Length\Unit\Unit\Meter` is a base (SI) unit for length.
+
+`Xtuple\Util\Type\Measure\Length\Unit\Collection\Set\LengthUnits` is a `Set<LengthUnit>`
+that contains all supported units.
+`Set<LengthUnit>` is using `LengthUnit::symbol()` as a key.
+`Xtuple\Util\Type\Measure\Length\Unit\Collection\Set\ArraySetLengthUnit` allow to create any custom set of units
+with a custom key value.
+`Set<LengthUnit>` has `find(string $search): LengthUnit` to try find a unit across all synonyms.
+
+.Using `Xtuple\Util\Type\Measure\Length` package
+[source]
+----
+use Xtuple\Util\Type\Measure\Length\Unit\Collection\Set\ArraySetLengthUnit;
+use Xtuple\Util\Type\Measure\Length\Unit\Collection\Set\LengthUnits;
+use Xtuple\Util\Type\Measure\Length\Unit\Unit\Centimeter;
+use Xtuple\Util\Type\Measure\Length\Unit\Unit\Meter;
+use Xtuple\Util\Type\Measure\Length\LengthStruct;
+
+// When $unit parameter may be skipped, the base unit (SI unit) is used.
+$length = new LengthStruct(3.14);
+// Following is true:
+$length->value() === 3.14;
+$length->unit()->is(new Meter()) === true;
+$length->in(new Centimeter())->value() === 314;
+
+$units = new LengthUnits();
+// Following is true:
+$units->get('m')->is(new Meter()) === true;
+$units->get('kg') === null;
+$units->find('METRES')->is(new Meter()) === true; // note: find() is case-insensitive.
+
+// Third-party integrations may have custom symbols.
+$units = new ArraySetLengthUnit([
+  'MTR' => new Meter(),
+], true);
+// Following is true:
+$units->get('mtr')->is(new Meter()) === true;
+$units->get('inch') === null;
+$units->find('mtr')->is(new Meter()) === true;
+// Throws an exception, as "foot" unit is not found
+$units->find('foot');
+----
+
+==  Mass
+
+`Xtuple\Util\Type\Measure\Mass\Mass` interface is used to handle measurement in mass (weight) units
+(`Xtuple\Util\Type\Measure\Mass\Unit\MassUnit`).
+`Xtuple\Util\Type\Measure\Mass\Unit\Unit\Kilogram` is a base (SI) unit for length.
+
+`Xtuple\Util\Type\Measure\Mass\Unit\Collection\Set\MassUnits` is a `Set<MassUnit>` that contains all supported units.
+`Set<MassUnit>` is using `MassUnit::symbol()` as a key.
+`Xtuple\Util\Type\Measure\Mass\Unit\Collection\Set\ArraySetMassUnit` allow to create any custom set of units
+with a custom key value.
+`Set<MassUnit>` has `find(string $search): MassUnit` to try find a unit across all synonyms.
+
+.Using `Xtuple\Util\Type\Measure\Mass` package
+[source]
+----
+use Xtuple\Util\Type\Measure\Mass\Unit\Collection\Set\ArraySetMassUnit;
+use Xtuple\Util\Type\Measure\Mass\Unit\Collection\Set\MassUnits;
+use Xtuple\Util\Type\Measure\Mass\Unit\Unit\Gram;
+use Xtuple\Util\Type\Measure\Mass\Unit\Unit\Kilogram;
+use Xtuple\Util\Type\Measure\Mass\MassStruct;
+
+// When $unit parameter may be skipped, the base unit (SI unit) is used.
+$length = new MassStruct(3.14);
+// Following is true:
+$length->value() === 3.14;
+$length->unit()->is(new Kilogram()) === true;
+$length->in(new Gram())->value() === 3140;
+
+$units = new MassUnits();
+// Following is true:
+$units->get('kg')->is(new Kilogram()) === true;
+$units->get('m') === null;
+$units->find('KILOS')->is(new Kilogram()) === true; // note: find() is case-insensitive.
+
+// Third-party integrations may have custom symbols.
+$units = new ArraySetMassUnit([
+  'KGS' => new Kilogram(),
+], true);
+// Following is true:
+$units->get('kgs')->is(new Kilogram()) === true;
+$units->get('gram') === null;
+$units->find('kgs')->is(new Kilogram()) === true;
+// Throws an exception, as "gram" unit is not found
+$units->find('gram');
+----

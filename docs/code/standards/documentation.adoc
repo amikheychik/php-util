@@ -1,0 +1,6 @@
+= Documentation
+
+* Documentation should be written in http://asciidoc.org[ASCIIDoc] format.
+* https://asciidoctor.org[ASCIIDoctor] should be used for documentation generation.
+* https://rhodesmill.org/brandon/2012/one-sentence-per-line/[Semantic line feeds] should be used
+for lines longer than 120 characters.

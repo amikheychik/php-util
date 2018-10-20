@@ -1,0 +1,41 @@
+= File
+
+== Path
+
+`Xtuple\Util\File\Path` package wraps path-related PHP functions into objects.
+Use `Path` to require interface,
+instead of using plain string to pass paths around.
+`Path` object represents only path,
+and may exist or does not exists,
+and should check for path status on each call.
+
+[source]
+----
+use Xtuple\Util\File\Path\PathString;
+
+$path = new PathString('/tmp/path-example');
+
+// Returns false
+$path->exists();
+
+// Returns null as path doesn't exist
+$path->absolute();
+
+// Returns false
+$path->isFile();
+
+// Returns false
+$path->isDir();
+
+// Initializing file
+touch('/tmp/path-example');
+
+// Returns true
+$path->exists();
+
+// Returns "/tmp/path-example"
+$path->absolute();
+
+// Returns true
+$path->isFile();
+----

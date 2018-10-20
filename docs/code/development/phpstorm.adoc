@@ -1,0 +1,259 @@
+= PHPStorm IDE preferences
+
+link:http://jetbrains.com/phpstorm[PHPStorm] is the most advanced IDE to work with PHP
+and is *strongly* recommended to use for development.
+Using other IDEs or editors is up for a developer,
+and this section can be used as a reference to achieve same code quality
+and development productivity results.
+
+== Editor
+
+=== Inspections
+
+[NOTE]
+Inspections can be set for IDE or for the Project only.
+These settings are recommended to be set for IDE
+and adjusted for specific projects if required.
+
+* PHP
+** Error handling
+*** Unhandled exception: `checked`; severity: `Warning`.
+** PHPDoc
+*** Missing `@throws` tag(s): `checked`; severity: `No highlighting, only fix`
+(to mitigate https://youtrack.jetbrains.com/issue/WI-41446).
+
+=== Code Style → PHP
+
+[NOTE]
+Details of how to configure Code Style in PHPStorm are described in its
+link:https://www.jetbrains.com/help/phpstorm/configuring-code-style.html[Configuring Code Style]
+documentation.
+
+[IMPORTANT]
+Code style can be imported from the
+`link:https://github.com/xtuple/php-util/blob/master/resources/phpstorm/code-style.xml[resources/phpstorm/code-style.xml]`
+file.
+
+==== Tabs and Indents
+
+* [ ] Use tab character
+* [ ] Use smart tabs
+* Tab size: `2`
+* Indent: `2`
+* Continuation indent: `2`
+* [ ] Keep indents on empty lines
+* [ ] Indent code in PHP tags
+
+==== Spaces
+
+* Before Parentheses
+** [ ] Function declaration parentheses
+** [ ] Function call parentheses
+** [x] Anonymous function parentheses (?)
+** [x] `if` parentheses
+** [x] `for` parentheses
+** [x] `while` parentheses
+** [x] `switch` parentheses
+** [x] `catch` parentheses
+** [ ] Array initializer parentheses
+* Around operators
+** [x] Assignment operators (`=`, `+=`, …)
+** [x] Logical operators (`&&`, `||`)
+** [x] Equality operators (`==`, `!=`)
+** [x] Relational operators (`<`, `>`, `<=`, `=>`, `<=>`)
+** [x] Bitwise operators (`&`, `|`, `^`)
+** [x] Additive operators (`+`, `-`)
+** [x] Multiplicative operators (`*`, `/`, `%`, `**`)
+** [x] Shift operators (`>>`, `<<`)
+** [ ] Unary additive operators (`+`, `-`, `++`, `--`)
+** [x] Concatenation (`.`)
+** [ ] Object access operator (`->`)
+** [ ] Null coalescing operator (`??`)
+** [x] Assignment in `declare` statement
+* Before left brace
+** [x] Class left brace
+** [x] Function left brace
+** [x] `if` left brace
+** [x] `else` left brace
+** [x] `for` left brace
+** [x] `while` left brace
+** [x] `do` left brace
+** [x] `switch` left brace
+** [x] `try` left brace
+** [x] `catch` left brace
+** [x] `finally` left brace
+* Before keywords
+** [x] `else` keyword
+** [x] `while` keyword
+** [x] `catch` keyword
+** [x] `finally` keyword
+* Within
+** [ ] Brackets
+** [ ] Brackets around variable/expression
+** [ ] Array initializer parentheses
+** [ ] Grouping parentheses
+** [ ] Function declaration parentheses
+** [ ] Function call parentheses
+** [ ] `if` parentheses
+** [ ] `for` parentheses
+** [ ] `while` parentheses
+** [ ] `switch` parentheses
+** [ ] `catch` parentheses
+** [x] `<?=` and `?>`
+* Other
+** [ ] Before comma
+** [x] After comma
+** [ ] Before semicolon
+** [x] After semicolon
+** [x] After type cast
+** [ ] Before colon in return type
+** [x] After colon in return type
+** [ ] Before unary Not (`!`)
+** [ ] After unary Not (`!`)
+
+==== Wrapping and braces
+
+* Hard wrap at `120`
+* Wrap on typing `Default: No`
+* Visual guides `Default: None`
+* Keep when reformatting
+** [x] Line breaks (?)
+** [x] Comment at first column
+** [ ] Control statement in one line
+** [ ] Simple methods in one line
+* Braces placement
+** In namespace _End of line_
+** In class declaration _End of line_
+** In function declaration _End of line_
+** In closure declaration _End of line_
+** Other _End of line_
+* Extends/implements list _Wrap if long_
+** [x] Align when multiline
+* Extends/implements keyword _Wrap always_
+* Function declaration parameters _Wrap if long_
+** [x] Align when multiline
+** [ ] New line after `(`
+** [ ] Place `)` on a new line
+** [x] Keep `)` and `{` on one line
+* Function/constructor call arguments _Do not wrap_
+** [ ] Align when multiline
+** [ ] New line after `(`
+** [ ] Place `)` on a new line
+** Place `()` for constructor _Always_
+* Chained method calls _Do not wrap_
+** [x] Align when multiline
+** [ ] Place `;` on new line
+* `if()` statement
+** [ ] New line after `(`
+** [ ] Place `)` on new line
+** Force braces _Always_
+** [x] `else` on new line
+** [ ] Special `else if` treatment
+* `for()`/`foreach()` statements _Do not wrap_
+** [x] Align when multiline
+** [ ] New line after `(`
+** [ ] Place `)` on new line
+** Force braces _Always_
+* `while()` statement
+** Force braces _Always_
+* `do … while()` statement
+** Force braces _Always_
+** [x] `while` on new line
+* `switch` statement
+** [x] Indent `case` branches
+** [x] Indent `break` from `case`
+* `try` statement
+** [x] `catch` on new line
+** [x] `finally` on new line
+* Binary expressions _Do not wrap_
+** [ ] Align when multiline
+** [ ] Operators sign on next line
+** [ ] New line after `(`
+** [ ] Place `)` on new line
+* Assignment statement _Do not wrap_
+** [ ] Assignment sign on next line
+** [ ] Align consecutive assignments
+* Class field/constant groups
+** [ ] Align fields in columns
+** [ ] Align constants
+* Ternary operation _Chop down if long_
+** [ ] Align when multiline
+** [x] `?` and `:` signs on next line
+* Array initializer _Chop down if long_
+** [x] Align when multiline
+** [ ] Align key-value pairs
+** [x] New line after `(`
+** [x] Place `)` on new line
+* Modifier list
+** [ ] Wrap after modifier list
+* Function return type
+** [ ] Return type on new line
+* Group use _Chop down if long_
+
+==== Blank lines
+
+* Keep Maximum Blank Lines
+** In declarations: `0`
+** In code: `1`
+** Before `}`: `0`
+** After `{`: `2`
+* Minimum Blank Lines
+** Before namespace: `1`
+** After namespace: `1`
+** Before `use` statements: `1`
+** After `use` statements: `1`
+** Around class: `1`
+** After class header: `0`
+** Around field: `0`
+** Around method: `1`
+** Before method body: `0`
+** Around class constants: `0`
+** After opening tag: `0`
+** After function: `1`
+** Before `return` statement: `0`
+
+==== PHPDoc
+
+* [x] Align parameter/property names
+* [x] Keep blank lines
+* [x] Blank lines around parameters
+* [x] Blank line before the first tag
+* [x] Align tag comments
+* [x] Wrap long lines
+* Generated Doc Blocks
+** [ ] Use fully-qualified class names
+
+==== Code Conversion
+
+* [x] Convert `true`/`false` constants to _Lower case_
+* [x] Convert `null` constant to _Lower case_
+* [x] Convert `if`/`elseif` to `elseif`
+* Array declaration style:
+** [x] Force short declaration style
+** [x] Add a comma after last element in multiline array
+
+==== Code Generation
+
+* Variable Naming Style _camelCase_
+* Fields Default Visibility _private_
+* Comment Code
+** [ ] Line comment at first column
+*** [x] Add a space at comment start
+
+==== Arrangement
+
+* Grouping rules
+** [x] Keep getters and setters together
+** [x] Keep dependent methods together _depth-first order_
+** [x] Keep overridden methods together _keep order_
+
+== Language & Frameworks
+
+=== PHP
+
+* PHP language level: `7.1 (const visibility, nullables, multiple exceptions)`
+* Analysis (_tab_):
+** Call tree analysis depth: `1`
+** Unchecked exceptions:
+*** `\PHPUnit\Framework\AssertionFailedError`
+*** `\SebastianBergmann\RecursionContext\InvalidArgumentException`

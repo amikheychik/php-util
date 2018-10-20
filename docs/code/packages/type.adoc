@@ -1,0 +1,10 @@
+= Type
+
+`Xtuple\Util\Type` package contains subpackages to handle real-world data types.
+
+include::type/datetime.adoc[leveloffset=+1]
+include::type/measure.adoc[leveloffset=+1]
+include::type/message.adoc[leveloffset=+1]
+include::type/stream.adoc[leveloffset=+1]
+include::type/string.adoc[leveloffset=+1]
+include::type/uuid.adoc[leveloffset=+1]

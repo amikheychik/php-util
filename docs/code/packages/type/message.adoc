@@ -1,0 +1,265 @@
+= Message (Localizable string)
+
+`Xtuple\Util\Type\String\Chars\Message` package provides set of localizable/translatable string classes.
+Name `Message` was inspired by the underlying
+link:http://php.net/manual/en/book.intl.php[PHP Intl extension] terminology
+(see http://php.net/manual/en/class.messageformatter.php[MessageFormatter class]).
+PHP `intl` extension wraps up
+link:http://site.icu-project.org[ICU - International Components for Unicode] library,
+which makes localization handling highly reliable.
+
+[NOTE]
+In general, localization and translation are not the same:
+a text in the same language may require different output for the numbers or dates inside it for different locales.
+But for convenience,
+these terms would be used interchangeably in this section of documentation,
+as any localizable string in this package is also translatable.
+
+`Xtuple\Util\Type\String\Chars\Message\Message\Message` is the base type (interface)
+that defines requirements for a translatable string:
+
+- `Message::__toString()` must return a string, localized for `en_US.UTF-8` locale.
+- `Message::format(string $locale): string` returns a string localized for a custom locale.
+- `Message::template(): string` returns a template used for a string.
+Interpolation delimiters are not strictly specified,
+for compatibility with other frameworks (e.g. Drupal),
+but by default curly brackets (`{}`) are used and are strongly recommended to be kept.
+- `Message::arguments(): Set<Argument>` returns set of arguments used in the template.
+Arguments may contain delimiters for compatibility with other frameworks,
+but by default are not used.
+
+`template()` and `arguments()` methods should be used by translation packages to retrieve original data.
+Some message subtypes, e.g. `PluralMessage`,
+define more methods to access other data forms,
+that may be needed for localization.
+
+`Xtuple\Util\Type\String\Chars\Message\Argument` is a `Message` that is used as an argument for other messages:
+
+- `Argument::key()` returns a key - name of the argument inside the message.
+
+.Using `Xtuple\Util\Type\String\Chars\Message\Message`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Argument\ArgumentFromString;
+use Xtuple\Util\Type\String\Message\Argument\ArgumentStruct;
+use Xtuple\Util\Type\String\Message\Argument\ArgumentWithTokens;
+use Xtuple\Util\Type\String\Message\Message\MessageStruct;
+use Xtuple\Util\Type\String\Message\Message\MessageWithTokens;
+use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
+
+// Basic declaration of a message. Parameters are wrapped in `{}`, but curly brackets are not used in argument name.
+$message = new MessageStruct('Query {query} failed: {message}', new ArraySetArgument([
+  new StringArgument('query', 'http://httpbin.org/status/404'),
+  new StringArgument('message', 'Page not found'),
+]));
+// Following is correct:
+$message->__toString() === 'Query http://httpbin.org/status/404 failed: Page not found';
+$message->template() === 'Query {query} failed: {message}';
+$message->arguments()->get('message')->__toString() === 'Page not found';
+$message->arguments()->get('{message}') === null;
+
+// MessageWithTokens can be used as a shortcut, if parameters do not need localization
+$message = new MessageWithTokens('API request failed: ({code}) {message}', [
+  'code' => 1024,
+  'message' => 'Access denied',
+]);
+// Note: in en_US.UTF-8 locale number 1024 should be localized as 1,024 by default, but is treated as a string here.
+$message->__toString() === 'API request failed: (1024) Access denied'
+// But the message template remains, so it can be translated.
+$message->template() === 'API request failed: ({code}) {message}';
+
+// Every Argument by default is just a Message with a key (name). And can have nested localizable arguments.
+$argument = new ArgumentStruct('error', new MessageWithTokens('({code}) {message}', [
+  'code' => 1024,
+  'message' => 'Access denied',
+]));
+$message = new MessageStruct('API request failed: {error}', new ArraySetArgument([
+  $argument,
+]));
+$message->template() === 'API request failed: {error}';
+$message->arguments()->get('error')->template() === '({code}) {message}';
+
+// ArgumentFromString is a shortcut for ArgumentStruct, to unpack MessageStruct parameters
+$argument = new ArgumentFromString('error', '({code}) {message}', new ArraySetArguments([
+  new StringArgument('code', 1024),
+  new StringArgument('message', 'Access denied'),
+]));
+
+// ArgumentWithTokens is a shortcut for ArgumentStruct, to use MessageWithTokens.
+$argument = new ArgumentWithTokens('error', '({code}) {message}', [
+  'code' => 1024,
+  'message' => 'Access denied',
+]);
+----
+
+== Types
+
+Various types of messages are present in `Xtuple\Util\Type\String\Message\Type`.
+Each subpackage may declare a custom `Message` subtype and provide abstractions for `Message` and `Argument`.
+Type subpackages may have even more narrowed down subtypes:
+for example,
+`Number` type contains `Currency` subtype,
+along with other number-related subtypes.
+
+String (`Xtuple\Util\Type\String\Message\Type\String`) is the most basic one,
+used just to fulfill the strict type requirements of `Set<Argument>` and `Set<Message>`.
+Example of its usage is provided in the section above.
+
+Examples below provided only for `Message` types,
+but they can also be used with corresponding `Argument` types.
+
+[NOTE]
+`Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessage`
+default implementation currently do not use `php-intl` package,
+due to the difference between commonly used `date()` formatting options and `\IntlDateFormatter`.
+This also renders `Message::format($locale)` method redundant,
+as its parameter doesn't change the output.
+`DateTimeMessage::timezone(?string $timezone = null)`
+should be used to render date for the given format in the specified timezone.
+
+.Using `Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessage`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Type\DateTime\DateTimeMessageStruct;
+
+$default = ini_get('date.timezone');
+ini_set('date.timezone', 'America/New_York');
+
+// DateTime is in UTC, formatter uses system default date.timezone setting
+$date = new DateTimeMessageStruct(
+  new DateTimeString('2018-01-01T00:00:00Z'),
+  'm/d/Y g:ia'
+);
+// Default output is in UTC
+(string) $date === '01/01/2018 12:00am';
+// $locale doesn't change the format output
+$date->locale('ru_RU') === '01/01/2018 12:00am'; // instead of 01.01.2018 00:00
+// Default server timezone is used
+$date->timezone() === '12/31/2017 7:00pm';
+// Custom timezone is used
+$date->timezone('America/Los_Angeles') === '12/31/2017 4:00pm';
+
+ini_set('date.timezone', $default);
+----
+
+.Using `Xtuple\Util\Type\String\Message\Type\Number\NumberMessage`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Type\Number\Currency\CurrencyMessage;
+use Xtuple\Util\Type\String\Message\Type\Number\Float\FloatMessage;
+use Xtuple\Util\Type\String\Message\Type\Number\Integer\IntegerMessage;
+use Xtuple\Util\Type\String\Message\Type\Number\Percent\PercentMessage;
+
+$integer = new IntegerMessage(5000);
+// __toString() defaults to en_US.UTF-8 locale
+$integer->__toString() === '5,000';
+$integer->format('ru_RU') === '5 000'; // 5&nbsp;000
+
+$float = new FloatMessage(12345.54321);
+$float->__toString() === '12,345.543';
+$float->format('ru_RU') === '12 345,543'; // 12&nbsp;345,543
+
+// FloatMessage allows to provide custom format
+$float = new FloatMessage(6.54321, '#,#00.000#');
+$float->__toString() === '006.5432';
+
+// Note: "," is shifted in this example:
+$float = new FloatMessage(123456.54321, '#,#000.000#');
+$float->__toString() === '12,3456.5432';
+
+// Note: PercentMessage requires a float value, and 1 is 100%
+$percent = new PercentMessage(0.05);
+$percent->__toString() === '5%';
+$percent->format('ru_RU') === '5 %'; // 5&nbsp;%
+
+$percent = new PercentMessage(5);
+$percent->__toString() ===  '500%';
+
+// CurrencyMessage requires currency 3-letter ISO 4217 code
+$currency = new CurrencyMessage(5000, 'USD');
+$currency->__toString() === '$5,000.00';
+$currency->format('ru_RU') === '5 000,00 $'; // 5&nbsp;000,00&nbsp;$
+
+// Note: currency formatted according to locale, not currency itself
+$currency = new CurrencyMessage(-5432.1024, 'RUB');
+$currency->__toString() === '-RUB5,432.10'; // en_US.UTF-8 locale
+$currency->format('ru_RU') === '-5 432,10 руб.'; // -5&nbsp;432,10&nbsp;руб.
+----
+
+`Xtuple\Util\Type\String\Message\Type\Plural\PluralMessage`
+adds methods for `Message` required for correct translation of a text with a plural value.
+
+- `PluralMessage::count(): NumberMessage` - count value is localizable too.
+- `PluralMessage::singular(): ?Message` - singular translation is optional
+(this would depend on the language).
+- `PluralMessage::plural(): Message` - is the default value and a fallback message.
+- `PluralMessage::plurals(): Set<Argument>` - additional
+link:http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html[plural forms]
+may be provided,
+including exact values (`=0`, `=1`, etc.)
+- `PluralMessage::offset(): ?float` - optional offset for the count value.
+Usually useful when exact value plurals provided.
+
+.Using `Xtuple\Util\Type\String\Message\Type\Plural`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Type\Number\Currency\CurrencyMessage;
+use Xtuple\Util\Type\String\Message\Type\Number\Integer\IntegerMessage;
+use Xtuple\Util\Type\String\Message\Type\Plural\PluralMessageStruct;
+use Xtuple\Util\Type\String\Message\Type\Plural\PluralMessageFromStrings;
+use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
+use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
+
+$plural = new PluralMessageStruct(
+  new IntegerMessage(4321),
+  new StringMessage('{count} users are {status}'),
+  new StringMessage('One user is {status}'),
+  null,
+  new ArraySetArgument([
+    new StringArgument('status', 'online'),
+  ])
+);
+// Note: using NumberMessage for $count allows to localize count too.
+$plural->__toString() === '4,321 users are online';
+
+// PluralMessageFromStrings can be used, when messages are simple strings
+$plural = new PluralMessageFromStrings(0, '{count} items', 'One item', [
+  '=0' => 'No items',
+]);
+// Note: '=0' plural is used when count equals 0
+$plural->__toString() === 'No items';
+
+$plural = new PluralMessageFromStrings($count = 2, '{count} items', 'One item', [
+  '=0' => 'No items',
+], null, $offset = 1);
+// Note: $count is 2, but since $offset is 1, the result is shown for $count == 1.
+$plural->__toString() === 'One item';
+----
+
+`Xtuple\Util\Type\String\Message\Type\Select\SelectMessage`
+adds methods for `Message` required for correct translation of messages with custom selection rules.
+The basic example would be a selection of correct pronoun based on user's gender.
+
+- `SelectMessage::value(): string` - actual value, select "option"
+- `SelectMessage::default(): Message` - default message, a fallback variant.
+- `SelectMessage::options(): Set<Argument>` - messages to select from.
+
+.Using `Xtuple\Util\Type\String\Message\Type\Select`
+[source]
+----
+use Xtuple\Util\Type\String\Message\Argument\Collection\Set\ArraySetArgument;
+use Xtuple\Util\Type\String\Message\Type\Select\SelectMessageStruct;
+use Xtuple\Util\Type\String\Message\Type\String\StringArgument;
+use Xtuple\Util\Type\String\Message\Type\String\StringMessage;
+
+$select = new SelectMessageStruct('other', new StringMessage('Their gender is {gender}'), new ArraySetArgument([
+  new StringArgument('m', 'male'),
+  new StringArgument('f', 'female'),
+]), new ArraySetArgument([
+  new StringArgument('gender', 'unknown'),
+]));
+// Note: 'other' option is not provided, so default message is used.
+$select->__toString() === 'Their gender is unknown';
+----

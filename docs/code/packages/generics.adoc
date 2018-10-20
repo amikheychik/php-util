@@ -1,0 +1,69 @@
+= Generics
+
+`Xtuple\Util\Generics` package simplifies work with generic classes.
+
+== Type
+
+`Xtuple\Util\Generics\Type` package should be used when type check is required.
+
+Use `StrictType` when instance of a class/interface is required,
+and `ScalarType` when a scalar (string, integer, float or boolean) is required.
+
+[source]
+----
+use Xtuple\Util\Generics\Type\ResourceType;
+use Xtuple\Util\Generics\Type\ScalarType;
+use Xtuple\Util\Generics\Type\StrictType;
+
+// Super types may be used.
+$type = new StrictType(\Countable::class);
+
+// Type::cast() method returns the same object instance as it receives, if type is correct.
+$array1 = new \ArrayObject();
+// Passes correctly, as \ArrayObject implements \Countable
+$array2 = $type->cast($array1); // ($array1 === $array2)
+
+// Throws an exception, as an array is passed
+$type->cast([]);
+
+// Throws an exception, as \stdClass does not implement \Countable;
+$type->cast(new \stdClass());
+
+$scalar = new ScalarType();
+
+// Returns 1
+$scalar->cast(1);
+
+// Throws an exception, null is not a scalar.
+$scalar->cast(null);
+
+$resource = new ResourceType();
+
+// Returns resource handler created by tmpfile().
+$resource->cast(tmpfile());
+
+// Throws an exception, as \stdClass() is not a resource.
+$resource->cast(new \stdClass());
+----
+
+Use `NullableType` when instance of a class/interface or `null` can be passed,
+and `NullableScalarType` when a scalar or `null` can be passed.
+
+[source]
+----
+use Xtuple\Util\Generics\Type\NullableScalarType;
+use Xtuple\Util\Generics\Type\NullableType;
+
+// Class/interface names may be passed as strings.
+$nullableType = new NullableType('\stdClass'); <1>
+
+// Returns null, instead of throwing an exception (unlike StrictType)
+$nullableType->cast(null);
+
+$nullableScalar = new NullabaleScalarType();
+
+// Returns null, instead of throwin an exception
+$nullalbeScalar->cast(null);
+----
+<1> `::class` constant doesn't have a leading root namespace `\`,
+but it's recommended to provide one when it's passed as a string.
