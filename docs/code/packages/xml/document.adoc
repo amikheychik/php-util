@@ -1,0 +1,4 @@
+= Document
+
+`Xtuple\Util\XML\Document\XMLDocument` interface is reserved to represent fully formed XML document elements,
+but is currently not implemented.

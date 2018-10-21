@@ -1,0 +1,90 @@
+= Element
+
+`Xtuple\Util\XML\Element\XMLElement` interface defines methods required to work with an XML element.
+Unlike `\SimpleXMLElement`,
+`XMLElement` does not represent an XML document
+(that should start with an `<?xml` tag, use `Xtuple\Util\XML\Document\XMLDocument` instead).
+Implementations of the interface must be able to handle any set of data that can be converted into an XML element
+(for example, see `Xtuple\Util\XML\Element\XMLElementSequence`).
+
+`XMLElement::__toString()` must return a valid XML element string,
+trimmed and with no prepended `<?xml` tag (even if the input had it).
+
+== Basic implementations
+
+The default implementation is provided by `Xtuple\Util\XML\Element\XMLElementSimple`,
+using `\SimpleXMLElement`.
+`XMLElementSimple` throws an exception,
+if a `\SimpleXMLElement` representing an XML attribute is passed.
+
+.Using `Xtuple\Util\XML\Element\XMLElementSimple`
+[source]
+----
+include::./element.basic1.example.php[lines=5..-1]
+----
+
+`Xtuple\Util\XML\Element\XMLElementString` is a shortcut for `XMLElementSimple` to provide XML as a string instead.
+As `\SimpleXMLElement` is used, `XMLElementString` throws an exception,
+if provided string can not be parsed as a valid XML,
+including situations,
+when more than one XML root tags exist.
+It means, that any XML created by `XMLElement` might be parsed by `XMLElementString`.
+
+`Xtuple\Util\XML\Element\XMLElementStruct` can be used to build XML from regular data.
+
+.Using `Xtuple\Util\XML\Element\XMLElementStruct`
+[source]
+----
+include::./element.basic2.example.php[lines=5..-1]
+----
+
+`Xtuple\Util\XML\Element\XMLElementSequence`
+should be used to represent a list (sequence) of XML elements as an XML element.
+`XMLElementSequence` name, value and attributes are always empty.
+
+.Using `Xtuple\Util\XML\Element\XMLElementSequence`
+[source]
+----
+include::./element.basic3.example.php[lines=5..-1]
+----
+
+== Optional
+
+`Xtuple\Util\XML\Element\Optional\OptionalXMLElement`
+provides an implementation of an `XMLElement` that returns an empty string,
+if the tag is empty (a regular implementation, should return an actual empty tag, e.g. `<br/>`).
+
+`Xtuple\Util\XML\Element\Optional\OptionalXMLElementStruct`
+is a shortcut for `OptionalXMLElement` with the same signature as `XMLElementStruct`.
+
+.Using `Xtuple\Util\XML\Element\Optional\OptionalXMLElement`
+[source]
+----
+include::./element.optional.example.php[lines=5..-1]
+----
+
+== Strict types
+
+`Xtuple\Util\XML\Element\XMLElement::value()` is a generic method, that always returns `string`.
+For example,
+`Xtuple\Util\XML\Element\Type\BooleanXMLElement::value()` returns strictly `bool` (`true` or `false`).
+`Xtuple\Util\XML\Element\Type\AbstractTypeXMLElement` can be used to simplify adding new strictly typed XML elements.
+
+.Using `Xtuple\Util\XML\Element\Type\Boolean` package
+[source]
+----
+include::./element.strict.example.php[lines=5..-1]
+----
+
+== Collection
+
+`Xtuple\Util\XML\Element\Collection\Sequence\ListXMLElement` is a default collection of XML elements
+and `Xtuple\Util\XML\Element\Collection\Sequence\ArrayListXMLElement` is its default implementation.
+
+`ListXMLElement::__toString()` must return an output of the elements in the same order as they are in the list.
+
+.Using `Xtuple\Util\XML\Element\Collection\Sequence\ListXMLElement`
+[source]
+----
+include::./element.collection.example.php[lines=5..-1]
+----

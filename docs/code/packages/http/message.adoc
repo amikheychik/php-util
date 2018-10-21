@@ -1,0 +1,4 @@
+= Message
+
+`Xtuple\Util\HTTP\Message` package contains classes to represent HTTP message elements as described in
+`link:https://tools.ietf.org/html/rfc7230#section-3[RFC 7230]`.

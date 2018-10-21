@@ -1,0 +1,23 @@
+= Tree
+
+`Xtuple\Util\Collection\Tree` package handles nested data
+(but not necessarily using tree-representation to do it).
+`Tree` is mutable and provides `set()` and `remove()` methods to change its state.
+`Tree::data(): array` method returns all the data as a (nested) array.
+`Tree` keys may be both strings or integers,
+but all the specific data is retrieved using key paths to the node.
+`Tree` is iterable,
+but should iterate only through the top-level keys and elements
+(as otherwise it's not clear how to cast nested keys to strings or integers.).
+Similarly, `Tree::count()` returns the number of top-level data,
+and `Tree::isEmpty()` doesn't check all the leaves.
+
+As with other `Xtuple\Util\Collection` packages,
+abstract `Tree` classes may be used implementing new interfaces
+to provide custom method to access specific keys.
+
+.Using `Xtuple\Util\Collection\Tree\ArrayTree`
+[source]
+----
+include::./tree.example.php[lines=5..-1]
+----

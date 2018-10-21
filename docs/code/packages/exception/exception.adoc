@@ -1,0 +1,17 @@
+= Exception
+
+`Xtuple\Util\Exception\ExceptionWithMessage` is a default implementation of `Xtuple\Util\Exception\AbstractThrowable`,
+without any constructor customizations.
+It may be especially helpful,
+when all the parameters are already provided in the required types.
+
+[source]
+----
+include::./exception.example.php[lines=4..-1]
+----
+<1> `\Xtuple\Util\Exception\ExceptionWithArguments` encapsulates
+`Xtuple\Util\Type\String\Message\Message\MessageStruct` creation.
+<2> `\Xtuple\Util\Exception\Exception` encapsulates
+`Xtuple\Util\Type\String\Message\Message\MessageWithTokens` instead of
+`Xtuple\Util\Type\String\Message\Message\MessageStruct`.
+<3> This parameter would be cast to string and can't be localized as an integer later.

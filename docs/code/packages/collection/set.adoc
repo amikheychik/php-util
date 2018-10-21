@@ -1,0 +1,23 @@
+= Set
+
+`Xtuple\Util\Collection\Set` package provides default set implementation.
+As PHP doesn't support objects identity by default,
+its implementation can be chosen by user
+(two objects may be completely different,
+but would be considered identical,
+as long as their key method returns the same value).
+This effectively makes Set similar to Map,
+but unlike Map, Set throws exception when duplicates occur.
+Set is immutable.
+
+[source]
+.Example usage of the `ArraySet`.
+----
+include::./set1.example.php[lines=4..-1]
+----
+
+[source]
+.Example usage of the `StrictlyTypedArraySet`.
+----
+include::./set2.example.php[lines=6..-1]
+----

@@ -1,0 +1,9 @@
+= MultiErrorException
+
+`Xtuple\Util\Exception\MultiErrorException` is a shortcut for `Xtuple\Util\Exception\Exception`
+when an exception with multiple errors should be thrown.
+
+[source]
+----
+include::./multi-error-exception.example.php[lines=5..-1]
+----

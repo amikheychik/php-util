@@ -1,0 +1,9 @@
+= Bitmask
+
+`Xtuple\Util\Enum\Bitmask\BitmaskEnum` should be used for bit masks.
+It strictly checks for the bit mask to have all flags possible.
+
+[source]
+----
+include::./bitmask.example.php[lines=7..-1]
+----

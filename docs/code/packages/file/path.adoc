@@ -1,0 +1,14 @@
+= Path
+
+`Xtuple\Util\File\Path` package wraps path-related PHP functions into objects.
+Use `Path` to require interface,
+instead of using plain string to pass paths around.
+`Path` object represents only path,
+and may exist or does not exists,
+and should check for path status on each call.
+
+[source]
+----
+include::./path.example.php[lines=5..-1]
+----
+

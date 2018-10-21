@@ -1,0 +1,9 @@
+= ChainException
+
+`Xtuple\Util\Exception\ChainException` is a shortcut for `Xtuple\Util\Exception\Exception`
+when a previous exception should be re-thrown.
+
+[source]
+----
+include::./chain-exception.example.php[lines=5..-1]
+----

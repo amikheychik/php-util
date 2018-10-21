@@ -1,0 +1,17 @@
+= Stack
+
+`Xtuple\Util\Collection\Stack` package provides a default stack implementation.
+Similarly to List, stack keys are handled internally.
+Stack is mutable and provides `push()` and `pop()` methods to mutate its state.
+
+[source]
+.Example usage of the `ArrayStack`.
+----
+include::./stack1.example.php[lines=5..-1]
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayStack`.
+----
+include::./stack2.example.php[lines=5..-1]
+----

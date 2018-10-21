@@ -1,0 +1,99 @@
+= Attribute
+
+`Xtuple\Util\XML\Attribute\XMLAttribute` interface defines methods required to work with an XML attribute.
+
+`Xtuple\Util\XML\Attribute\XMLAttribute::__toString()`
+method must generate an output for the attribute in `key="value"` format.
+
+== Basic implementations
+
+The default implementation is provided by `Xtuple\Util\XML\Attribute\XMLAttributeSimple`,
+using `\SimpleXMLElement`.
+Unlike `\SimpleXMLElement`,
+`XMLAttributeSimple` would always represent an XML attribute
+and would throw an exception if an XML element is passed.
+
+.Using `Xtuple\Util\XML\Attribute\XMLAttributeSimple`
+[source]
+----
+include::./attribute.basic1.example.php[lines=5..-1]
+----
+
+`Xtuple\Util\XML\Attribute\XMLAttributeStruct`
+is a straight-forward implementation of the `XMLAttribute` interface that may be helpful,
+when an `XMLAttribute` is required,
+but underlying data is presented in non-XML format
+(e.g. to create test stubs).
+
+.Using `Xtuple\Util\XML\Attribute\XMLAttributeStruct`
+[source]
+----
+include::./attribute.basic2.example.php[lines=5..-1]
+----
+
+To provide a custom `XMLAttribute`,
+the `Xtuple\Util\XML\Attribute\AbstractXMLAttribute` can be extended.
+It allows to additionally specify attribute as a string.
+If "to string" value parameter is omitted,
+the default behavior is preserved.
+
+.Using `Xtuple\Util\XML\Attribute\AbstractXMLAttribute`
+[source]
+----
+include::./attribute.basic3.example.php[lines=6..-1]
+----
+
+== Optional
+
+`Xtuple\Util\XML\Attribute\Optional\OptionalXMLAttribute`
+can be used in
+`Xtuple\Util\XML\Attribute\Collection\Map\MapXMLAttribute::getOptional()`
+to provide a default value for an optional attribute.
+Optional XML attribute output must be empty.
+
+`Xtuple\Util\XML\Attribute\Optional\OptionalXMLAttributeStruct` is a shortcut to match
+`Xtuple\Util\XML\Attribute\XMLAttributeStruct` signature.
+
+.Using `Xtuple\Util\XML\Attribute\Optional\OptionalXMLAttribute`
+[source]
+----
+include::./attribute.optional.example.php[lines=5..-1]
+----
+
+== Strict types
+
+`Xtuple\Util\XML\Attribute\XMLAttribute::value()` method is generic.
+Its return value may be overridden by the children implementations to return a more specific type.
+
+`Xtuple\Util\XML\Attribute\XMLAttributeStruct` treats provided values the same generic way,
+returning their value as is, but casting them to a string on output.
+This might lead to unexpected behavior on conversion to and from XML.
+To avoid such issues, strict types should be used.
+
+For example,
+`Xtuple\Util\XML\Attribute\Type\Boolean\BooleanXMLAttribute` interface re-defines `value()` method to return `bool`.
+
+.Using `Xtuple\Util\XML\Attribute\Type\Boolean\BooleanXMLAttribute`
+[source]
+----
+include::./attribute.strict.example.php[lines=5..-1]
+----
+
+== Collection
+
+`Map<XMLAttribute::name(), XMLAttribute>` 
+(`Xtuple\Util\XML\Attribute\Collection\Map\MapXMLAttribute`)
+is used as a default collection for attributes.
+
+`MapXMLAttribute::__toString()` must return a string in `key1="value1" key2="value2"` format.
+The order of the attributes output may be changed by implementation.
+
+`MapXMLAttribute::getOptional(XMLAttribute $default): XMLAttribute` returns an XMLAttribute if exists,
+or the provided default otherwise.
+Use `getOptional()` instead of `get()` when attribute is not required by the document schema.
+
+.Using `Xtuple\Util\XML\Attribute\Collection\Map\ArrayMapXMLAttribute`
+[source]
+----
+include::./attribute.collection.example.php[lines=5..-1]
+----

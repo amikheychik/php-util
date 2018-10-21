@@ -1,0 +1,8 @@
+= Integer
+
+`Xtuple\Util\Enum\Integer\IntegerEnum` should be used to provide a set of integer constants.
+
+[source]
+----
+include::./integer.example.php[lines=7..-1]
+----

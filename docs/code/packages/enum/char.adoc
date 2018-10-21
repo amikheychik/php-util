@@ -1,0 +1,15 @@
+= Char
+
+`Xtuple\Util\Enum\Char\StringEnum` should be used to provide a set of string constants.
+
+[source]
+----
+include::./char1.example.php[lines=7..-1]
+----
+
+`Xtuple\Util\Enum\Char\OptionalStringEnum` allows to declare a `string` enum with allowed `null` value.
+
+[source]
+----
+include::./char2.example.php[lines=8..-1]
+----

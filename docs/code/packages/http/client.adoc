@@ -1,0 +1,41 @@
+= Client
+
+`Xtuple\Util\HTTP\Client` declares an interface for an HTTP client
+and provides a default implementation `Xtuple\Util\HTTP\Client\CURL` using
+link:http://php.net/manual/en/book.curl.php[PHP Curl extension].
+
+`Xtuple\Util\HTTP\Client\Client` interface declares two methods:
+
+* `send(Request $request): Result` - `send()` is a safe method,
+and must not throw an exception directly.
+Exception should be returned inside the `Result` object.
+* `sendMany(MapRequest $requests): MapResult` - `sendMany()` is an unsafe method,
+it may throw an exception,
+if the whole requests processing failed.
+Yet, if any single request failed with an exception,
+that exception should be returned inside the `Result` object too.
+Results in `MapResults` returned by `sendMany()` must have the same keys as the requests passed in `MapRequest`.
+`sendMany()` doesn't specify if requests should be done asynchronously,
+but the default implementation `Xtuple\Util\HTTP\Client\CURL\CURLClient` sends requests in parallel.
+
+.Using `Xtuple\Util\HTTP\Client\CURL\CURLClient`.
+[source]
+----
+include::./client1.example.php[lines=4..-1]
+----
+<1> `@noinspection` references `URLWithQuery`, as generic URL string may be incorrect.
+<2> Using `RequestStruct` and other generic classes is tedious.
+It's recommended to create custom classes for the often used URLs (see example below).
+<3> `@noinspection` references `ArrayMapRequest`,
+as all the elements of passed array are guaranteed to be of type `Request`.
+
+Generic classes are not convenient to use more than once.
+To avoid code duplication,
+it's recommended to create concrete implementations for them.
+This also would allow simplify testing of each element.
+
+.Implementing custom `Request`, `Response`, `URL`, etc.
+[source]
+----
+include::./client2.example.php[lines=4..-1]
+----

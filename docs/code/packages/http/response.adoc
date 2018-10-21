@@ -1,0 +1,4 @@
+= Response
+
+`Xtuple\Util\HTTP\Response` package contains classes to represent HTTP request elements as described in
+`link:https://tools.ietf.org/html/rfc7231[RFC 7231]`.

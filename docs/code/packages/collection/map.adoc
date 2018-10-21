@@ -1,0 +1,19 @@
+= Map
+
+`Xtuple\Util\Collection\Map` package provides default key-value map implementations.
+Unlike usual key-value maps,
+Map keys are always strings (not objects).
+Map allows access to any existing element with `get(string $key)` method.
+Map is immutable.
+
+[source]
+.Example usage of the `ArrayMap`.
+----
+include::./map1.example.php[lines=4..-1]
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayMap`.
+----
+include::./map2.example.php[lines=4..-1]
+----

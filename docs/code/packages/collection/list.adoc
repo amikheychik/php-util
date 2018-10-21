@@ -1,0 +1,18 @@
+= List (Sequence)
+
+`Xtuple\Util\Collection\Sequence` package provides default list implementations.
+List keys are integers and count starts from `0`.
+List allows access to any existing element with `get(int $key)` method.
+List is immutable.
+
+[source]
+.Example usage of the `ArrayList`.
+----
+include::./list1.example.php[lines=3..-1]
+----
+
+[source]
+.Example usage of the `StrictlyTypedArrayList`.
+----
+include::./list2.example.php[lines=5..-1]
+----

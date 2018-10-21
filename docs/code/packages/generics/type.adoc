@@ -1,0 +1,13 @@
+= Type
+
+`Xtuple\Util\Generics\Type` package should be used when type check is required.
+
+Use `StrictType` when instance of a class/interface is required,
+and `ScalarType` when a scalar (string, integer, float or boolean) is required.
+
+[source]
+----
+include::./type.example.php[lines=6..-1]
+----
+<1> `::class` constant doesn't have a leading root namespace `\`,
+but it's recommended to provide one when it's passed as a string.
