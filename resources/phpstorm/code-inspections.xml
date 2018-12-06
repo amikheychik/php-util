@@ -36,8 +36,6 @@
                    enabled_by_default="true"/>
   <inspection_tool class="EfferentObjectCouplingInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
   <inspection_tool class="EmptyClassInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
-  <inspection_tool class="EncryptionInitializationVectorRandomnessInspection" enabled="false" level="ERROR"
-                   enabled_by_default="false"/>
   <inspection_tool class="ExceptionsAnnotatingAndHandlingInspection" enabled="false" level="WARNING"
                    enabled_by_default="false"/>
   <inspection_tool class="FileFunctionMissUseInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
@@ -131,8 +129,6 @@
   <inspection_tool class="MissingElseKeywordInspection" enabled="false" level="ERROR" enabled_by_default="false"/>
   <inspection_tool class="MissingOrEmptyGroupStatementInspection" enabled="true" level="WARNING"
                    enabled_by_default="true"/>
-  <inspection_tool class="MockingMethodsCorrectnessInspection" enabled="false" level="WARNING"
-                   enabled_by_default="false"/>
   <inspection_tool class="NonSecureArrayRandUsageInspection" enabled="false" level="ERROR" enabled_by_default="false"/>
   <inspection_tool class="NonSecureHtmlentitiesUsageInspection" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
@@ -276,15 +272,10 @@
   <inspection_tool class="ThrowRawExceptionInspection" enabled="true" level="WARNING" enabled_by_default="true"/>
   <inspection_tool class="TransitiveDependenciesUsageInspection" enabled="false" level="WARNING"
                    enabled_by_default="false"/>
-  <inspection_tool class="UnSafeIsSetOverArrayInspection" enabled="true" level="WARNING" enabled_by_default="true">
-    <option name="SUGGEST_TO_USE_NULL_COMPARISON" value="false"/>
-  </inspection_tool>
   <inspection_tool class="UnnecessaryContinueInspection" enabled="false" level="WARNING" enabled_by_default="false"/>
   <inspection_tool class="UnnecessaryEmptinessCheckInspection" enabled="false" level="WARNING"
                    enabled_by_default="false"/>
   <inspection_tool class="UnnecessaryVariableOverridesInspection" enabled="false" level="WEAK WARNING"
-                   enabled_by_default="false"/>
-  <inspection_tool class="UnqualifiedReferenceInspection" enabled="false" level="WEAK WARNING"
                    enabled_by_default="false"/>
   <inspection_tool class="UnsupportedSerializeTypesInspection" enabled="false" level="ERROR"
                    enabled_by_default="false"/>

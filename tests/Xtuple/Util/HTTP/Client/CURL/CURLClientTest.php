@@ -20,12 +20,14 @@ use Xtuple\Util\HTTP\Request\URI\URL\AbstractBaseURL;
 use Xtuple\Util\HTTP\Request\URI\URL\URLComponents;
 use Xtuple\Util\HTTP\Response\JSON\JSONResponseStruct;
 
+/** @noinspection EfferentObjectCouplingInspection */
 class CURLClientTest
   extends TestCase {
   /** @var CURLClient */
   private $httpClient;
 
   public function setUp() {
+    parent::setUp();
     $this->httpClient = new CURLClient(new DebugConfiguration());
   }
 

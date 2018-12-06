@@ -14,6 +14,8 @@ final class EncodedHTMLTagsString
   }
 
   public function __toString(): string {
-    return (string) str_replace('&#38;', '&amp;', htmlentities($this->string, ENT_NOQUOTES));
+    /** @var string $replaced - (string) cast conflicts with code inspections */
+    $replaced = str_replace('&#38;', '&amp;', htmlentities($this->string, ENT_NOQUOTES));
+    return $replaced;
   }
 }

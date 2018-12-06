@@ -145,11 +145,11 @@ Default PHPStorm checks cover this functionality.
 | `::class` can be used | Off | Lookup root namespace classes conflicts too often with regular words.
 | Deprecated constructor style | Error |
 | Deprecated dynamic calls to scope introspection | Error |
-| `__DIR__` constant can be used | Warning |
+| `+__DIR__+` constant can be used | Warning |
 | Elvis operator can be used | Weak warning |
 | `get_class()` usage correctness | Warning |
 | `instanceof` can be used | Warning |
-| `null === ` can be used | Warning |
+| `null ===` can be used | Warning |
 | Null coalescing operator can be used | Weak warning |
 | Power operator can be used | Warning |
 | Return type hint can be used | Off | Under consideration.
@@ -182,7 +182,9 @@ Default PHPStorm checks cover this functionality.
 | Unqualified function/constant reference | Off | Under consideration
 | Variables function usage | Warning |
 3+| PHP Inspections (EA Extended) → *PHPUnit*
+| PHPUnit: API deprecations | Weak warning |
 | PHPUnit: bugs and best practices | Weak warning |
+| PHPUnit: methods mocking issues | Warning |
 | PHPUnit: unnecessary assertion | Weak warning |
 3+| PHP Inspections (EA Extended) → *Probable bugs*
 | Addition operation used on arrays | Off |
@@ -190,12 +192,14 @@ Default PHPStorm checks cover this functionality.
 | Callable methods validity | Warning |
 | Class autoloading correctness | Warning |
 | `::class` constant usage correctness | Error |
+| Class mocking correctness | Error |
 | `compact()` variables existence | Error |
 | Continue misbehaviour in `switch` | Error |
 | Date interval specification validity | Error |
 | `DateTime` constants usage validity | Error |
 | `DateTime::setTime()` usage correctness | Error |
 | Declare directive correctness | Error |
+| Duplicate array keys | Warning |
 | Empty/isset results correctness | Error |
 | Forgotten debug statements | Error |
 | Incomplete throw statements | Error |
@@ -204,8 +208,8 @@ Default PHPStorm checks cover this functionality.
 | Infinity loop detection | Error |
 | Isset operations variables existence | Warning |
 | Magic methods validity | Error |
+| Missing array initialization | Warning |
 | `mkdir()` race condition | Error |
-| Mocking correctness | Error |
 | Null reference | Warning |
 | Passing arguments by reference correctness | Warning |
 | Phar-incompatible `realpath()` usage | Warning |
@@ -218,7 +222,7 @@ Default PHPStorm checks cover this functionality.
 | Suspicious assignments | Error |
 | Suspicious binary operations | Error |
 | Suspicious loop | Error |
-| Suspicious return | Error |
+| Suspicious returns | Error |
 | Suspicious semicolon | Error |
 | Suspicious ternary operator | Error |
 | Suspicious usage of `include_once`/`require_once` return value | Error |
@@ -229,7 +233,8 @@ Default PHPStorm checks cover this functionality.
 | Cryptographically secure algorithms | Error |
 | Cryptographically secure randomness | Error |
 | CURL: SSL server spoofing (SSL MITM and Spoofing Attacks) | Error |
-| Encryption unserialize (PHP Object Injection Vulnerability) | Error |
+| Encryption initialization vector randomness | Error |
+| Exploiting unserialize (PHP Object Injection Vulnerability) | Error |
 | Hostname substitution | Error |
 | Insecure `crypt()` usage (Cryptographically weak algorithms) | Error |
 | Insecure `extract()` usage (Variable extract vulnerability) | Error |
@@ -277,6 +282,7 @@ Default PHPStorm checks cover this functionality.
 | Duplicate case in switch statement | Warning |
 | Expression result unused | Warning |
 | Foreach array is used as value | Warning |
+| Format function parameters mismatch | Warning |
 | Goto into loop statement | Error |
 | Method `__toString` implementation | Warning | Check `__toString` exists for each expression type
 | Method `__toString` return type | Error |
@@ -296,6 +302,7 @@ Default PHPStorm checks cover this functionality.
 3+| Quality tools
 | PHP Code Sniffer validation | Off |
 | PHP Code Detector validation | Off |
+| PHP Mess Detector validation | Off |
 3+| Replacement assignments
 | Reports assignment operations which can be replaced by increment or decrement. | No highlighting, fix only |
 | Reports assignment operations which can be replaced by operator assignment. | No highlighting, fix only |
