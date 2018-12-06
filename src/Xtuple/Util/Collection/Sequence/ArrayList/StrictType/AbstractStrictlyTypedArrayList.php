@@ -16,14 +16,15 @@ abstract class AbstractStrictlyTypedArrayList
    */
   public function __construct(string $type, iterable $elements = []) {
     $strict = new StrictType($type);
+    $casted = [];
     foreach ($elements as $i => $element) {
       try {
-        $strict->cast($element);
+        $casted[] = $strict->cast($element);
       }
       catch (\Throwable $e) {
         throw new ElementTypeException((string) $i, $strict, $element, $e);
       }
     }
-    parent::__construct($elements);
+    parent::__construct($casted);
   }
 }
