@@ -12,11 +12,11 @@ class QueryFileTest
    */
   public function testConstructor() {
     $query = new QueryFile(
-      new CreateRegularFileFromString('/tmp/phpunit/php-util/query.sql', implode("\n", [
-        'SELECT *',
-        'FROM {table}',
-        'WHERE id = :id',
-      ])),
+      new CreateRegularFileFromString('/tmp/phpunit/php-util/query.sql', '
+        SELECT *
+        FROM %table
+        WHERE id = :id
+      '),
       [
         'table' => 'phpunit',
       ],
@@ -24,10 +24,17 @@ class QueryFileTest
         ':id' => 1,
       ]
     );
-    self::assertEquals('SELECT * FROM phpunit WHERE id = :id', str_replace("\n", ' ', $query->sql()));
+    self::assertEquals(
+      'SELECT * FROM phpunit WHERE id = :id',
+      trim(preg_replace('/[\ \n]+/', ' ', $query->sql()))
+    );
     self::assertEquals([
       ':id' => 1,
     ], $query->parameters());
+  }
+
+  protected function tearDown() {
+    parent::tearDown();
     unlink('/tmp/phpunit/php-util/query.sql');
   }
 }

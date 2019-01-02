@@ -13,7 +13,7 @@ use Xtuple\Util\Postgres\Cache\Record\PostgresRecordFromRecord;
 use Xtuple\Util\Postgres\PDO\Connection\Connection;
 use Xtuple\Util\Postgres\PDO\PDODatabase;
 use Xtuple\Util\Postgres\PDO\Query\Parameter\Table\Table;
-use Xtuple\Util\Postgres\Query\QueryStruct;
+use Xtuple\Util\Postgres\Query\QueryWithTokens;
 
 final class PostgresCacheTable
   implements Cache {
@@ -44,12 +44,14 @@ final class PostgresCacheTable
 
   public function find(Key $key): ?Record {
     try {
-      if ($row = $this->database()->query(new QueryStruct("
+      if ($row = $this->database()->query(new QueryWithTokens('
         SELECT * 
-        FROM {$this->table} 
+        FROM %table 
         WHERE cid = :cid 
           AND (expire = 0 OR expire > :now)
-      ", [
+      ', [
+        'table' => $this->table,
+      ], [
         ':cid' => (new PostgresKeyFromKey($key))->id(),
         ':now' => $this->now,
       ]))->rows()->get(0)) {
@@ -65,7 +67,9 @@ final class PostgresCacheTable
    * @throws \Throwable
    */
   public function clear(): void {
-    $this->database()->query(new QueryStruct("TRUNCATE {$this->table}"));
+    $this->database()->query(new QueryWithTokens('TRUNCATE %table', [
+      'table' => $this->table,
+    ]));
   }
 
   /**
@@ -75,7 +79,9 @@ final class PostgresCacheTable
    */
   public function delete(Key $key): void {
     try {
-      $this->database()->query(new QueryStruct("DELETE FROM {$this->table} WHERE cid LIKE :cid", [
+      $this->database()->query(new QueryWithTokens('DELETE FROM %table WHERE cid LIKE :cid', [
+        'table' => $this->table,
+      ], [
         ':cid' => (new PostgresKeyFromKey($key))->id(),
       ]));
     }
@@ -114,11 +120,13 @@ final class PostgresCacheTable
    */
   public function isEmpty(): bool {
     /** @noinspection NullPointerExceptionInspection */
-    return $this->database()->query(new QueryStruct("
+    return $this->database()->query(new QueryWithTokens('
         SELECT count(*) 
-        FROM {$this->table}
+        FROM %table
         WHERE (expire = 0 OR expire > :now)
-      ", [
+      ', [
+        'table' => $this->table,
+      ], [
         ':now' => $this->now,
       ]))->rows()->get(0)->get('count') === 0;
   }

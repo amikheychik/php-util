@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
 class QueryWithTokensTest
   extends TestCase {
   public function testConstructor() {
-    $query = new QueryWithTokens("CREATE USER {user} WITH PASSWORD '{password}'", [
+    $query = new QueryWithTokens("CREATE USER %user WITH PASSWORD '%password'", [
       'user' => 'phpunit',
       'password' => 'phpunit',
     ]);
     self::assertEquals("CREATE USER phpunit WITH PASSWORD 'phpunit'", $query->sql());
     self::assertEquals([], $query->parameters());
-    $query = new QueryWithTokens('SELECT * FROM {table} WHERE id = :id', [
+    $query = new QueryWithTokens('SELECT * FROM %table WHERE id = :id', [
       'table' => 'phpunit',
     ], [
       ':id' => 1,
