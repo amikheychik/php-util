@@ -8,7 +8,7 @@ use Xtuple\Util\Postgres\Cache\Key\PostgresKeyFromKey;
 use Xtuple\Util\Postgres\Cache\Record\PostgresRecordFromRecord;
 use Xtuple\Util\Postgres\Database;
 use Xtuple\Util\Postgres\PDO\Query\Parameter\Table\Table;
-use Xtuple\Util\Postgres\Query\QueryStruct;
+use Xtuple\Util\Postgres\Query\QueryWithTokens;
 use Xtuple\Util\Postgres\Transaction\Transaction;
 
 final class InsertRecordTransaction
@@ -33,23 +33,27 @@ final class InsertRecordTransaction
   public function run(Database $database) {
     $postgresRecord = new PostgresRecordFromRecord($this->record);
     /** @noinspection NullPointerExceptionInspection */
-    $exists = $database->query(new QueryStruct("SELECT count(*) FROM {$this->table} WHERE cid = :cid", [
+    $exists = $database->query(new QueryWithTokens('SELECT count(*) FROM %table WHERE cid = :cid', [
+        'table' => $this->table,
+      ], [
         ':cid' => (new PostgresKeyFromKey($this->record->key()))->id(),
       ]))->rows()->get(0)->get('count') !== 0;
     if ($exists) {
-      $query = "
-        UPDATE {$this->table} 
+      $query = '
+        UPDATE %table 
         SET data = :data, expire = :expire, created = :created, serialized = :serialized
         WHERE cid = :cid
-      ";
+      ';
     }
     else {
-      $query = "
-        INSERT INTO {$this->table} (cid, data, expire, created, serialized) 
+      $query = '
+        INSERT INTO %table (cid, data, expire, created, serialized) 
         VALUES (:cid, :data, :expire, :created, :serialized)
-      ";
+      ';
     }
-    $database->query(new QueryStruct($query, $postgresRecord->row()));
+    $database->query(new QueryWithTokens($query, [
+      'table' => $this->table,
+    ], $postgresRecord->row()));
     return $postgresRecord;
   }
 }
