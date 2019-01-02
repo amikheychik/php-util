@@ -17,7 +17,7 @@ class ArrayMapTest
     self::assertEquals(2, $map->count());
     self::assertFalse($map->isEmpty());
     foreach ($map as $k => $v) {
-      self::assertInternalType('string', $k, "Key: $k");
+      self::assertIsString($k, "Key: $k");
     }
   }
 
