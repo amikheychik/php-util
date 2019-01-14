@@ -50,12 +50,12 @@
 | Unresolved include | Warning |
 | Usage of internal entity | Weak warning |
 3+| Naming conventions
-| Class name is not following coding convention | |
-| Constant name is not following coding convention | |
-| Function name is not following coding convention | |
-| Method name is not following coding convention | |
-| Property name is not following coding convention | |
-| Variable name is not following coding convention | |
+| Class name is not following coding convention | Off |
+| Constant name is not following coding convention | Off |
+| Function name is not following coding convention | Off |
+| Method name is not following coding convention | Off |
+| Property name is not following coding convention | Off |
+| Variable name is not following coding convention | Off |
 3+| *PHP Attention (PHPStorm plugin)*
 | Possible `false` return | Off | Inspection behavior is unclear
 | Possible `null` return | Off | Inspection behavior is unclear
