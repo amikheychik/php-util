@@ -47,8 +47,8 @@ final class XMLElementSimple
   public function attributes(?string $ns = null, bool $isPrefix = false): MapXMLAttribute {
     $attributes = [];
     foreach ($this->element->attributes($ns, $isPrefix) as $attribute) {
-      /** @var \SimpleXMLElement $attribute */
-      /** @noinspection PhpUnhandledExceptionInspection - \SimpleXMLElement::attributes() returns attributes only */
+      /** @var \SimpleXMLElement $attribute - \SimpleXMLElement::attributes() returns attributes only */
+      /** @noinspection PhpUnhandledExceptionInspection */
       $attributes[] = new XMLAttributeSimple($attribute);
     }
     /** @noinspection PhpUnhandledExceptionInspection - verified XMLAttribute type */
